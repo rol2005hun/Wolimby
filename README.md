@@ -5,11 +5,11 @@ Több fajta szolgáltatás van, amelyet megtenkinthetsz a weboldoldalon. \
 Na, de térjünk a lényegre... \
 ✧・──・──・──・──・─・──・✧ \
 ╰─╮ \
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;╰─➤ Mi található a weboldalon? \
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;╰─➤ Mi található a weboldalon? \
 
 ・🔧 ┃ Gyorsaság. \
-・📝 ┃ Különféle szolgáltatások. \ 
-・💬 ┃ Rang rendszer. \ 
+・📝 ┃ Különféle szolgáltatások. \
+・💬 ┃ Rang rendszer. \
 ・👑 ┃ Jó közösség. \
 ・🛠️ ┃ Jófej csapattagok. \
 
