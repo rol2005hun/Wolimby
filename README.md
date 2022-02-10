@@ -1,6 +1,6 @@
 # Wolimby
 
-A **Wolimby** egy egyszerű weboldal, amely tanulás és szórakozás révén készülődik.
+A **Wolimby** egy egyszerű weboldal, amely tanulás és szórakozás révén készülődik. \
 Több fajta szolgáltatás van, amelyet megtenkinthetsz a weboldoldalon. \
 Na, de térjünk a lényegre...
 ✧・──・──・──・──・─・──・✧
