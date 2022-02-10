@@ -2,10 +2,10 @@
 
 A **Wolimby** egy egyszerű weboldal, amely tanulás és szórakozás révén készülődik. \
 Több fajta szolgáltatás van, amelyet megtenkinthetsz a weboldoldalon. \
-Na, de térjünk a lényegre...
-✧・──・──・──・──・─・──・✧
-╰─╮
-  ╰─➤ Mi található a weboldalon?
+Na, de térjünk a lényegre... \
+✧・──・──・──・──・─・──・✧ \
+╰─╮ \
+  ╰─➤ Mi található a weboldalon? \
 
 ・🔧 ┃ Gyorsaság. \
 ・📝 ┃ Különféle szolgáltatások. \ 
