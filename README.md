@@ -5,7 +5,7 @@ Több fajta szolgáltatás van, amelyet megtenkinthetsz a weboldoldalon. \
 Na, de térjünk a lényegre... \
 ✧・──・──・──・──・─・──・✧ \
 ╰─╮ \
- &emsp;&emsp;╰─➤ Mi található a weboldalon?
+ &emsp;&nbsp;╰─➤ Mi található a weboldalon?
 
 ・🔧 ┃ Gyorsaság. \
 ・📝 ┃ Különféle szolgáltatások. \
