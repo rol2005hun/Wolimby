@@ -8,11 +8,11 @@ Na, de térjünk a lényegre...
 ╰─╮
   ╰─➤ Mi található a weboldalon?
 
-・🔧 ┃ Gyorsaság.
-・📝 ┃ Különféle szolgáltatások.
-・💬 ┃ Rang rendszer.
-・👑 ┃ Jó közösség.
-・🛠️ ┃ Jófej csapattagok.
+・🔧 ┃ Gyorsaság.\
+・📝 ┃ Különféle szolgáltatások.\
+・💬 ┃ Rang rendszer.\
+・👑 ┃ Jó közösség.\
+・🛠️ ┃ Jófej csapattagok.\
 
 Nézd meg a bemutató videót, és ha megtetszett amit láttál, csatlakozz és várd a fejleményeket. Pacsi 🤟
 
