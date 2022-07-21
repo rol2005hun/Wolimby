@@ -18,6 +18,6 @@ Nézd meg a bemutató videót, és ha megtetszett amit láttál, csatlakozz és 
 📨 Szerver meghívó: https://discord.gg/FqdMuyhdTC \
 📺 Bemutató videó: https://youtu.be/LzVwiGQb6HU \
 📃 Szerversablon: https://discord.new/sZMYQYRTj3dz \
-🌐 Github: - https://github.com/rol2005hun/Wolimby
+🌐 Github: https://github.com/rol2005hun/Wolimby
 
 A Weboldal frontendje Vue-ban készült el, a backend Express, NodeJS, és MongoDB-ből áll legfőképpen.
