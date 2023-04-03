@@ -54,7 +54,8 @@ export const useUserStore = defineStore('user', {
         }
         return res;
       } catch(err: any) {
-        this.$state.error = err.response.data.message;
+        console.log(err.response)
+        //this.$state.error = err.response.data.message;
         if(process.client && err.response.status != 429) {
           functions.deleteCookie('token');
         }
