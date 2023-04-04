@@ -22,7 +22,7 @@ const config: NuxtConfig = {
   buildModules: ['@pinia/nuxt'],
   runtimeConfig: {
     public: {
-      apiBase: 'https://api.account.wolimby.hu',
+      apiBase: 'https://storied-biscochitos-8008b9.netlify.app/',
       cookieDomain: 'wolimby.hu'
     }
   }
