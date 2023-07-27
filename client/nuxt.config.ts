@@ -27,7 +27,7 @@ const config: NuxtConfig = {
   runtimeConfig: {
     public: {
       apiBase: 'https://account-api-shrp.onrender.com',
-      cookieDomain: 'localhost'
+      cookieDomain: 'wolimby.hu'
     }
   }
 }
