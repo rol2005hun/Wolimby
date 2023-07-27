@@ -26,7 +26,7 @@ const config: NuxtConfig = {
   buildModules: ['@pinia/nuxt'],
   runtimeConfig: {
     public: {
-      apiBase: 'http://localhost:2000',
+      apiBase: 'https://account-api-shrp.onrender.com/',
       cookieDomain: 'localhost'
     }
   }
