@@ -1,0 +1,26 @@
+[
+    {
+      "id": 1,
+      "code": "const number = Math.round(Math.random() * 1;"
+    },
+    {
+      "id": 2,
+      "code": "const add = (a: number, b: number): number => return a + b;"
+    },
+    {
+      "id": 3,
+      "code": "console.log('I am a developer babyyy');"
+    },
+    {
+      "id": 4,
+      "code": "working ? 'yes' : 'no';"
+    },
+    {
+      "id": 5,
+      "code": "cout << 'I love C++' << endl;"
+    },
+    {
+      "id": 6,
+      "code": "cin >> a >> c >> b >> g >> e >> z >> f >> j >> m;"
+    }
+]

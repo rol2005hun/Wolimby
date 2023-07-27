@@ -1,0 +1,107 @@
+.typeracer {
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10%;
+    font-size: 30px;
+
+    .how-to {
+      color: white;
+      margin: 50px 50px 100px 50px;
+      font-size: 30px;
+      text-align: center;
+    }
+
+    &-code {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 40px;
+      white-space: pre-line;
+
+      span {
+        display: inline-block;
+
+        &.br {
+          &.incorrect {
+            background-color: red;
+          }
+
+          &.neutral {
+            background-color: transparent;
+          }
+        }
+
+        &.correct {
+          color: greenyellow;
+        }
+
+        &.incorrect {
+          color: red;
+        }
+
+        &.neutral {
+          color: white;
+        }
+      }
+
+      .cursor {
+        font-weight: lighter;
+        color: black;
+        margin: 0 -4.5px 0 -4.5px;
+        animation: blink 1s infinite;
+      }
+    }
+
+    &-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+
+      .stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 20px;
+
+        .label {
+          font-size: 15px;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+
+        .value {
+          font-size: 30px;
+        }
+      }
+
+      .pause-btn, .restart-btn, .rules-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        margin: 0 20px 0 20px;
+        color: white;
+        font-size: 30px;
+
+        &:hover {
+          color: greenyellow;
+        }
+      }
+    }
+  }
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
