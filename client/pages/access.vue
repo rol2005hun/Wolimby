@@ -1,5 +1,5 @@
 <template>
-    <h1 class="text">Üdv <strong class="username-roles">{{ currentUser.profile.username || 'user'}}</strong>, a Wolimby Account-ban, a lenti ikonok közül az egyikre kattintva átírányítás történik meg.</h1>
+    <h1 class="text">Üdv <strong class="username-roles">{{ currentUser.profile?.username }}</strong>, a Wolimby Account-ban, a lenti ikonok közül az egyikre kattintva átírányítás történik meg.</h1>
     <div class="project">
         <div class="project-icon 1">
             <a :href="domains.domain1"><img src="https://i.imgur.com/N72oZnx.png" alt="domain1"></a>
