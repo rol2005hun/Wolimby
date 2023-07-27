@@ -2,7 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.ts",
+  "main": "index.ts",
   "scripts": {
     "start": "nodemon index.ts",
     "build": "tsc"
@@ -21,7 +21,6 @@
     "mongoose": "^7.0.3",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
-    "request-ip": "^3.3.0",
-    "typescript": "^4.6.2"
+    "request-ip": "^3.3.0"
   }
 }
