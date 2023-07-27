@@ -34,9 +34,9 @@ const domains = ref<Domains>({
 onMounted(async () => {
     if (typeof window !== 'undefined') {
         domains.value = {
-            domain1: `http://${location.hostname.split('.').slice(-2).join('.')}:3001`,
-            domain2: `http://shortify.${location.hostname.split('.').slice(-2).join('.')}:3000`,
-            domain3: `http://games.${location.hostname.split('.').slice(-2).join('.')}:4000`,
+            domain1: `https://games.${location.hostname.split('.').slice(-2).join('.')}`,
+            domain2: `http://shortify.${location.hostname.split('.').slice(-2).join('.')}`,
+            domain3: `http://me.${location.hostname.split('.').slice(-2).join('.')}`,
         //   domain4: `https://cloud.${location.hostname.split('.').slice(-2).join('.')}`,
         //   domain5: `https://games.${location.hostname.split('.').slice(-2).join('.')}`,
         };
