@@ -2,9 +2,15 @@ import { NextFunction, Request, Response } from 'express';
 import Url from '../models/UrlSchema';
 
 export const checkUrl = async (req: Request, res: Response, next: NextFunction) => {
+    const bannedUrls = ['createlink'];
+    if(bannedUrls.includes(req.body.shortUrl)) {
+        return res.status(404).send({
+            success: false,
+            message: 'A megadott rövidített URL nem használható.'
+        });
+    }
+    
     const url = await Url.findOne({ 'url.shortUrl': req.body.shortUrl });
-
-    console.log(url)
 
     if(url) {
         return res.status(404).send({
