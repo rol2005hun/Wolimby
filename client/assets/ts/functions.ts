@@ -40,8 +40,7 @@ function formatDate(ipDate: string): string {
 
 function getDomain() {
     if(process.client) {
-        const domain = `http://${location.hostname.split('.').slice(-2).join('.')}`;
-        return domain;
+        return `http://${location.hostname.split('.').slice(-2).join('.')}`;
     }
 }
 
