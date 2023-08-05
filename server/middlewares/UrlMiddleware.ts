@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import Url from '../models/UrlSchema';
 
 export const checkUrl = async (req: Request, res: Response, next: NextFunction) => {
-    const url = await Url.findOne({shortUrl: req.body.shortUrl});
+    const url = await Url.findOne({ 'url.shortUrl': req.query.url });
 
     if(url) {
         return res.status(404).send({
