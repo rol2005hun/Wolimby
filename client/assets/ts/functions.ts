@@ -39,8 +39,10 @@ function formatDate(ipDate: string): string {
 }
 
 function getDomain() {
-    const domain = `http://${location.hostname.split('.').slice(-2).join('.')}`;
-    return domain;
+    if(process.client) {
+        const domain = `http://${location.hostname.split('.').slice(-2).join('.')}`;
+        return domain;
+    }
 }
 
 function setCookie(cName: string, cValue: string, expDays?: number): void {
