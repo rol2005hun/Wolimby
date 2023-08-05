@@ -17,6 +17,9 @@
                             <input type="submit" value="Rövidítés">  
                         </div>
                     </form>
+                    <div class="preview">
+                        <span v-if="shortUrl" class="text">Előnézet: <a :href="'https://wosho.tech/' + shortUrl">{{ 'https://wosho.tech/' + shortUrl }}</a></span>
+                    </div>
                 </div>
             </div>
         </div>
