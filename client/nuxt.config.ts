@@ -8,14 +8,14 @@ const config: NuxtConfig = {
       htmlAttrs: {
         lang: 'hu'
       },
-      title: 'Wolimby - Account',
+      title: 'Wolimby - Shortify',
       link: [
         { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css', crossorigin: 'anonymous' },
         { rel: 'icon', href: 'https://i.imgur.com/Z4uWZ64.jpg', type: 'image/x-icon' }
       ],
       meta: [
-        { name: 'title', content: 'Wolimby - Account' },
-        { name: 'description', content: 'Manage your Wolimby Account' }
+        { name: 'title', content: 'Wolimby - Shortify' },
+        { name: 'description', content: 'Link rövidítés egyszerűen.' }
       ]
     },
     rootId: 'app'
