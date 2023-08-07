@@ -9,6 +9,7 @@ import { notificationStore, testStore } from '@/store';
 
 onMounted(() => {
   if(!testStore.isOnline) {
+    console.log('azer online')
     notificationStore.addNotification({
       id: 0,
       type: 'information',
