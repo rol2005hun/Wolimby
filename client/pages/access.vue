@@ -35,8 +35,8 @@ onMounted(async () => {
     if (typeof window !== 'undefined') {
         domains.value = {
             domain1: `https://games.${location.hostname.split('.').slice(-2).join('.')}`,
-            domain2: `http://shortify.${location.hostname.split('.').slice(-2).join('.')}`,
-            domain3: `http://me.${location.hostname.split('.').slice(-2).join('.')}`,
+            domain2: `https://shortify.${location.hostname.split('.').slice(-2).join('.')}`,
+            domain3: `https://me.${location.hostname.split('.').slice(-2).join('.')}`,
         //   domain4: `https://cloud.${location.hostname.split('.').slice(-2).join('.')}`,
         //   domain5: `https://games.${location.hostname.split('.').slice(-2).join('.')}`,
         };
