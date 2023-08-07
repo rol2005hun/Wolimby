@@ -4,11 +4,14 @@
         <div class="project-icon 1">
             <a :href="domains.domain1"><img src="https://i.imgur.com/N72oZnx.png" alt="domain1"></a>
         </div>
-        <div class="project-icon 1">
+        <div class="project-icon 2">
             <a :href="domains.domain2"><img src="https://i.imgur.com/N72oZnx.png" alt="domain2"></a>
         </div>
         <div class="project-icon 3">
             <a :href="domains.domain3"><img src="https://i.imgur.com/SsMjPCz.png" alt="domain3"></a>
+        </div>
+        <div class="project-icon 4">
+            <a :href="domains.domain4"><img src="https://i.imgur.com/SsMjPCz.png" alt="domain4"></a>
         </div>
     </div>
 </template>
@@ -24,11 +27,13 @@ interface Domains {
     domain1: string,
     domain2: string,
     domain3: string,
+    domain4: string
 }
 const domains = ref<Domains>({
     domain1: '',
     domain2: '',
     domain3: '',
+    domain4: ''
 });
 
 onMounted(async () => {
@@ -36,10 +41,9 @@ onMounted(async () => {
         domains.value = {
             domain1: `https://games.${location.hostname.split('.').slice(-2).join('.')}`,
             domain2: `https://shortify.${location.hostname.split('.').slice(-2).join('.')}`,
-            domain3: `https://me.${location.hostname.split('.').slice(-2).join('.')}`,
-        //   domain4: `https://cloud.${location.hostname.split('.').slice(-2).join('.')}`,
-        //   domain5: `https://games.${location.hostname.split('.').slice(-2).join('.')}`,
-        };
+            domain3: `https://social.${location.hostname.split('.').slice(-2).join('.')}`,
+            domain4: `https://me.${location.hostname.split('.').slice(-2).join('.')}`
+        }
     }
 });
 </script>
