@@ -4,8 +4,8 @@
       <NuxtLink to="/" class="nav-branding">Social</NuxtLink>
       <ul class="nav-menu">
         <li class="nav-item">
-          <a href="#" class="nav-link" @click="toggleMenu(2)">{{ currentUser.profile.username }}</a>
-          <ul class="nav-submenu">
+          <a v-if="isLoggedIn && isOnline" href="#" class="nav-link" @click="toggleMenu(2)">{{ currentUser.profile.username }}</a>
+          <ul v-if="isLoggedIn && isOnline" class="nav-submenu">
             <li class="nav-submenu-link"><a :href="'account.' + functions.getDomain() + '/profile'">Profilom</a></li>
             <li class="nav-submenu-link"><a :href="'account.' + functions.getDomain() + '/settings'">Beállítások</a></li>
             <li class="nav-submenu-link"><a href="#" @click="userStore.logout()">Kijelentkezés</a></li>
@@ -28,7 +28,8 @@ import { userStore, testStore } from '@/store';
 import functions from '@/assets/ts/functions';
 
 const isDropdownActive = ref(false);
-const { currentUser } = storeToRefs(userStore);;
+const { isLoggedIn, currentUser } = storeToRefs(userStore);
+const { isOnline } = storeToRefs(testStore);
 
 function toggleMenu(option: number) {
   const body = document.querySelector('body');
