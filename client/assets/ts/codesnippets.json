@@ -1,26 +1,42 @@
 [
-    {
-      "id": 1,
-      "code": "const number = Math.round(Math.random() * 1;"
-    },
-    {
-      "id": 2,
-      "code": "const add = (a: number, b: number): number => return a + b;"
-    },
-    {
-      "id": 3,
-      "code": "console.log('I am a developer babyyy');"
-    },
-    {
-      "id": 4,
-      "code": "working ? 'yes' : 'no';"
-    },
-    {
-      "id": 5,
-      "code": "cout << 'I love C++' << endl;"
-    },
-    {
-      "id": 6,
-      "code": "cin >> a >> c >> b >> g >> e >> z >> f >> j >> m;"
-    }
+  {
+    "id": 1,
+    "code": "const number = Math.round(Math.random() * 1;"
+  },
+  {
+    "id": 2,
+    "code": "const add = (a: number, b: number): number => return a + b;"
+  },
+  {
+    "id": 3,
+    "code": "console.log('I am a developer babyyy');"
+  },
+  {
+    "id": 4,
+    "code": "working ? 'yes' : 'no';"
+  },
+  {
+    "id": 5,
+    "code": "cout << 'I love C++' << endl;"
+  },
+  {
+    "id": 6,
+    "code": "cin >> a >> c >> b >> g >> e >> z >> f >> j >> m;"
+  },
+  {
+    "id": 7,
+    "code": "if(iAmHappy) { clapYourHands(); } else { showIt(); }"
+  },
+  {
+    "id": 8,
+    "code": "01000101101001001010010100101010100101"
+  },
+  {
+    "id": 9,
+    "code": "while(alive) { eat(); sleep(); code(); repeat(); }"
+  },
+  {
+    "id": 10,
+    "code": "console.log(Wolimby is the best <3);"
+  }
 ]
