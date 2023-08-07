@@ -1,5 +1,5 @@
 <template>
-    <main class="home">
+    <main v-if="isLoggedIn && isOnline" class="home">
         <div class="welcome-container">
             <div class="welcome">
                 <div class="welcome-text">
@@ -183,11 +183,12 @@
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import axios from 'axios';
-import { userStore, postStore, commentStore, replyStore, notificationStore } from '@/store';
+import { userStore, postStore, commentStore, replyStore, notificationStore, testStore } from '@/store';
 import functions from '@/assets/ts/functions';
 
+const { isLoggedIn, currentUser } = storeToRefs(userStore);
+const { isOnline } = storeToRefs(testStore);
 const { posts } = storeToRefs(postStore);
-const { currentUser } = storeToRefs(userStore);
 const comment = ref('');
 const reply = ref('');
 const post = ref('');
