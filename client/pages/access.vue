@@ -5,10 +5,10 @@
             <a :href="domains.domain1"><img src="https://i.imgur.com/N72oZnx.png" alt="domain1"></a>
         </div>
         <div class="project-icon 1">
-            <a :href="domains.domain1"><img src="https://i.imgur.com/N72oZnx.png" alt="domain2"></a>
+            <a :href="domains.domain2"><img src="https://i.imgur.com/N72oZnx.png" alt="domain2"></a>
         </div>
         <div class="project-icon 3">
-            <a :href="domains.domain1"><img src="https://i.imgur.com/SsMjPCz.png" alt="domain3"></a>
+            <a :href="domains.domain3"><img src="https://i.imgur.com/SsMjPCz.png" alt="domain3"></a>
         </div>
     </div>
 </template>

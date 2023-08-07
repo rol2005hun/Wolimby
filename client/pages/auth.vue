@@ -110,9 +110,9 @@ function login() {
     }
   }).catch(() => {
     notificationStore.addNotification({
-    id: 0,
-    type: 'error',
-    message: userStore.$state.error
+      id: 0,
+      type: 'error',
+      message: userStore.$state.error
     });
   });
 }
