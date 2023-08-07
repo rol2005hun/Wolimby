@@ -1,9 +1,9 @@
 <template>
-    <main v-if="isLoggedIn && isOnline" class="home">
+    <main class="home">
         <div class="welcome-container">
             <div class="welcome">
                 <div class="welcome-text">
-                    <h1>Üdvözöllek, {{ currentUser.profile.username }}!</h1>
+                    <h1>Üdvözöllek, {{ currentUser.profile?.username }}!</h1>
                     <div class="open" @click="isModalVisible = true"><i class="fa-solid fa-plus"></i></div>
                     <p>Itt láthatod a legfrissebb bejegyzéseket, hozzászólásokat és válaszokat.</p>
                 </div>
