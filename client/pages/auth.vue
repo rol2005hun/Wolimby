@@ -93,6 +93,15 @@ function toggleForm(option: number) {
   }
 }
 
+function redirectTo() {
+  const url = new URL(window.location.href);
+  if(url.searchParams.get('redirectTo')) {
+    return url.searchParams.get('redirectTo');
+  } else {
+    return '/access';
+  }
+}
+
 function login() {
   const user = {
     username: username.value,
@@ -107,12 +116,7 @@ function login() {
         message: 'Sikeres bejelentkezés.'
       });
       
-      const url = new URL(window.location.href);
-      if(url.searchParams.get('redirectTo')) {
-        navigateTo(url.searchParams.get('redirectTo'), { external: true });
-      } else {
-        navigateTo('/access');
-      }
+      redirectTo();
     }
   }).catch(() => {
     notificationStore.addNotification({
@@ -132,11 +136,13 @@ function register() {
 
   userStore.register(user).then(res => {
     if(res.data.success) {
-    notificationStore.addNotification({
-      id: 0,
-      type: 'success',
-      message: 'Sikeres regisztráció. Kérlek jelentkezz be.'
-    });
+      notificationStore.addNotification({
+        id: 0,
+        type: 'success',
+        message: 'Sikeres regisztráció. Kérlek jelentkezz be.'
+      });
+
+      redirectTo();
     }
   }).catch(() => {
     notificationStore.addNotification({
