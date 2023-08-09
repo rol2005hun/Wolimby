@@ -116,7 +116,7 @@ function openRules() {
 }
 
 watch(typedText, (newTypedText: string) => {
-  if (counter.value == 1) {
+  if (counter.value == 5) {
     title.value = 'Lássuk csak...';
     description.value = `<p style="text-align: center;">Gratulálok az eredménytől függetlenül, ez kemény menet lehetett. Te ${cpm.value} karaktert ütsz le percenként. Igazi vadállat 🦁</p>`;
     modalOpen.value = true;
