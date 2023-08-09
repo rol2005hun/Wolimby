@@ -13,12 +13,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
 
     if (!token) {
-      abortNavigation();
-      return navigateTo('https://account.wolimby.hu/auth', { external: true });
+      return navigateTo('http://localhost:3001/auth?redirectTo=' + useRequestURL().href, { external: true });
     }
 
     if(to.name == undefined) return navigateTo('/home');
   } else {
-    return navigateTo('https://account.wolimby.hu/auth', { external: true });
+    return navigateTo('https://account.wolimby.hu/auth?redirectTo=' + useRequestURL().href, { external: true });
   }
 });
