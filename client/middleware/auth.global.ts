@@ -9,6 +9,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       axios.defaults.headers.common['Authorization'] = useCookie('token').value;
       await userStore.getCurrentUser();
       userStore.token = useCookie('token').value as string;
+    } else {
+      userStore.token = '';
     }
 
     if(to.name == undefined) return navigateTo('/createlink');
