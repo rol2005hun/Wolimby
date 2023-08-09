@@ -2,10 +2,6 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import functions from '@/assets/ts/functions';
 
-if(process.client) {
-  axios.defaults.headers.common['Authorization'] = functions.getCookie('token') || '';
-}
-
 interface UserProfile {
   profile: {
     username: string,
@@ -40,13 +36,13 @@ interface UserProfile {
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    token: process.client ? functions.getCookie('token') || '' : '',
+    token: '',
     currentUser: {} as UserProfile,
     error: '' || 'Ismeretlen'
   }),
 
   getters: {
-    isLoggedIn: state => !!state.token,
+    isLoggedIn: state => !!state.currentUser,
   },
   
   actions: {
