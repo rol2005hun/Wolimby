@@ -96,9 +96,9 @@ function toggleForm(option: number) {
 function redirectTo() {
   const url = new URL(window.location.href);
   if(url.searchParams.get('redirectTo')) {
-    return url.searchParams.get('redirectTo');
+    navigateTo(url.searchParams.get('redirectTo'), { external: true });
   } else {
-    return '/access';
+    navigateTo('/access');
   }
 }
 
