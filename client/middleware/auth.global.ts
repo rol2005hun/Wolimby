@@ -13,7 +13,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
 
     if (!token) {
-      return navigateTo('http://localhost:3001/auth?redirectTo=' + useRequestURL().href, { external: true });
+      return navigateTo('https://account.wolimby.hu/auth?redirectTo=' + useRequestURL().href, { external: true });
     }
 
     if(to.name == undefined) return navigateTo('/home');
