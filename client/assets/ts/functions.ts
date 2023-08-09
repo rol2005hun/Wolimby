@@ -29,18 +29,31 @@ function userRoles(roles: number[] | undefined, id?: string): void {
 function formatDate(ipDate: string): string {
     const date = new Date(ipDate);
     function addZero(i: number): string {
-        if (i < 10) {
-            i = Number('0' + i);
-        }
-        return i.toString();
+        return i < 10 ? `0${i}` : i.toString();
     }
     const text = `${date.getFullYear()}.${addZero(date.getMonth() + 1)}.${addZero(date.getDate())} ${addZero(date.getHours())}:${addZero(date.getMinutes())}`;
     return text;
 }
 
+function getFileType(link: string) {
+    const extension = link.split('.').pop() as string;
+
+    const imageExtensions = ['png', 'jpg', 'jpeg', 'gif', 'apng', 'tiff', 'bmp'];
+    const videoExtensions = ['mp4', 'mpeg', 'avi', 'webm', 'quicktime', 'x-matroska', 'x-flv', 'x-msvideo', 'x-ms-wmv'];
+
+    if (imageExtensions.includes(extension)) {
+        return 'image';
+    } else if (videoExtensions.includes(extension)) {
+        return 'video';
+    } else {
+        return 'unknown';
+    }
+}
+
 function getDomain() {
-    const domain = `http://${location.hostname.split('.').slice(-2).join('.')}`;
-    return domain;
+    if(process.client) {
+        return `http://${location.hostname.split('.').slice(-2).join('.')}`;
+    }
 }
 
 function setCookie(cName: string, cValue: string, expDays?: number): void {
@@ -68,6 +81,7 @@ function deleteCookie(cName: string): void {
 export default {
     userRoles,
     formatDate,
+    getFileType,
     getDomain,
     setCookie,
     getCookie,
