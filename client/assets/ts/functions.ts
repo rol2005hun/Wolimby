@@ -51,7 +51,7 @@ function getFileType(link: string) {
 }
 
 function getDomain() {
-    console.log(useRequestURL().href.split('/')[2])
+    console.log(useRequestURL().href)
     return useRequestURL().href.split('/')[2];
 }
 
