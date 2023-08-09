@@ -51,9 +51,7 @@ function getFileType(link: string) {
 }
 
 function getDomain() {
-    if(process.client) {
-        return `http://${location.hostname.split('.').slice(-2).join('.')}`;
-    }
+    return useRequestURL().href.split('/')[2];
 }
 
 function setCookie(cName: string, cValue: string, expDays?: number): void {
