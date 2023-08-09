@@ -42,7 +42,7 @@ export const useUserStore = defineStore('user', {
   }),
 
   getters: {
-    isLoggedIn: state => !!state.currentUser,
+    isLoggedIn: state => !!state.token,
   },
   
   actions: {
@@ -65,7 +65,8 @@ export const useUserStore = defineStore('user', {
       try {
         functions.deleteCookie('token');
         delete axios.defaults.headers.common['Authorization'];
-        window.location.href = functions.getDomain() + ':3000';
+        this.$state.currentUser = {} as UserProfile;
+        this.$state.token = '';
       } catch(err: any) {
         this.$state.error = err.response.data.message;
       }
