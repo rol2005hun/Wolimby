@@ -101,12 +101,18 @@ function login() {
 
   userStore.login(user, checkbox.value).then(res => {
     if(res.data.success) {
-      navigateTo('/access');
       notificationStore.addNotification({
         id: 0,
         type: 'success',
         message: 'Sikeres bejelentkezés.'
       });
+      
+      const url = new URL(window.location.href);
+      if(url.searchParams.get('redirectTo')) {
+        navigateTo(url.searchParams.get('redirectTo'), { external: true });
+      } else {
+        navigateTo('/access');
+      }
     }
   }).catch(() => {
     notificationStore.addNotification({
