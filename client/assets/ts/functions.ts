@@ -73,8 +73,11 @@ function getCookie(cName: string): string | undefined {
     return res;
 }
 
-function deleteCookie(cName: string): void {
-    document.cookie = cName + `=; path=/; expires=thu, 01 jan 1970 00:00:01 GMT; domain=${useRuntimeConfig().public.cookieDomain}`;
+function deleteCookie(cName: string): Promise<void> {
+    return new Promise((resolve) => {
+        document.cookie = cName + `=; path=/; expires=thu, 01 jan 1970 00:00:01 GMT; domain=${useRuntimeConfig().public.cookieDomain}`;
+        resolve();
+    });
 }
 
 export default {
