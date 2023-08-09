@@ -93,11 +93,9 @@ export const useUserStore = defineStore('user', {
 
     async logout() {
       try {
-        await functions.deleteCookie('token').then((res) => {
-          console.log(res)
-          axios.defaults.headers.common['Authorization'] = '';
-        });
-        navigateTo('https://account.wolimby.hu/auth', { external: true });
+        functions.deleteCookie('token');
+        delete axios.defaults.headers.common['Authorization'];
+        if(process.client) window.location.href = 'https://account.wolimby.hu/auth';
       } catch(err: any) {
         this.$state.error = err.response.data.message;
       }
