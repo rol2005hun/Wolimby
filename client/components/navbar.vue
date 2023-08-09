@@ -5,7 +5,6 @@
       <ul class="nav-menu">
         <li class="nav-item">
           <a v-if="isLoggedIn && isOnline" href="#" class="nav-link" @click="toggleMenu(2)">{{ currentUser.profile.username }}</a>
-          <a v-else :href="'account.' + functions.getDomain() + '/auth'" class="nav-link">Töltés...</a>
           <ul v-if="isLoggedIn && isOnline" class="nav-submenu">
             <li class="nav-submenu-link"><a :href="'account.' + functions.getDomain() + '/profile'">Profilom</a></li>
             <li class="nav-submenu-link"><a :href="'account.' + functions.getDomain() + '/settings'">Beállítások</a></li>

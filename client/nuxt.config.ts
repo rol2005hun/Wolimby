@@ -26,8 +26,8 @@ const config: NuxtConfig = {
   buildModules: ['@pinia/nuxt'],
   runtimeConfig: {
     public: {
-      apiBase: 'https://api.social.wolimby.hu',
-      cookieDomain: 'wolimby.hu',
+      apiBase: 'http://localhost:2003',
+      cookieDomain: 'localhost',
       imgurClientId: '80af936d45232db'
     }
   }

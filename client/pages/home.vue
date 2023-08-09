@@ -3,7 +3,7 @@
         <div class="welcome-container">
             <div class="welcome">
                 <div class="welcome-text">
-                    <h1>Üdvözöllek, {{ currentUser.profile?.username }}!</h1>
+                    <h1>Üdvözöllek, {{ currentUser.profile.username }}!</h1>
                     <div class="open" @click="isModalVisible = true"><i class="fa-solid fa-plus"></i></div>
                     <p>Itt láthatod a legfrissebb bejegyzéseket, hozzászólásokat és válaszokat.</p>
                 </div>
@@ -61,7 +61,7 @@
                                 <div class="more-button-dot"></div>
                             </div>
                             <ul class="more-options">
-                                <li class="more-option">Másolás</li>
+                                <li class="more-option" @click="copyId(post._id)">Másolás</li>
                                 <li class="more-option">Szerkesztés</li>
                                 <li v-if="isOwner(post.author._id)" @click.prevent="deletePost(post._id)" class="more-option">Törlés</li>
                             </ul>
@@ -110,7 +110,7 @@
                                             <div class="more-button-dot"></div>
                                         </div>
                                         <ul class="more-options">
-                                            <li class="more-option">Másolás</li>
+                                            <li class="more-option" @click="copyId(comment._id)">Másolás</li>
                                             <li class="more-option">Szerkesztés</li>
                                             <li v-if="isOwner(comment.author._id)" @click.prevent="deleteComment(post._id, comment._id)" class="more-option">Törlés</li>
                                         </ul>
@@ -155,9 +155,9 @@
                                                                 <div class="more-button-dot"></div>
                                                             </div>
                                                             <ul class="more-options">
-                                                                <li class="more-option">Másolás</li>
+                                                                <li class="more-option" @click="copyId(reply._id)">Másolás</li>
                                                                 <li class="more-option">Szerkesztés</li>
-                                                                <li v-if="isOwner(comment.author._id)" @click.prevent="deleteReply(post._id, comment._id, reply._id)" class="more-option">Törlés</li>
+                                                                <li v-if="isOwner(reply.author._id)" @click.prevent="deleteReply(post._id, comment._id, reply._id)" class="more-option">Törlés</li>
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -183,11 +183,10 @@
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import axios from 'axios';
-import { userStore, postStore, commentStore, replyStore, notificationStore, testStore } from '@/store';
+import { userStore, postStore, commentStore, replyStore, notificationStore } from '@/store';
 import functions from '@/assets/ts/functions';
 
-const { isLoggedIn, currentUser } = storeToRefs(userStore);
-const { isOnline } = storeToRefs(testStore);
+const { currentUser } = storeToRefs(userStore);
 const { posts } = storeToRefs(postStore);
 const comment = ref('');
 const reply = ref('');
@@ -199,6 +198,16 @@ const isModalVisible = ref(false);
 
 function isOwner(userId: string) {
     return currentUser.value._id == userId;
+}
+
+function copyId(id: string) {
+    navigator.clipboard.writeText(id);
+
+    notificationStore.addNotification({
+        id: 0,
+        type: 'success',
+        message: 'Másolva a vágólapra!',
+    });
 }
 
 function showComments(postId: string) {
@@ -347,11 +356,13 @@ function editPost(postId: number, patching: string) {
         if(res.data.success) {
             await postStore.getAllPost();
 
-            notificationStore.addNotification({
-                id: 0,
-                message: 'Sikeres bejegyzés szerkesztés.',
-                type: 'success'
-            });
+            if(patching != 'like') {
+                notificationStore.addNotification({
+                    id: 0,
+                    message: 'Sikeres bejegyzés szerkesztés.',
+                    type: 'success'
+                });
+            }
         }
     }).catch((err: string) => {
         notificationStore.addNotification({
@@ -376,11 +387,13 @@ function editComment(postId: number, commentId: number, patching: string) {
         if(res.data.success) {
             await postStore.getAllPost();
 
-            notificationStore.addNotification({
-                id: 0,
-                message: 'Sikeres hozzászólás szerkesztés.',
-                type: 'success'
-            });
+            if(patching != 'like') {
+                notificationStore.addNotification({
+                    id: 0,
+                    message: 'Sikeres hozzászólás szerkesztés.',
+                    type: 'success'
+                });
+            }
         }
     }).catch((err: string) => {
         notificationStore.addNotification({
@@ -405,11 +418,13 @@ function editReply(postId: number, commentId: number, replyId: number, patching:
         if(res.data.success) {
             await postStore.getAllPost();
 
-            notificationStore.addNotification({
-                id: 0,
-                message: 'Sikeres válasz szerkesztés.',
-                type: 'success'
-            });
+            if(patching != 'like') {
+                notificationStore.addNotification({
+                    id: 0,
+                    message: 'Sikeres válasz szerkesztés.',
+                    type: 'success'
+                });
+            }
         }
     }).catch((err: string) => {
         notificationStore.addNotification({
