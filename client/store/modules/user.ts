@@ -42,7 +42,7 @@ export const useUserStore = defineStore('user', {
   }),
 
   getters: {
-    isLoggedIn: state => !!state.currentUser,
+    isLoggedIn: state => !!state.token,
   },
   
   actions: {

@@ -9,7 +9,7 @@
           <ul v-if="isLoggedIn && isOnline" class="nav-submenu">
             <li class="nav-submenu-link"><NuxtLink to="/profile">Profilom</NuxtLink></li>
             <li class="nav-submenu-link"><NuxtLink to="/settings">Beállítások</NuxtLink></li>
-            <li class="nav-submenu-link"><a href="#" @click="userStore.logout()">Kijelentkezés</a></li>
+            <li class="nav-submenu-link"><a href="#" @click="logout()">Kijelentkezés</a></li>
           </ul>
         </li>
       </ul>
@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { storeToRefs } from 'pinia';
-import { userStore, testStore } from '@/store';
+import { userStore, notificationStore, testStore } from '@/store';
 
 const isDropdownActive = ref(false);
 const { isLoggedIn, currentUser } = storeToRefs(userStore);
@@ -70,6 +70,15 @@ function handleOutsideClick(event: MouseEvent) {
     submenu.classList.remove('active');
     isDropdownActive.value = false;
   }
+}
+
+function logout() {
+  userStore.logout();
+  notificationStore.addNotification({
+    id: 0,
+    type: 'success',
+    message: 'Sikeresen kijelentkezés.',
+  });
 }
 </script>
 
