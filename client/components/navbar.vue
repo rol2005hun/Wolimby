@@ -6,8 +6,8 @@
         <li class="nav-item">
           <a v-if="isLoggedIn && isOnline" href="#" class="nav-link" @click="toggleMenu(2)">{{ currentUser.profile.username }}</a>
           <ul v-if="isLoggedIn && isOnline" class="nav-submenu">
-            <li class="nav-submenu-link"><a :href="'account.' + functions.getDomain() + '/profile'">Profilom</a></li>
-            <li class="nav-submenu-link"><a :href="'account.' + functions.getDomain() + '/settings'">Beállítások</a></li>
+            <li class="nav-submenu-link"><a :href="'https://account.' + functions.getDomain() + '/profile'">Profilom</a></li>
+            <li class="nav-submenu-link"><a :href="'https://account.' + functions.getDomain() + '/settings'">Beállítások</a></li>
             <li class="nav-submenu-link"><a href="#" @click="userStore.logout()">Kijelentkezés</a></li>
           </ul>
         </li>

@@ -51,7 +51,8 @@ function getFileType(link: string) {
 }
 
 function getDomain() {
-    return useRequestURL().href.split('/')[2];
+    const url = new URL(useRequestURL().href);
+    return url.host.split('.').slice(-2).join('.');
 }
 
 function setCookie(cName: string, cValue: string, expDays?: number): void {
