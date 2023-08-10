@@ -12,7 +12,7 @@ onMounted(() => {
     notificationStore.addNotification({
       id: 0,
       type: 'information',
-      message: 'A Wolimby Games szerverei jelenleg alszanak.'
+      message: 'A Wolimby Social szerverei jelenleg alszanak.'
     });
   }
 });
