@@ -55,26 +55,18 @@ function getDomain() {
     return url.host.split('.').slice(-2).join('.');
 }
 
-function setCookie(cName: string, cValue: string, expDays?: number): void {
+function setCookie(cName: string, cValue: string, expDays?: number): string {
     let date = new Date();
     date.setTime(date.getTime() + expDays! * 24 * 60 * 60 * 1000);
-    const expires = 'expires=' + date.toUTCString();
-    document.cookie = cName + '=' + cValue + '; ' + expires + `; path=/; domain=${useRuntimeConfig().public.cookieDomain}`;
+    return useCookie(cName, { path: '/', domain: getDomain(), expires: date }).value = cValue;
 }
 
-function getCookie(cName: string): string | undefined {
-    const name = cName + '=';
-    const cDecoded = decodeURIComponent(document.cookie);
-    const cArr = cDecoded.split('; ');
-    let res: string | undefined;
-    cArr.forEach(val => {
-        if (val.indexOf(name) === 0) res = val.substring(name.length);
-    });
-    return res;
+function getCookie(cName: string): string | null | undefined {
+    return useCookie(cName).value;
 }
 
-function deleteCookie(cName: string): void {
-    document.cookie = cName + `=; path=/; expires=thu, 01 jan 1970 00:00:01 GMT; domain=${useRuntimeConfig().public.cookieDomain}`;
+function deleteCookie(cName: string): string {
+    return useCookie(cName, { path: '/', domain: getDomain(), expires: new Date('thu, 01 jan 1970 00:00:01 GMT') }).value = '';
 }
 
 export default {
