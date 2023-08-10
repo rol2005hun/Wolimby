@@ -50,7 +50,7 @@ function getFileType(link: string) {
     }
 }
 
-function getDomain() {
+function getDomain(): string {
     const url = new URL(useRequestURL().href);
     const parts = url.hostname.split('.');
     return parts.slice(-2).join('.');
