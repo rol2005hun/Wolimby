@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { userStore, postStore, testStore } from '@/store';
+import functions from '@/assets/ts/functions';
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   await testStore.testApi();
@@ -13,11 +14,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
 
     if (!token) {
-      return navigateTo('https://account.wolimby.hu/auth?redirectTo=' + useRequestURL().href, { external: true });
+      return navigateTo('https://account' + functions.getDomain + '/auth?redirectTo=' + useRequestURL().href, { external: true });
     }
 
     if(to.name == undefined) return navigateTo('/home');
   } else {
-    return navigateTo('https://account.wolimby.hu/auth?redirectTo=' + useRequestURL().href, { external: true });
+    return navigateTo('https://account' + functions.getDomain + '/auth?redirectTo=' + useRequestURL().href, { external: true });
   }
 });
