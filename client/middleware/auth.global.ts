@@ -4,6 +4,7 @@ import functions from '@/assets/ts/functions';
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   await testStore.testApi();
+  const path: string = `https://account.${functions.getDomain}/auth?redirectTo=${useRequestURL().href}`;
   if(testStore.isOnline) {
     const token = useCookie('token').value;
     if (token) {
@@ -14,11 +15,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
 
     if (!token) {
-      return navigateTo('https://account' + functions.getDomain + '/auth?redirectTo=' + useRequestURL().href, { external: true });
+      return navigateTo(path, { external: true });
     }
 
     if(to.name == undefined) return navigateTo('/home');
   } else {
-    return navigateTo('https://account' + functions.getDomain + '/auth?redirectTo=' + useRequestURL().href, { external: true });
+    return navigateTo(path, { external: true });
   }
 });
