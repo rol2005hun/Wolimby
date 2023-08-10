@@ -97,7 +97,8 @@ export const useUserStore = defineStore('user', {
         delete axios.defaults.headers.common['Authorization'];
         this.$state.currentUser = {} as UserProfile;
         this.$state.token = '';
-        return navigateTo(`https://account.${functions.getDomain()}/auth`, { external: true });
+        const path = `https://account.${functions.getDomain()}/auth`;
+        return navigateTo(path, { external: true });
       } catch(err: any) {
         this.$state.error = err.response.data.message;
       }
