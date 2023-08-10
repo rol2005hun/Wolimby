@@ -93,9 +93,9 @@ export const useUserStore = defineStore('user', {
 
     async logout() {
       try {
-        await (useCookie('token', { path: '/', domain: functions.getDomain(), expires: new Date('thu, 01 jan 1970 00:00:01 GMT') }).value = null);
-        await delete axios.defaults.headers.common['Authorization'];
-        navigateTo('https://account.wolimby.hu/auth', { external: true });
+        useCookie('token', { path: '/', domain: 'wolimby.hu', expires: new Date('thu, 01 jan 1970 00:00:01 GMT') }).value = '';
+        delete axios.defaults.headers.common['Authorization'];
+        return navigateTo('https://account.wolimby.hu/auth', { external: true });
       } catch(err: any) {
         this.$state.error = err.response.data.message;
       }
