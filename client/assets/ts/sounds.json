@@ -1,0 +1,54 @@
+[
+    {
+      "name": "blue",
+      "sound": "/sounds/kek.mp3"
+    },
+    {
+      "name": "purple",
+      "sound": "/sounds/lila.mp3"
+    },
+    {
+      "name": "no",
+      "sound": "/sounds/megsem.mp3"
+    },
+    {
+      "name": "orange",
+      "sound": "/sounds/narancssarga.mp3"
+    },
+    {
+      "name": "red",
+      "sound": "/sounds/piros.mp3"
+    },
+    {
+      "name": "ok",
+      "sound": "/sounds/rendben.mp3"
+    },
+    {
+      "name": "yellow",
+      "sound": "/sounds/sarga.mp3"
+    },
+    {
+      "name": "free",
+      "sound": "/sounds/szabadagazda.mp3"
+    },
+    {
+      "name": "rules",
+      "sound": "/sounds/szabalyzat.mp3"
+    },
+    {
+      "name": "newgame",
+      "sound": "/sounds/ujjatek.mp3"
+    },
+    {
+        "name": "green",
+        "sound": "/sounds/zold.mp3"
+    },
+    {
+        "name": "won",
+        "sound": "/sounds/nyertel.mp3"
+    },
+    {
+        "name": "loose",
+        "sound": "/sounds/vesztettel.mp3"
+    }
+]
