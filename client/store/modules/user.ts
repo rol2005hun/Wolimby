@@ -93,8 +93,8 @@ export const useUserStore = defineStore('user', {
     async logout() {
       try {
         functions.deleteCookie('token');
-        navigateTo('/auth');
         delete axios.defaults.headers.common['Authorization'];
+        return navigateTo('/auth');
       } catch(err: any) {
         this.$state.error = err.response.data.message;
       }

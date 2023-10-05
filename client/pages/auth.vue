@@ -55,7 +55,7 @@
             <div class="checkbox-text">
               <div class="checkbox-content">
                 <input type="checkbox" id="regCheck" required>
-                <label for="regCheck" class="text">Elfogadom a <a href="#" class="text signup-link">felhasználási feltételeket</a></label>
+                <label for="regCheck" class="text">Elfogadom a <a href="#" @click="modalOpen = true" class="text signup-link">felhasználási feltételeket</a></label>
               </div>
             </div>
             <div class="input-field button">
@@ -71,6 +71,7 @@
       </div>
     </div>
   </main>
+  <Modal :isVisible="modalOpen" @closeModal="modalOpen = false" :title="title" :description="description"/>
 </template>
   
 <script setup lang="ts">
@@ -81,6 +82,13 @@ const username = ref('');
 const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
+const modalOpen = ref(false);
+const title = ref('Felhasználási feltételek');
+const description = ref(`<p>A regisztrációval elfogadod az alábbi feltételeket:</p><ul style="margin: 10px 0 10px 30px;"><li>Adatvédelmi irányelveinket
+<a href="#">itt</a> találod.</li><li>A felhasználói fiókodat bizalmasan kezeled, és felelős vagy a fiókodban végzett összes tevékenységért.</li><li>A
+regisztrációval hozzájárulsz ahhoz, hogy email értesítéseket kapj a fontos frissítésekről és információkról.</li></ul><h2 style="margin-bottom: 10px">Fiók
+Biztonsága</h2><p>Kérjük, tartsd be a következő irányelveket a fiókod biztonsága érdekében:</p><ol><li>Használj erős jelszót, amely tartalmaz kis- és 
+nagybetűket, számokat és speciális karaktereket.</li><li>Ne oszd meg jelszavad másokkal.</li><li>Használj kétlépcsős azonosítást, ha elérhető.</li></ol>`);
 const checkbox = ref(false);
 
 function toggleForm(option: number) {
@@ -96,9 +104,9 @@ function toggleForm(option: number) {
 function redirectTo() {
   const url = new URL(window.location.href);
   if(url.searchParams.get('redirectTo')) {
-    navigateTo(url.searchParams.get('redirectTo'), { external: true });
+    return navigateTo(url.searchParams.get('redirectTo'), { external: true });
   } else {
-    navigateTo('/access');
+    return navigateTo('/access');
   }
 }
 
