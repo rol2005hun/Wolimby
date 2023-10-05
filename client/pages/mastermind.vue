@@ -65,7 +65,6 @@ function generateFeedback(exactMatchesCount: number, colorMatchesCount: number) 
 }
   
 function checkGuess() {
-    console.log(secretCode.value)
     const guess = board.value[state.currentRow];
     if (guess.every(color => color !== '')) {
         const exactMatches = guess.filter((color, index) => color === secretCode.value[index]);

@@ -3,7 +3,7 @@
         <div class="modal-overlay" v-if="isVisible" @click="closeModal"></div>
         <div class="modal" v-if="isVisible">
             <div class="modal-content">
-                <button @click="closeModal" class="close-btn">X</button>
+                <button @click="closeModal" class="close-btn">&times;</button>
                 <h2>{{ title }}</h2>
                 <p v-html="description"></p>
             </div>
