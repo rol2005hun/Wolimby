@@ -50,7 +50,7 @@ function getFileType(link: string) {
     }
 }
 
-function getDomain(): string {
+function getDomain() {
     const url = new URL(useRequestURL().href);
     const parts = url.hostname.split('.');
     return parts.slice(-2).join('.');
@@ -59,7 +59,11 @@ function getDomain(): string {
 function setCookie(cName: string, cValue: string, expDays?: number): string {
     let date = new Date();
     date.setTime(date.getTime() + expDays! * 24 * 60 * 60 * 1000);
-    return useCookie(cName, { path: '/', domain: getDomain(), expires: date }).value = cValue;
+    if(expDays) {
+        return useCookie(cName, { path: '/', domain: getDomain(), expires: date }).value = cValue;
+    } else {
+        return useCookie(cName, { path: '/', domain: getDomain() }).value = cValue;
+    }
 }
 
 function getCookie(cName: string): string | null | undefined {
