@@ -4,7 +4,7 @@ const test = async (req: Request, res: Response, next: NextFunction) => {
     try {
         return res.status(201).send({
             success: true,
-            message: 'A Wolimby Games szerverei megfelőlen müködnek.'
+            message: 'A Wolimby Account szerverei megfelőlen müködnek.'
         });
     } catch (err) {
         return res.status(404).send({
