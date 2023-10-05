@@ -92,7 +92,7 @@ export const useUserStore = defineStore('user', {
 
     async logout() {
       try {
-        functions.deleteCookie('token');
+        useCookie('token').value = null;
         delete axios.defaults.headers.common['Authorization'];
         this.$state.currentUser = {} as UserProfile;
         this.$state.token = '';

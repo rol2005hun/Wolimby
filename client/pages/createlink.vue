@@ -7,11 +7,11 @@
                     <form @submit.prevent="createUrl">
                         <div class="input-field">
                             <input type="text" v-model="fullUrl" placeholder="Teljes link" required>
-                            <i class="fa-solid fa-user"></i>
+                            <i class="fa-solid fa-link"></i>
                         </div>
                         <div class="input-field">
-                            <input type="text" v-model="shortUrl" placeholder="Rövidített link" required>
-                            <i class="fa-solid fa-user"></i>
+                            <input type="text" v-model="shortUrl" placeholder="Rövidített link" minlength="3" maxlength="8" required>
+                            <i class="fa-solid fa-link-slash"></i>
                         </div>
                         <div class="input-field button">
                             <input type="submit" value="Rövidítés">  
