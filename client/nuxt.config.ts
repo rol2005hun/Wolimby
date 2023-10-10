@@ -26,8 +26,8 @@ const config: NuxtConfig = {
   buildModules: ['@pinia/nuxt'],
   runtimeConfig: {
     public: {
-      apiBase: 'https://api.games.wolimby.hu',
-      cookieDomain: 'wolimby.hu'
+      apiBase: 'http://localhost:2001',
+      cookieDomain: 'localhost'
     }
   }
 }

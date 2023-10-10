@@ -65,13 +65,14 @@ function generateFeedback(exactMatchesCount: number, colorMatchesCount: number) 
 }
   
 function checkGuess() {
+    if(state.currentRow > 9) return;
     const guess = board.value[state.currentRow];
     if (guess.every(color => color !== '')) {
         const exactMatches = guess.filter((color, index) => color === secretCode.value[index]);
-        const colorMatches = guess.filter(color => secretCode.value.includes(color));
-        feedbackCircles.value[state.currentRow] = generateFeedback(exactMatches.length, colorMatches.length - exactMatches.length);
+        const colorMatches = guess.filter(color => secretCode.value.includes(color) && !exactMatches.includes(color));
+        feedbackCircles.value[state.currentRow] = generateFeedback(exactMatches.length, colorMatches.length);
 
-        if (exactMatches.length === 4) {
+        if (exactMatches.length === 4 && state.gameWon === true) {
             new Audio(sounds.find(sound => sound.name === 'won')!.sound).play();
             state.gameWon = true;
             title.value = 'Nyertél';
@@ -94,7 +95,7 @@ function checkGuess() {
 }
   
 function placeColor(color: string) {
-    if (!state.gameWon) {
+    if (!state.gameWon && state.currentRow < 10) {
         const currentRow = board.value[state.currentRow];
         const emptyIndex = currentRow.findIndex(cell => cell === '');
 
@@ -123,7 +124,7 @@ function showSolution() {
     ${secretCode.value.map(color => `<div style="background-color: ${color}; width: 25px; height: 25px; border-radius: 50%;"></div>`).join('')}
     </div></p>`;
     modalOpen.value = true;
-    state.gameWon = true;
+    state.gameWon = false;
 }
 
 function removeColor(rowIndex: number, colIndex: number) {
