@@ -11,7 +11,7 @@ const config: NuxtConfig = {
       title: 'Wolimby - Games',
       link: [
         { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css', crossorigin: 'anonymous' },
-        { rel: 'icon', href: 'https://i.imgur.com/Z4uWZ64.jpg', type: 'image/x-icon' }
+        { rel: 'icon', href: 'https://i.imgur.com/S3W7xAU.png', type: 'image/x-icon' }
       ],
       meta: [
         { name: 'title', content: 'Wolimby - Games' },
