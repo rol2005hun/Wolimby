@@ -24,7 +24,7 @@ const createPost = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 const getPost = async (req: Request, res: Response, next: NextFunction) => {
-    const post = await Post.findOne({ _id: req.query.postid }).populate('author');
+    const post = await Post.findOne({ _id: req.query.postid }).populate(['author', 'comments.author', 'comments.replies.author']);
     return res.status(201).send({
         success: true,
         post: post
