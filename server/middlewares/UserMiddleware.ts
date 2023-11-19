@@ -3,7 +3,7 @@ import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import User from '../models/UserSchema';
 
-export const login = async (req: Request, res: Response, next: NextFunction) => {
+const login = async (req: Request, res: Response, next: NextFunction) => {
   const user = await User.findOne({ $or: [{ 'profile.username': req.body.username }, { 'profile.email': req.body.username }] });
 
   if (!user) {
@@ -30,7 +30,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   next();
 }
 
-export const register = async (req: Request, res: Response, next: NextFunction) => {
+const register = async (req: Request, res: Response, next: NextFunction) => {
     const isUsernameTaken = await User.findOne({ 'profile.username': req.body.username });
     const isEmailTaken = await User.findOne({ 'profile.email': req.body.email });
 
@@ -105,7 +105,7 @@ function passportAuthenticate(callback: (req: Request, res: Response, next: Next
   return hack;
 }
 
-export const isLoggedIn = passportAuthenticate(async (req, res, next) => {
+const isLoggedIn = passportAuthenticate(async (req, res, next) => {
   if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
     try {
       const decoded = jwt.verify(req.headers.authorization.split(' ')[1], process.env.KEY);
@@ -132,3 +132,9 @@ export const isLoggedIn = passportAuthenticate(async (req, res, next) => {
     });
   }
 });
+
+export default {
+  login,
+  register,
+  isLoggedIn
+}

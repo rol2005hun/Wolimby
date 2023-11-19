@@ -95,6 +95,118 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
+const patchUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        let temp = {};
+        switch(req.query.patching) {
+            case 'profile':
+                if(req.body.password) {
+                    const salt = await bcrypt.genSalt(10);
+                    req.body.password = await bcrypt.hash(req.body.password, salt);
+                }
+                for(let field in req.body) {
+                    temp['profile.' + field] = req.body[field];
+                }
+                await User.updateOne({ _id: req.query.user }, { $set: temp });
+                break;
+            case 'appearance':
+                for(let field in req.body) {
+                    temp['appearance.' + field] = req.body[field];
+                }
+                await User.updateOne({ _id: req.query.user }, { $set: temp });
+                break;
+            case 'privacy':
+                for(let field in req.body) {
+                    temp['privacy.' + field] = req.body[field];
+                }
+                await User.updateOne({ _id: req.query.user }, { $set: temp });
+                break;
+        }
+    } catch (err) {
+        return res.status(404).send({
+            success: false,
+            error: err.message
+        });
+    }
+    const userToPatch = await User.findOne({ _id: req.query.user });
+
+    return res.status(201).send({
+        success: true,
+        message: 'Sikeres mentés.',
+        user: userToPatch
+    });
+}
+
+const notification = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        switch(req.query.action) {
+            case 'add':
+                const notification = { 'profile.notificationList': [{ title: req.body.title, message: req.body.message }] };
+                await User.updateOne({ _id: req.query.user }, { $push: notification });
+                break
+            case 'delete':
+                await User.updateOne({ _id: req.params.id}, { $set: {'profile.notificationList': []}}, { multi: true });
+                break;
+        }
+    } catch (err) {
+        return res.status(404).send({
+            success: false,
+            error: err.message
+        });
+    }
+
+    const userToPatch = await User.findOne({ _id: req.query.user });
+
+    return res.status(201).send({
+        success: true,
+        message: 'Sikeres mentés.',
+        user: userToPatch
+    });
+}
+
+const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        await User.findByIdAndDelete({ _id: req.query.user });
+
+        return res.send({
+            success: true,
+            message: 'Sikeres törlés.'
+        });
+    } catch (err) {
+        return res.status(404).send({
+            success: false,
+            error: err.message
+        });
+    }
+}
+
+const getUser = async (req: Request, res: Response, next: NextFunction) => {
+    let user;
+    
+    if(mongoose.Types.ObjectId.isValid(req.query.user)) {
+        user = await User.findOne({ _id: req.query.user }).select(['-profile.password', '-profile.ipList']);
+    } else {
+        user = await User.findOne({ 'profile.username': req.query.user }).select(['-profile.password', '-profile.ipList']);
+    }
+
+    try {
+        if(!user) return res.status(404).send({
+            success: false,
+            message: 'Nem létezik ilyen felhasználó a megadott paraméterekkel.'
+        });
+
+        return res.send({
+            success: true,
+            user: user
+        });
+    } catch (err) {
+        return res.status(404).send({
+            success: false,
+            error: err.message
+        });
+    }
+}
+
 const currentUser = async (req: Request, res: Response, next: NextFunction) => {
     return res.send({
         success: true,
@@ -105,5 +217,9 @@ const currentUser = async (req: Request, res: Response, next: NextFunction) => {
 export default {
     login,
     register,
+    patchUser,
+    notification,
+    deleteUser,
+    getUser,
     currentUser
 };
