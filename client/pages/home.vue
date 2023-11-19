@@ -62,6 +62,7 @@
                             </div>
                             <ul class="more-options">
                                 <li class="more-option" @click="copyId(post._id)">Másolás</li>
+                                <li class="more-option" @click="openPost(post._id)">Megnyitás</li>
                                 <li class="more-option">Szerkesztés</li>
                                 <li v-if="isOwner(post.author._id)" @click.prevent="deletePost(post._id)" class="more-option">Törlés</li>
                             </ul>
@@ -76,7 +77,7 @@
                         <button @click="editPost(post._id, 'like')" class="like-button footer-button">
                         <i class="fa-solid fa-heart" :style="{ color: post.likes.includes(currentUser._id) ? 'red' : 'black' }"></i> {{ post.likes.length }} kedvelés</button>
                         <button class="comment-button footer-button" @click="showComments(post._id)"><i class="fa-solid fa-comment"></i> {{ post.comments.length }} hozzászólás</button>
-                        <button class="share-button footer-button"><i class="fa-solid fa-share"></i> {{ post.shares.length }} megosztás</button>
+                        <button class="share-button footer-button" @click="copyLink(post._id)"><i class="fa-solid fa-share"></i> {{ post.shares.length }} megosztás</button>
                     </div>
                     <div :class="'card-comments ' + post._id">
                         <form @submit.prevent="createComment(post._id)" class="textarea-container">
@@ -210,6 +211,16 @@ function copyId(id: string) {
     });
 }
 
+function copyLink(id: string) {
+    navigator.clipboard.writeText(functions.getDomain() + '/post/' + id);
+
+    notificationStore.addNotification({
+        id: 0,
+        type: 'success',
+        message: 'Másolva a vágólapra!',
+    });
+}
+
 function showComments(postId: string) {
     const comments = document.getElementsByClassName('card-comments ' + postId)[0] as HTMLDivElement;
     comments.classList.toggle('active');
@@ -294,6 +305,10 @@ async function createPost() {
             type: 'error'
         });
     })
+}
+
+function openPost(post: string) {
+    navigateTo('/post/' + post);
 }
 
 function createComment(postId: string) {

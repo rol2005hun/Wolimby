@@ -4,6 +4,7 @@ import axios from 'axios';
 export const usePostStore = defineStore('post', {
     state: () => ({
         posts: [] as any[],
+        post: {} as any,
         error: '' || 'Ismeretlen'
     }),
     
@@ -23,9 +24,10 @@ export const usePostStore = defineStore('post', {
             }
         },
 
-        async getPost(postId: number) {
+        async getPost(postId: string) {
             try {
                 const res: any = await axios.get(`${useRuntimeConfig().public.apiBase}/posts/get?postid=${postId}`);
+                this.$state.post = res.data.post;
                 return res;
             } catch(err: any) {
                 this.$state.error = err.response.data.message;
