@@ -1,43 +1,13 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import functions from '@/assets/ts/functions';
-
-interface UserProfile {
-  profile: {
-    username: string,
-    email: string,
-    name: string,
-    password: string,
-    profilePicture: string,
-    biography: string,
-    // birthday: Date,
-    roles: string,
-    notificationList: [{
-        title: string,
-        profilePicture: string,
-        message: string,
-        createdAt: Date
-    }],
-    ipList: [{
-        ip: string,
-        loggedAt: Date
-    }],
-    createdAt: Date
-  },
-  privacy: {
-    showName: boolean,
-    showEmail: boolean
-  },
-  appearance: {
-    backgroundImage: string,
-    theme: string
-  }
-}
+import UserProfile from '@/assets/types/user';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     token: '',
     currentUser: {} as UserProfile,
+    user: {} as UserProfile,
     error: '' || 'Ismeretlen'
   }),
 
@@ -77,7 +47,7 @@ export const useUserStore = defineStore('user', {
 
     async getCurrentUser() {
       try {
-        const res: any = await axios.get(`${useRuntimeConfig().public.apiBase}/users/currentuser`);
+        const res: any = await axios.get(`${useRuntimeConfig().public.apiBase}/users/current`);
         if(res.data.success) {
           this.$state.currentUser = res.data.user;
         }
@@ -90,11 +60,74 @@ export const useUserStore = defineStore('user', {
       }
     },
 
+    async getUser(user: string) {
+      try {
+        const res: any = await axios.get(`${useRuntimeConfig().public.apiBase}/users/get?user=${user}`);
+        if(res.data.success) {
+          this.$state.user = res.data.user;
+        }
+        return res;
+      } catch(err: any) {
+        this.$state.error = err.response.data.message;
+      }
+    },
+
+    async updateUserData(user: string, patching: string, data: object) {
+      try {
+        const res: any = await axios.patch(`${useRuntimeConfig().public.apiBase}/users/patch?user=${user}&patching=${patching}`, data);
+        if(res.data.success) {
+          this.$state.currentUser = res.data.user;
+        }
+        return res;
+      } catch(err: any) {
+        this.$state.error = err.response.data.message;
+      }
+    },
+
+    async updateNotificationSettings(user: string, action: string) {
+      try {
+        const res: any = await axios.patch(`${useRuntimeConfig().public.apiBase}/users/notification?user=${user}&action=${action}`);
+        if(res.data.success) {
+          this.$state.currentUser = res.data.user;
+        }
+        return res;
+      } catch(err: any) {
+        this.$state.error = err.response.data.message;
+      }
+    },
+
+    async uploadImage(image: object) {
+      try {
+        const res: any = await axios.post('https://api.imgur.com/3/upload', image, {
+          headers: {
+            Authorization: 'Client-ID ' + useRuntimeConfig().public.imgurClientId,
+          },
+      });
+        return res;
+      } catch(err: any) {
+        this.$state.error = err.response.data.message;
+      }
+    },
+
     async logout() {
       try {
         functions.deleteCookie('token');
         delete axios.defaults.headers.common['Authorization'];
         return navigateTo('/auth');
+      } catch(err: any) {
+        this.$state.error = err.response.data.message;
+      }
+    },
+
+    async deleteUser(user: string) {
+      try {
+        const res: any = await axios.delete(`${useRuntimeConfig().public.apiBase}/users/delete?user=${user}`);
+        if(res.data.success) {
+          functions.deleteCookie('token');
+          delete axios.defaults.headers.common['Authorization'];
+          return navigateTo('/auth');
+        }
+        return res;
       } catch(err: any) {
         this.$state.error = err.response.data.message;
       }

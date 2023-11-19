@@ -8,7 +8,7 @@
           <NuxtLink v-else to="/auth" class="nav-link" @click="toggleMenu(2)">Bejelentkezés</NuxtLink>
           <ul v-if="isLoggedIn && isOnline" class="nav-submenu">
             <li class="nav-submenu-link"><NuxtLink to="/profile">Profilom</NuxtLink></li>
-            <li class="nav-submenu-link"><NuxtLink to="/settings">Beállítások</NuxtLink></li>
+            <li class="nav-submenu-link"><NuxtLink to="/profile/settings">Beállítások</NuxtLink></li>
             <li class="nav-submenu-link"><p @click="logout()">Kijelentkezés</p></li>
           </ul>
         </li>
