@@ -39,7 +39,7 @@ import { userStore } from '@/store';
 const { user } = storeToRefs(userStore);
 
 onBeforeMount(async () => {
-    await userStore.getUser(useRoute().params.id)
+  await userStore.getUser(useRoute().params.id as string)
 });
 </script>
 

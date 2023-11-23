@@ -6,11 +6,11 @@
           <p class="title">Wolimby - Bejelentkezés</p>
           <form @submit.prevent="login">
             <div class="input-field">
-              <input type="text" v-model="username" placeholder="Felhasználónév / Email cím" required>
+              <input type="text" v-model="username" placeholder="Felhasználónév / Email cím" autocomplete="email" required>
               <i class="fa-solid fa-user"></i>
             </div>
               <div class="input-field">
-              <input type="password" v-model="password" class="password"  placeholder="Jelszó" required>
+              <input type="password" v-model="password" class="password" placeholder="Jelszó" autocomplete="password" required>
               <i class="uil uil-key-skeleton icon"></i>
               <i class="fa-solid fa-lock"></i>
             </div>
@@ -35,20 +35,20 @@
           <p class="title">Wolimby - Regisztráció</p>
           <form @submit.prevent="register">
             <div class="input-field">
-              <input type="text" v-model="username" placeholder="Felhasználónév" required>
+              <input type="text" v-model="username" placeholder="Felhasználónév" autocomplete="username" required>
               <i class="fa-solid fa-user"></i>
             </div>
             <div class="input-field">
-              <input type="text" v-model="email" placeholder="Email cím" required>
+              <input type="text" v-model="email" placeholder="Email cím" autocomplete="email" required>
               <i class="fa-solid fa-envelope"></i>
             </div>
             <div class="input-field">
-              <input type="password" v-model="password" class="password"  placeholder="Jelszó" required>
+              <input type="password" v-model="password" class="password" placeholder="Jelszó" autocomplete="password" required>
               <i class="uil uil-key-skeleton icon"></i>
               <i class="fa-solid fa-lock"></i>
             </div>
               <div class="input-field">
-              <input type="password" v-model="confirmPassword" class="password"  placeholder="Jelszó még egyszer" required>
+              <input type="password" v-model="confirmPassword" class="password" placeholder="Jelszó még egyszer" autocomplete="password" required>
               <i class="uil uil-key-skeleton icon"></i>
               <i class="fa-solid fa-lock"></i>
             </div>
