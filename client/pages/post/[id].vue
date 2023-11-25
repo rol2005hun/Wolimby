@@ -16,7 +16,7 @@
                         </div>
                         <ul class="more-options">
                             <li class="more-option" @click="copyId(post._id)">Másolás</li>
-                            <li class="more-option">Szerkesztés</li>
+                            <li v-if="isOwner(post.author._id)" class="more-option">Szerkesztés</li>
                             <li v-if="isOwner(post.author._id)" @click.prevent="deletePost(post._id)" class="more-option">Törlés</li>
                         </ul>
                     </div>
@@ -30,10 +30,10 @@
                     <button @click="editPost(post._id, 'like')" class="like-button footer-button">
                     <i class="fa-solid fa-heart" :style="{ color: post.likes.includes(currentUser._id) ? 'red' : 'black' }"></i> {{ post.likes.length }} kedvelés</button>
                     <button class="comment-button footer-button" @click="showComments(post._id)"><i class="fa-solid fa-comment"></i> {{ post.comments.length }} hozzászólás</button>
-                    <button class="share-button footer-button"><i class="fa-solid fa-share"></i> {{ post.shares.length }} megosztás</button>
+                    <button class="share-button footer-button" @click="copyLink(post._id)"><i class="fa-solid fa-share"></i> {{ post.shares.length }} megosztás</button>
                 </div>
                 <div :class="'card-comments ' + post._id">
-                    <form @submit.prevent="createComment(post._id)" class="textarea-container">
+                    <form v-if="!notLoggedIn" @submit.prevent="createComment(post._id)" class="textarea-container">
                         <textarea type="text" class="create-comment" placeholder="Szólj hozzá..." v-model="comment" name="create-comment" maxlength="200" required></textarea>
                         <button type="submit" title="sendbutton"><i class="fa-solid fa-paper-plane send-button"></i></button>
                     </form>
@@ -65,7 +65,7 @@
                                     </div>
                                     <ul class="more-options">
                                         <li class="more-option" @click="copyId(comment._id)">Másolás</li>
-                                        <li class="more-option">Szerkesztés</li>
+                                        <li v-if="isOwner(comment.author._id)" class="more-option">Szerkesztés</li>
                                         <li v-if="isOwner(comment.author._id)" @click.prevent="deleteComment(post._id, comment._id)" class="more-option">Törlés</li>
                                     </ul>
                                 </div>
@@ -110,13 +110,13 @@
                                                         </div>
                                                         <ul class="more-options">
                                                             <li class="more-option" @click="copyId(reply._id)">Másolás</li>
-                                                            <li class="more-option">Szerkesztés</li>
+                                                            <li v-if="isOwner(reply.author._id)" class="more-option">Szerkesztés</li>
                                                             <li v-if="isOwner(reply.author._id)" @click.prevent="deleteReply(post._id, comment._id, reply._id)" class="more-option">Törlés</li>
                                                         </ul>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <form @submit.prevent="createReply(currentUser._id, post._id, comment._id)" class="reply-textarea-container">
+                                            <form v-if="!notLoggedIn" @submit.prevent="createReply(currentUser._id, post._id, comment._id)" class="reply-textarea-container">
                                                 <textarea type="text" class="create-reply" placeholder="Válaszolj rá..." v-model="reply" name="create-reply" maxlength="200" required></textarea>
                                                 <button type="submit" title="sendbutton"><i class="fa-solid fa-paper-plane send-button"></i></button>
                                             </form>
@@ -142,10 +142,21 @@ import { storeToRefs } from 'pinia';
 import { userStore, postStore, commentStore, replyStore, notificationStore } from '@/store';
 import functions from '@/assets/ts/functions';
 
-const { currentUser } = storeToRefs(userStore);
+const { isLoggedIn, currentUser } = storeToRefs(userStore);
 const { post } = storeToRefs(postStore);
 const comment = ref('');
 const reply = ref('');
+
+function notLoggedIn() {
+    if(!isLoggedIn.value) {
+        notificationStore.addNotification({
+            id: 0,
+            type: 'error',
+            message: 'Először jelentkezz be!',
+        });
+        return true;
+    }
+}
 
 function isOwner(userId: string) {
     return currentUser.value._id == userId;
@@ -153,6 +164,16 @@ function isOwner(userId: string) {
 
 function copyId(id: string) {
     navigator.clipboard.writeText(id);
+
+    notificationStore.addNotification({
+        id: 0,
+        type: 'success',
+        message: 'Másolva a vágólapra!',
+    });
+}
+
+function copyLink(id: string) {
+    navigator.clipboard.writeText('https://social.' + functions.getDomain() + '/post/' + id);
 
     notificationStore.addNotification({
         id: 0,
@@ -172,6 +193,7 @@ function showReplies(commentId: string) {
 }
 
 function createComment(postId: string) {
+    if (notLoggedIn()) return;
     const commentElement = document.getElementsByClassName('create-comment')[0] as HTMLTextAreaElement;
     const commentToCreate = {
         author: currentUser.value._id,
@@ -181,7 +203,7 @@ function createComment(postId: string) {
 
     commentStore.createComment(commentToCreate).then(async (res: any) => {
         if(res.data.success) {
-            await postStore.getAllPost();
+            await postStore.getPost(postId);
             commentElement.value = '';
 
             notificationStore.addNotification({
@@ -194,6 +216,7 @@ function createComment(postId: string) {
 }
 
 function createReply(userId: string, postId: string, commentId: string) {
+    if (notLoggedIn()) return;
     const replyElement = document.getElementsByClassName('create-reply')[0] as HTMLTextAreaElement;
 
     const replyToCreate = {
@@ -205,7 +228,7 @@ function createReply(userId: string, postId: string, commentId: string) {
 
     replyStore.createReply(replyToCreate).then(async (res: any) => {
         if(res.data.success) {
-            await postStore.getAllPost();
+            await postStore.getPost(postId);
             replyElement.value = '';
 
             notificationStore.addNotification({
@@ -217,7 +240,8 @@ function createReply(userId: string, postId: string, commentId: string) {
     });
 }
 
-function editPost(postId: number, patching: string) {
+function editPost(postId: string, patching: string) {
+    if (notLoggedIn()) return;
     let body: object = {};
     switch(patching) {
         case 'like':
@@ -229,7 +253,7 @@ function editPost(postId: number, patching: string) {
 
     postStore.editPost(postId, patching, body).then(async (res: any) => {
         if(res.data.success) {
-            await postStore.getAllPost();
+            await postStore.getPost(postId);
 
             if(patching != 'like') {
                 notificationStore.addNotification({
@@ -248,7 +272,8 @@ function editPost(postId: number, patching: string) {
     });
 }
 
-function editComment(postId: number, commentId: number, patching: string) {
+function editComment(postId: string, commentId: number, patching: string) {
+    if (notLoggedIn()) return;
     let body: object = {};
     switch(patching) {
         case 'like':
@@ -260,7 +285,7 @@ function editComment(postId: number, commentId: number, patching: string) {
 
     commentStore.editComment(postId, commentId, patching, body).then(async (res: any) => {
         if(res.data.success) {
-            await postStore.getAllPost();
+            await postStore.getPost(postId);
 
             if(patching != 'like') {
                 notificationStore.addNotification({
@@ -279,7 +304,8 @@ function editComment(postId: number, commentId: number, patching: string) {
     });
 }
 
-function editReply(postId: number, commentId: number, replyId: number, patching: string) {
+function editReply(postId: string, commentId: number, replyId: number, patching: string) {
+    if (notLoggedIn()) return;
     let body: object = {};
     switch(patching) {
         case 'like':
@@ -291,7 +317,7 @@ function editReply(postId: number, commentId: number, replyId: number, patching:
 
     replyStore.editReply(postId, commentId, replyId, patching, body).then(async (res: any) => {
         if(res.data.success) {
-            await postStore.getAllPost();
+            await postStore.getPost(postId);
 
             if(patching != 'like') {
                 notificationStore.addNotification({
@@ -310,10 +336,11 @@ function editReply(postId: number, commentId: number, replyId: number, patching:
     });
 }
 
-function deletePost(postId: number) {
+function deletePost(postId: string) {
+    if (notLoggedIn()) return;
     postStore.deletePost(postId).then(async (res: any) => {
         if(res.data.success) {
-            await postStore.getAllPost();
+            await postStore.getPost(postId);
 
             notificationStore.addNotification({
                 id: 0,
@@ -330,10 +357,11 @@ function deletePost(postId: number) {
     });
 }
 
-function deleteComment(postId: number, commentId: number) {
+function deleteComment(postId: string, commentId: number) {
+    if (notLoggedIn()) return;
     commentStore.deleteComment(postId, commentId).then(async (res: any) => {
         if(res.data.success) {
-            await postStore.getAllPost();
+            await postStore.getPost(postId);
 
             notificationStore.addNotification({
                 id: 0,
@@ -350,10 +378,11 @@ function deleteComment(postId: number, commentId: number) {
     });
 }
 
-function deleteReply(postId: number, commentId: number, replyId: number) {
+function deleteReply(postId: string, commentId: number, replyId: number) {
+    if (notLoggedIn()) return;
     replyStore.deleteReply(postId, commentId, replyId).then(async (res: any) => {
         if(res.data.success) {
-            await postStore.getAllPost();
+            await postStore.getPost(postId);
 
             notificationStore.addNotification({
                 id: 0,

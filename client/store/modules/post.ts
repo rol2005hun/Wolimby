@@ -12,6 +12,19 @@ export const usePostStore = defineStore('post', {
     },
 
     actions: {
+        async uploadImage(image: object) {
+            try {
+              const res: any = await axios.post('https://api.imgur.com/3/upload', image, {
+                headers: {
+                    Authorization: 'Client-ID ' + useRuntimeConfig().public.imgurClientId,
+                },
+            });
+                return res;
+            } catch(err: any) {
+                this.$state.error = err.response.data.message;
+                return err;
+            }
+        },
         async createPost(post: object) {
             try {
                 const res: any = await axios.post(`${useRuntimeConfig().public.apiBase}/posts/create`, post);
@@ -46,7 +59,7 @@ export const usePostStore = defineStore('post', {
             }
         },
 
-        async editPost(postId: number, patching: string, body: object) {
+        async editPost(postId: string, patching: string, body: object) {
             try {
                 const res: any = await axios.patch(`${useRuntimeConfig().public.apiBase}/posts/edit?postId=${postId}&editing=${patching}`, body);
                 return res;
@@ -55,7 +68,7 @@ export const usePostStore = defineStore('post', {
             }
         },
 
-        async deletePost(postId: number) {
+        async deletePost(postId: string) {
             try {
                 const res: any = await axios.delete(`${useRuntimeConfig().public.apiBase}/posts/delete?postId=${postId}`);
                 return res;

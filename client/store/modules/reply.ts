@@ -19,7 +19,7 @@ export const useReplyStore = defineStore('reply', {
             }
         },
 
-        async editReply(postId: number, commentId: number, replyId: number, patching: string, body: object) {
+        async editReply(postId: string, commentId: number, replyId: number, patching: string, body: object) {
             try {
                 const res: any = await axios.patch(`${useRuntimeConfig().public.apiBase}/posts/comments/replies/edit?postId=${postId}&commentId=${commentId}&replyId=${replyId}&editing=${patching}`, body);
                 return res;
@@ -28,7 +28,7 @@ export const useReplyStore = defineStore('reply', {
             }
         },
 
-        async deleteReply(postId: number, commentId: number, replyId: number) {
+        async deleteReply(postId: string, commentId: number, replyId: number) {
             try {
                 const res: any = await axios.delete(`${useRuntimeConfig().public.apiBase}/posts/comments/replies/delete?postId=${postId}&commentId=${commentId}&replyId=${replyId}`);
                 return res;

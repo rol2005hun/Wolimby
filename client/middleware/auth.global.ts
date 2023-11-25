@@ -11,8 +11,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       await postStore.getAllPost();
       userStore.token = useCookie('token').value as string;
     }
-
-    if (!token) {
+    
+    if (!token && to.name != 'post-id') {
       return navigateTo('https://account.wolimby.hu/auth?redirectTo=' + useRequestURL().href, { external: true });
     }
 

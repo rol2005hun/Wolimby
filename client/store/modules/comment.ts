@@ -20,7 +20,7 @@ export const useCommentStore = defineStore('comment', {
             }
         },
 
-        async editComment(postId: number, commentId: number, patching: string, body: object) {
+        async editComment(postId: string, commentId: number, patching: string, body: object) {
             try {
                 const res: any = await axios.patch(`${useRuntimeConfig().public.apiBase}/posts/comments/edit?postId=${postId}&commentId=${commentId}&editing=${patching}`, body);
                 return res;
@@ -29,7 +29,7 @@ export const useCommentStore = defineStore('comment', {
             }
         },
 
-        async deleteComment(postId: number, commentId: number) {
+        async deleteComment(postId: string, commentId: number) {
             try {
                 const res: any = await axios.delete(`${useRuntimeConfig().public.apiBase}/posts/comments/delete?postId=${postId}&commentId=${commentId}`);
                 return res;

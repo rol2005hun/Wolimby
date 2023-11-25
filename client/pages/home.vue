@@ -63,7 +63,7 @@
                             <ul class="more-options">
                                 <li class="more-option" @click="copyId(post._id)">Másolás</li>
                                 <li class="more-option" @click="openPost(post._id)">Megnyitás</li>
-                                <li class="more-option">Szerkesztés</li>
+                                <li v-if="isOwner(post.author._id)" class="more-option">Szerkesztés</li>
                                 <li v-if="isOwner(post.author._id)" @click.prevent="deletePost(post._id)" class="more-option">Törlés</li>
                             </ul>
                         </div>
@@ -112,7 +112,7 @@
                                         </div>
                                         <ul class="more-options">
                                             <li class="more-option" @click="copyId(comment._id)">Másolás</li>
-                                            <li class="more-option">Szerkesztés</li>
+                                            <li v-if="isOwner(comment.author._id)" class="more-option">Szerkesztés</li>
                                             <li v-if="isOwner(comment.author._id)" @click.prevent="deleteComment(post._id, comment._id)" class="more-option">Törlés</li>
                                         </ul>
                                     </div>
@@ -157,7 +157,7 @@
                                                             </div>
                                                             <ul class="more-options">
                                                                 <li class="more-option" @click="copyId(reply._id)">Másolás</li>
-                                                                <li class="more-option">Szerkesztés</li>
+                                                                <li v-if="isOwner(reply.author._id)" class="more-option">Szerkesztés</li>
                                                                 <li v-if="isOwner(reply.author._id)" @click.prevent="deleteReply(post._id, comment._id, reply._id)" class="more-option">Törlés</li>
                                                             </ul>
                                                         </div>
@@ -212,7 +212,7 @@ function copyId(id: string) {
 }
 
 function copyLink(id: string) {
-    navigator.clipboard.writeText(functions.getDomain() + '/post/' + id);
+    navigator.clipboard.writeText('https://social.' + functions.getDomain() + '/post/' + id);
 
     notificationStore.addNotification({
         id: 0,
@@ -267,12 +267,16 @@ async function createPost() {
         } else if(file.value.type.includes('video')) {
             formData.append('video', file.value);
         }
-
-        let res: any = await axios.post('https://api.imgur.com/3/upload', formData, {
-            headers: {
-                Authorization: 'Client-ID ' + useRuntimeConfig().public.imgurClientId,
-            },
-        });
+        let res: any;
+        await postStore.uploadImage(formData).then((resp: any) => res = resp);
+        if(!res.response.data.success) {
+            notificationStore.addNotification({
+                id: 0,
+                type: 'error',
+                message: res,
+            });
+            return;
+        }
 
         uploadedFile.value = res.data.data.link;
     }
@@ -357,7 +361,7 @@ function createReply(userId: string, postId: string, commentId: string) {
     });
 }
 
-function editPost(postId: number, patching: string) {
+function editPost(postId: string, patching: string) {
     let body: object = {};
     switch(patching) {
         case 'like':
@@ -388,7 +392,7 @@ function editPost(postId: number, patching: string) {
     });
 }
 
-function editComment(postId: number, commentId: number, patching: string) {
+function editComment(postId: string, commentId: number, patching: string) {
     let body: object = {};
     switch(patching) {
         case 'like':
@@ -419,7 +423,7 @@ function editComment(postId: number, commentId: number, patching: string) {
     });
 }
 
-function editReply(postId: number, commentId: number, replyId: number, patching: string) {
+function editReply(postId: string, commentId: number, replyId: number, patching: string) {
     let body: object = {};
     switch(patching) {
         case 'like':
@@ -450,7 +454,7 @@ function editReply(postId: number, commentId: number, replyId: number, patching:
     });
 }
 
-function deletePost(postId: number) {
+function deletePost(postId: string) {
     postStore.deletePost(postId).then(async (res: any) => {
         if(res.data.success) {
             await postStore.getAllPost();
@@ -470,7 +474,7 @@ function deletePost(postId: number) {
     });
 }
 
-function deleteComment(postId: number, commentId: number) {
+function deleteComment(postId: string, commentId: number) {
     commentStore.deleteComment(postId, commentId).then(async (res: any) => {
         if(res.data.success) {
             await postStore.getAllPost();
@@ -490,7 +494,7 @@ function deleteComment(postId: number, commentId: number) {
     });
 }
 
-function deleteReply(postId: number, commentId: number, replyId: number) {
+function deleteReply(postId: string, commentId: number, replyId: number) {
     replyStore.deleteReply(postId, commentId, replyId).then(async (res: any) => {
         if(res.data.success) {
             await postStore.getAllPost();
