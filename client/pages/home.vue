@@ -270,14 +270,6 @@ async function createPost() {
         let res: any;
         await postStore.uploadImage(formData).then((resp: any) => res = resp);
         console.log(res)
-        if(!res.data.success) {
-            notificationStore.addNotification({
-                id: 0,
-                type: 'error',
-                message: res,
-            });
-            return;
-        }
 
         uploadedFile.value = res.data.link;
     }
