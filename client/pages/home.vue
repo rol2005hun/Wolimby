@@ -278,7 +278,7 @@ async function createPost() {
             return;
         }
 
-        uploadedFile.value = res.data.data.link;
+        uploadedFile.value = res.data.link;
     }
 
     const postToCreate = {
