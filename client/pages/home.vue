@@ -277,6 +277,7 @@ async function createPost() {
             });
             return;
         }
+        console.log(res.data)
 
         uploadedFile.value = res.data.link;
     }
