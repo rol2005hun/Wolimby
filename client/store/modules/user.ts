@@ -1,38 +1,7 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import functions from '@/assets/ts/functions';
-
-interface UserProfile {
-  profile: {
-    username: string,
-    email: string,
-    name: string,
-    password: string,
-    profilePicture: string,
-    biography: string,
-    // birthday: Date,
-    roles: string,
-    notificationList: [{
-        title: string,
-        profilePicture: string,
-        message: string,
-        createdAt: Date
-    }],
-    ipList: [{
-        ip: string,
-        loggedAt: Date
-    }],
-    createdAt: Date
-  },
-  privacy: {
-    showName: boolean,
-    showEmail: boolean
-  },
-  appearance: {
-    backgroundImage: string,
-    theme: string
-  }
-}
+import UserProfile from '@/assets/types/user';
 
 export const useUserStore = defineStore('user', {
   state: () => ({

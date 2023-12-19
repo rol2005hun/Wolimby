@@ -37,6 +37,7 @@ const description = ref('');
 const state = reactive({
     currentRow: 0,
     gameWon: false,
+    abdicating: false
 });
   
 function generateCode() {
@@ -72,11 +73,11 @@ function checkGuess() {
         const colorMatches = guess.filter(color => secretCode.value.includes(color) && !exactMatches.includes(color));
         feedbackCircles.value[state.currentRow] = generateFeedback(exactMatches.length, colorMatches.length);
 
-        if (exactMatches.length === 4 && state.gameWon === true) {
+        if (exactMatches.length === 4 && state.abdicating !== true) {
             new Audio(sounds.find(sound => sound.name === 'won')!.sound).play();
             state.gameWon = true;
             title.value = 'Nyertél';
-            description.value = `<p style="text-align: center;">Na az igen... Gratulálunk, játsz még egy kört.</p>`;
+            description.value = `<p style="text-align: center;">Na az igen... Gratulálunk, játssz még egy kört.</p>`;
             modalOpen.value = true;
         } else {
             state.currentRow++;
@@ -124,7 +125,7 @@ function showSolution() {
     ${secretCode.value.map(color => `<div style="background-color: ${color}; width: 25px; height: 25px; border-radius: 50%;"></div>`).join('')}
     </div></p>`;
     modalOpen.value = true;
-    state.gameWon = false;
+    state.abdicating = true;
 }
 
 function removeColor(rowIndex: number, colIndex: number) {

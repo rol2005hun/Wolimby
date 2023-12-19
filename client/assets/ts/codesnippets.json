@@ -25,7 +25,7 @@
   },
   {
     "id": 7,
-    "code": "if(iAmHappy) { clapYourHands(); } else { showIt(); }"
+    "code": "if(iAmHappy) {\n\tclapYourHands();\n} else {\n\tshowIt();\n}"
   },
   {
     "id": 8,
@@ -33,10 +33,34 @@
   },
   {
     "id": 9,
-    "code": "while(alive) { eat(); sleep(); code(); repeat(); }"
+    "code": "while(alive) {\n\teat();\n\tsleep();\n\tcode();\n\trepeat();\n}"
   },
   {
     "id": 10,
     "code": "console.log('Wolimby is the best <3');"
+  },
+  {
+    "id": 11,
+    "code": "const example = () => {\n\tconsole.log('Hello, World!');\n};"
+  },
+  {
+    "id": 12,
+    "code": "function addNumbers(a, b) {\n\treturn a + b;\n}"
+  },
+  {
+    "id": 13,
+    "code": "if (isReady) {\n\tstartGame();\n} else {\n\tconsole.log('Waiting...');\n}"
+  },
+  {
+    "id": 14,
+    "code": "const fruits = ['apple', 'banana', 'orange'];\nfor (const fruit of fruits) {\n\tconsole.log(fruit);\n}"
+  },
+  {
+    "id": 15,
+    "code": "class Animal {\n\tconstructor(name) {\n\t\tthis.name = name;\n\t}\n\tmakeSound() {\n\t\tconsole.log('Some generic sound');\n\t}\n}"
+  },
+  {
+    "id": 16,
+    "code": "const myName = 'Wolimby';\nconsole.log(`Hello, my name is ${myName}`);"
   }
 ]

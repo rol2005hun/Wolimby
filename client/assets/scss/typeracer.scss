@@ -15,11 +15,15 @@
     }
 
     &-code {
-      display: flex;
-      align-items: center;
-      justify-content: center;
       margin-bottom: 40px;
       white-space: pre-line;
+
+      .cursor {
+        font-weight: lighter;
+        color: black;
+        margin: 0 -4.5px 0 -4.5px;
+        animation: blink 1s infinite;
+      }
 
       span {
         display: inline-block;
@@ -45,13 +49,6 @@
         &.neutral {
           color: white;
         }
-      }
-
-      .cursor {
-        font-weight: lighter;
-        color: black;
-        margin: 0 -4.5px 0 -4.5px;
-        animation: blink 1s infinite;
       }
     }
 

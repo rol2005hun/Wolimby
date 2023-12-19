@@ -1,12 +1,7 @@
 <template>
   <main class="typeracer">
     <div class="container">
-      <div class="container-code">
-        <client-only>
-          <span v-for="(char, index) in formattedSnippet"
-          :key="index" :class="{ correct: char === typedText[index], incorrect: char !== typedText[index], br: char === ' ', neutral: typedText.length <= index }">
-          <span class="cursor" v-if="index === cursorPosition">|</span>{{ char === ' ' ? '\u00A0' : char }}</span>
-        </client-only>
+      <div class="container-code" v-html="toDisplay">
       </div>
       <div class="container-stats">
         <button class="pause-btn" @click="toggleTimer">
@@ -47,6 +42,7 @@ const title = ref('');
 const description = ref('');
 const modalOpen = ref(false);
 const timerRunning = ref(false);
+const toDisplay = ref('');
 const formattedSnippet = computed(() => currentSnippet.value.split(''));
 const cursorPosition = computed(() => (typedText.value.length === formattedSnippet.value.length ? typedText.value.length : typedText.value.length));
 
@@ -98,9 +94,42 @@ function generateNewSnippet() {
     newSnippet = codesnippets[Math.floor(Math.random() * codesnippets.length)].code;
   }
 
-  currentSnippet.value = newSnippet.replace(/\n/g, '');
+  currentSnippet.value = newSnippet;
   typedText.value = '';
+  formatChar();
 }
+
+function formatChar() {
+  toDisplay.value = '';
+  formattedSnippet.value.forEach((char, index) => {
+    const isCursor = index === cursorPosition.value;
+    const isCorrect = char === typedText.value[index];
+    const isIncorrect = char !== typedText.value[index];
+    const isLineBreak = char === '\n' || char === '\t' || char === ' ';
+    
+    const spanClass: Record<string, boolean> = {
+      correct: isCorrect,
+      incorrect: isIncorrect,
+      br: isLineBreak,
+      neutral: typedText.value.length <= index,
+    }
+
+    if (isCursor) {
+      toDisplay.value += `<span class="cursor">|</span>`;
+    }
+
+    if (char === ' ') {
+      toDisplay.value += `<span class="${Object.keys(spanClass).filter(key => spanClass[key]).join(' ')}">&nbsp;</span>`;
+    } else if (char === '\n') {
+      toDisplay.value += `<br class="${Object.keys(spanClass).filter(key => spanClass[key]).join(' ')}">`;
+    } else if (char === '\t') {
+      toDisplay.value += `<span class="${Object.keys(spanClass).filter(key => spanClass[key]).join(' ')}">&nbsp;&nbsp;&nbsp;&nbsp;</span>`;
+    } else {
+      toDisplay.value += `<span class="${Object.keys(spanClass).filter(key => spanClass[key]).join(' ')}">${char}</span>`;
+    }
+  });
+}
+
 
 function openRules() {
   title.value = 'Szabályzat';
@@ -144,23 +173,34 @@ if(process.client) {
       timerRunning.value = true;
     }
 
-    if(event.key === ' ') {
+    if(event.key === 'Space') {
       typedText.value += ' ';
-      return;
+    }
+
+    if(event.key === 'Tab') {
+      event.preventDefault();
+      typedText.value += '\t';
+    }
+
+    if(event.key === 'Enter') {
+      typedText.value += '\n';
     }
 
     if(event.key === 'Backspace') {
       typedText.value = typedText.value.slice(0, -1);
-      return;
     }
 
     if(event.key.length === 1) {
       typedText.value += event.key;
     }
+
+    formatChar();
+    console.log(typedText.value)
+      console.log(currentSnippet.value)
   });
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '@/assets/scss/typeracer.scss';
 </style>
