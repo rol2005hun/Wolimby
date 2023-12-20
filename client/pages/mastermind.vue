@@ -24,7 +24,7 @@
   
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
-import sounds from '@/assets/ts/sounds.json';
+import soundNames from '@/assets/ts/sounds.json';
 
 const colors = ['red', 'blue', 'green', 'yellow', 'orange', 'purple'];
 const board = ref(new Array(10).fill([]).map(() => new Array(4).fill('')));
@@ -33,6 +33,8 @@ const secretCode = ref(generateCode());
 const modalOpen = ref(false);
 const title = ref('');
 const description = ref('');
+const defaultSound = ref('walker');
+const sounds = soundNames.find(soundName => soundName.name === defaultSound.value)!.sounds;
   
 const state = reactive({
     currentRow: 0,
