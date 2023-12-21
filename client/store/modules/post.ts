@@ -25,6 +25,7 @@ export const usePostStore = defineStore('post', {
                 return err;
             }
         },
+        
         async createPost(post: object) {
             try {
                 const res: any = await axios.post(`${useRuntimeConfig().public.apiBase}/posts/create`, post);

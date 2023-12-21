@@ -20,6 +20,7 @@
   "dependencies": {
     "@pinia/nuxt": "^0.4.11",
     "axios": "^1.4.0",
+    "nuxt-socket-io": "^3.0.13",
     "pinia": "^2.1.4",
     "sass": "^1.63.6"
   }

@@ -24,9 +24,17 @@ const config: NuxtConfig = {
     directory: 'static'
   },
   buildModules: ['@pinia/nuxt'],
+  modules: ['nuxt-socket-io'],
+  io: {
+    sockets: [{
+      default: true,
+      name: 'main',
+      url: 'http://localhost:2003'
+    }]
+  },
   runtimeConfig: {
     public: {
-      apiBase: 'https://api.social.wolimby.hu',
+      apiBase: 'http://localhost:2003',
       imgurClientId: '80af936d45232db'
     }
   }

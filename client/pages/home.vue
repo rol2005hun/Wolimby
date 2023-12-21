@@ -183,7 +183,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
-import axios from 'axios';
 import { userStore, postStore, commentStore, replyStore, notificationStore } from '@/store';
 import functions from '@/assets/ts/functions';
 
