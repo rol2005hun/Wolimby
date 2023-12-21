@@ -208,6 +208,7 @@ function newChat(user: any) {
                 type: 'success',
             });
             socket.emit('newChat', res.data.chat);
+            socket.emit('connection', currentUser.value._id);
             isVisible.value = false;
             chatStore.getChats(currentUser.value._id).then((res) => {
                 if(res.data.success) {
@@ -244,7 +245,6 @@ function sendMessage() {
 
         chatStore.sendMessage(activeChat.value._id, newMessage);
         socket.emit('sendMessage', newMessage, activeChat.value._id);
-        socket.emit('connection', currentUser.value._id);
         activeChat.value.messages.push(newMessage);
         newMessageText.value = '';
         nextTick(() => {
