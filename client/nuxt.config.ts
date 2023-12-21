@@ -29,12 +29,12 @@ const config: NuxtConfig = {
     sockets: [{
       default: true,
       name: 'main',
-      url: 'http://localhost:2003'
+      url: 'https://api.akarmi.wolimby.hu'
     }]
   },
   runtimeConfig: {
     public: {
-      apiBase: 'http://localhost:2003',
+      apiBase: 'https://api.akarmi.wolimby.hu',
       imgurClientId: '80af936d45232db'
     }
   }
