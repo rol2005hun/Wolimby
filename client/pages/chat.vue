@@ -61,15 +61,15 @@
                 </div>
             </div>
             <div class="messages">
-                <div v-for="message in activeChat.messages" :key="message.id">
+                <div v-for="message in activeChat.messages" :key="message.id" :title="formatDateToText(message.createdAt)">
                     <div class="message" :class="whoSent(message)">
-                        <p :title="formatDateToText(message.createdAt)">{{ message.message }}</p>
+                        <p v-html="filterMessage(message.message)"></p>
                     </div>
                 </div>
             </div>
             <p v-if="isTyping">{{ typingText }}</p>
             <div class="input">
-                <input type="text" v-model="newMessageText" placeholder="Írd ide az üzeneted..." @focus="typing(true)" @blur="typing(false)"/>
+                <input type="text" v-model="newMessageText" placeholder="Írd ide az üzeneted..." @focus="typing(true)" @blur="typing(false)" v-on:keyup.enter="sendMessage"/>
                 <button @click="sendMessage" :disabled="newMessageText.length < 1">Küldés</button>
             </div>
         </div>
@@ -151,6 +151,36 @@ function filter(event: any, type: string) {
     }
 }
 
+function filterMessage(message: any) {
+    const imageRegex = /\.(png|jpg|jpeg|gif)$/i;
+    const videoRegex = /\.(mp4|mov|avi)$/i;
+    const audioRegex = /\.(mp3|ogg|wav)$/i;
+
+    let result = message;
+
+    const fileMatches = message.match(/\bhttps?:\/\/\S+\b/g);
+    
+    if (fileMatches) {
+        fileMatches.forEach((fileUrl: any) => {
+            let mediaElement = '';
+
+            if (imageRegex.test(fileUrl)) {
+                mediaElement = `<img src="${fileUrl}" style="max-width: 40vh; max-height: 40vh;" alt="Image"/>`;
+            } else if (videoRegex.test(fileUrl)) {
+                mediaElement = `<video controls style="max-width: 40vh; max-height: 40vh;"><source src="${fileUrl}" type="video/mp4"></video>`;
+            } else if (audioRegex.test(fileUrl)) {
+                mediaElement = `<audio controls style="max-width: 40vh; max-height: 40vh;"><source src="${fileUrl}" type="audio/mpeg"></audio>`;
+            }
+
+            const isFileAlone = result.trim() === fileUrl.trim();
+
+            result = isFileAlone ? result.replace(fileUrl, mediaElement) : result.replace(fileUrl, `<br/>&nbsp;${mediaElement}`);
+        });
+    }
+
+    return result;
+}
+
 function connection() {
     socket.emit('connection', currentUser.value._id);
     socket.on('connection', (onlineUsers: Array<null>) => {
@@ -214,6 +244,7 @@ function sendMessage() {
 
         chatStore.sendMessage(activeChat.value._id, newMessage);
         socket.emit('sendMessage', newMessage, activeChat.value._id);
+        socket.emit('connection', currentUser.value._id);
         activeChat.value.messages.push(newMessage);
         newMessageText.value = '';
         nextTick(() => {
