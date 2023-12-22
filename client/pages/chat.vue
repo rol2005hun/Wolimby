@@ -297,7 +297,35 @@ async function sendMessage() {
     if (newMessageText.value.length < 1 && fileList.value.length < 1) return;
 
     if (activeChat.value) {
+        const newTextMessage = {
+            message: newMessageText.value,
+            sentBy: currentUser.value._id,
+            createdAt: new Date(),
+        };
+
+        chatStore.sendMessage(activeChat.value._id, newTextMessage);
+        socket.emit('sendMessage', newTextMessage, activeChat.value._id);
+        activeChat.value.messages.push(newTextMessage);
+        newMessageText.value = '';
+        const inputElement = document.getElementsByClassName('input')[0] as HTMLInputElement;
+        inputElement.style.height = '0';
+        nextTick(() => {
+            scrollToBottom();
+        });
+
         if (fileList.value.length > 0) {
+            const waitingMessage = {
+                message: 'Fájl feltöltése folyamatban...',
+                sentBy: currentUser.value._id,
+                createdAt: new Date(),
+            }
+
+            activeChat.value.messages.push(waitingMessage);
+
+            nextTick(() => {
+                scrollToBottom();
+            });
+
             const file = fileList.value[0].file;
             const formData = new FormData();
 
@@ -317,6 +345,7 @@ async function sendMessage() {
                         createdAt: new Date(),
                     }
 
+                    activeChat.value.messages.splice(activeChat.value.messages.indexOf(waitingMessage), 1);
                     chatStore.sendMessage(activeChat.value._id, newImageMessage);
                     socket.emit('sendMessage', newImageMessage, activeChat.value._id);
                     activeChat.value.messages.push(newImageMessage);
@@ -335,22 +364,6 @@ async function sendMessage() {
                 });
             }
         }
-
-        const newTextMessage = {
-            message: newMessageText.value,
-            sentBy: currentUser.value._id,
-            createdAt: new Date(),
-        };
-
-        chatStore.sendMessage(activeChat.value._id, newTextMessage);
-        socket.emit('sendMessage', newTextMessage, activeChat.value._id);
-        activeChat.value.messages.push(newTextMessage);
-        newMessageText.value = '';
-        const inputElement = document.getElementsByClassName('input')[0] as HTMLInputElement;
-        inputElement.style.height = '0';
-        nextTick(() => {
-            scrollToBottom();
-        });
     }
 }
 
