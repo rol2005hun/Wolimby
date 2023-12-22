@@ -194,7 +194,7 @@ function uploadFile(event: any) {
 
     fileList.value = [];
     const inputElement = document.getElementsByClassName('input')[0] as HTMLInputElement;
-    inputElement.style.height = '110vh';
+    inputElement.style.height = '120vh';
     fileList.value.push(newFile);
     scrollToBottom();
 }
@@ -308,7 +308,8 @@ async function sendMessage() {
             }
 
             try {
-                const res = await postStore.uploadImage(formData);
+                let res: any;
+                await postStore.uploadImage(formData).then((response) => { res = response });
                 if (res.data.success) {
                     console.log(res.data.data.url)
                     const newImageMessage = {
