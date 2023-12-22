@@ -314,7 +314,7 @@ function sendMessage() {
 
             postStore.uploadImage(formData).then((res) => {
                 if(res.data.success) {
-                    newMessage.message = res.data.data.link;
+                    newMessageText.value = res.data.data.url;
                     fileList.value = [];
                     sendMessage();
                 }
