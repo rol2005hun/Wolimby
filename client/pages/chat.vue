@@ -2,7 +2,7 @@
     <div class="modal-overlay" v-if="isVisible" @click="isVisible =  false"></div>
     <div class="modal" v-if="isVisible">
         <div class="modal-content">
-            <button @click="isVisible = false" class="close-btn">&times;</button>
+            <button @click="closeUsers" class="close-btn">&times;</button>
             <div class="header">
                 <h3>Új chat</h3>
             </div>
@@ -68,10 +68,22 @@
                 </div>
             </div>
             <p v-if="isTyping">{{ typingText }}</p>
-            <div class="input">
-                <input type="text" v-model="newMessageText" placeholder="Írd ide az üzeneted..." @focus="typing(true)" @blur="typing(false)" v-on:keyup.enter="sendMessage"/>
-                <button @click="sendMessage" :disabled="newMessageText.length < 1">Küldés</button>
-            </div>
+            <form class="input" @submit.prevent="sendMessage" v-on:keyup.enter="sendMessage">
+                <div class="file-list">
+                    <div class="file" v-for="(file, index) in fileList" :key="index">
+                        <div class="preview"><img :src="file.url" alt="File Thumbnail" /></div>
+                        <i class="fa-solid fa-trash" @click="removeFile(index)"></i>
+                    </div>
+                </div>
+                <div class="bottom">
+                    <label>
+                        <input type="file" ref="fileInput" @change="uploadFile" style="display: none;"/>
+                        <span><i class="fa-solid fa-upload"></i></span>
+                    </label>
+                    <input class="textarea" type="text" v-model="newMessageText" placeholder="Írd ide az üzeneted..." @focus="typing(true)" @blur="typing(false)" required/>
+                    <button type="submit" title="sendbutton" :disabled="newMessageText.length < 1"><i class="fa-solid fa-paper-plane send-button"></i></button>
+                </div>
+            </form>
         </div>
     </div>
 </template>
@@ -82,7 +94,7 @@ definePageMeta({
 });
 
 import { ref } from 'vue';
-import { userStore, chatStore, notificationStore } from '@/store';
+import { userStore, postStore, chatStore, notificationStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import functions from '@/assets/ts/functions';
 
@@ -98,10 +110,12 @@ const newMessageText = ref('');
 const isVisible = ref(false);
 const isTyping = ref(false);
 const typingText = ref('Épp ír...');
+const fileList = ref([] as any);
 let socket: any;
 
 function switchChat(chat: object) {
     activeChat.value = chat;
+    scrollToBottom();
 }
 
 function other(users: any) {
@@ -121,6 +135,11 @@ function scrollToBottom() {
     messages.scrollTop = messages.scrollHeight;
 }
 
+function closeUsers() {
+    isVisible.value = false;
+    filteredUsers.value = users.value.filter(user => user._id !== currentUser.value._id);
+}
+
 function switchText() {
     if(typingText.value == 'Épp ír...') {
         typingText.value = 'Épp ír';
@@ -136,7 +155,7 @@ function switchText() {
 function filter(event: any, type: string) {
     switch(type) {
         case 'chats':
-            filteredChats.value = filteredChats.value.filter((chat: any) => {
+            filteredChats.value = chats.chats.value.filter((chat: any) => {
                 if(chat.type == 'private') {
                     chat.name = other(chat.users).nickname ? other(chat.users).nickname : other(chat.users).user.profile.username;
                 }
@@ -144,10 +163,50 @@ function filter(event: any, type: string) {
             });
             break;
         case 'users':
-            filteredUsers.value = filteredUsers.value.filter((user: any) => {
+            filteredUsers.value = users.value.filter(user => user._id !== currentUser.value._id).filter((user: any) => {
                 return user.profile.username.toLowerCase().includes(event.target.value.toLowerCase());
             });
             break;
+    }
+}
+
+function uploadFile(event: any) {
+    const filetype = functions.getFileType(event.target.files[0].name);
+
+    if(filetype == 'unknown') {
+        return notificationStore.addNotification({
+            id: 0,
+            type: 'error',
+            message: 'Nem támogatott fájlformátum!',
+        });
+    }
+
+    if(event.target.files[0].size > 209000000) {
+        return notificationStore.addNotification({
+            id: 0,
+            type: 'error',
+            message: 'A fájl túl nagy! >200mb',
+        });
+    }
+
+    const newFile = {
+        file: event.target.files[0],
+        url: URL.createObjectURL(event.target.files[0]),
+    }
+
+    fileList.value = [];
+    const inputElement = document.getElementsByClassName('input')[0] as HTMLInputElement;
+    inputElement.style.height = '400px';
+    fileList.value.push(newFile);
+    scrollToBottom();
+}
+
+function removeFile(index: number) {
+    fileList.value.splice(index, 1);
+
+    if(fileList.value.length == 0) {
+        const inputElement = document.getElementsByClassName('input')[0] as HTMLInputElement;
+        inputElement.style.height = '0';
     }
 }
 
@@ -237,6 +296,7 @@ function receiveChat() {
 }
 
 function sendMessage() {
+    if(newMessageText.value.length < 1) return;
     if (activeChat.value) {
         const newMessage = {
             message: newMessageText.value,
@@ -244,10 +304,31 @@ function sendMessage() {
             createdAt: new Date(),
         }
 
+        if(fileList.value.length > 0) {
+            const file = fileList.value[0].file;
+            const formData = new FormData();
+
+            if(file.value.type.includes('image')) {
+                formData.append('image', file.value);
+            } else if(file.value.type.includes('video')) {
+                formData.append('video', file.value);
+            }
+
+            postStore.uploadImage(formData).then((res) => {
+                if(res.data.success) {
+                    newMessage.message = res.data.url;
+                    fileList.value = [];
+                    sendMessage();
+                }
+            });
+        }
+
         chatStore.sendMessage(activeChat.value._id, newMessage);
         socket.emit('sendMessage', newMessage, activeChat.value._id);
         activeChat.value.messages.push(newMessage);
         newMessageText.value = '';
+        const inputElement = document.getElementsByClassName('input')[0] as HTMLInputElement;
+        inputElement.style.height = '0';
         nextTick(() => {
             scrollToBottom();
         });
@@ -316,6 +397,7 @@ onMounted(() => {
     receiveChat();
     disconnection();
     receiveTyping();
+    scrollToBottom();
 });
 </script>
 
