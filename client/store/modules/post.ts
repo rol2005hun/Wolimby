@@ -14,11 +14,12 @@ export const usePostStore = defineStore('post', {
     actions: {
         async uploadImage(image: object) {
             try {
-              const res: any = await axios.post('https://api.imgur.com/3/upload', image, {
-                headers: {
-                    Authorization: 'Client-ID ' + useRuntimeConfig().public.imgurClientId,
-                },
-            });
+                const res: any = await axios.post('https://api.imgur.com/3/upload', image, {
+                    headers: {
+                        Authorization: 'Client-ID ' + useRuntimeConfig().public.imgurClientId,
+                    },
+                });
+                console.log(res);
                 return res;
             } catch(err: any) {
                 this.$state.error = err.response.data.message;
