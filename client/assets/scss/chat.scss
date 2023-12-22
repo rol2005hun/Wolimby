@@ -207,23 +207,16 @@
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
-}
 
-.message p {
-    display: flex;
-    align-items: flex-end;
-    flex-direction: column;
-}
+    &.sent {
+        text-align: right;
+        background-color: #e2f3ff;
+    }
 
-.sent {
-    text-align: right;
-    background-color: #e2f3ff;
-}
-
-.received {
-    text-align: left;
-    background-color: #f0f0f0;
-
+    &.received {
+        text-align: left;
+        background-color: #f0f0f0;
+    }
 }
 
 .input {
@@ -239,7 +232,6 @@
 
             .preview {
                 background: #cccc;
-                margin-top: 10px;
                 border-radius: 10px;
                 display: flex;
                 align-items: center;
