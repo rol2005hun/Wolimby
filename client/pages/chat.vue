@@ -296,7 +296,7 @@ function receiveChat() {
 }
 
 function sendMessage() {
-    if(newMessageText.value.length < 1) return;
+    if(newMessageText.value.length < 1 && fileList.value.length < 1) return;
     if (activeChat.value) {
         const newMessage = {
             message: newMessageText.value,
@@ -309,9 +309,9 @@ function sendMessage() {
             const formData = new FormData();
 
             if(file.type.includes('image')) {
-                formData.append('image', file.value);
+                formData.append('image', file);
             } else if(file.type.includes('video')) {
-                formData.append('video', file.value);
+                formData.append('video', file);
             }
 
             postStore.uploadImage(formData).then((res) => {
