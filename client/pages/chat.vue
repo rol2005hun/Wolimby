@@ -295,7 +295,7 @@ function receiveChat() {
     });
 }
 
-function sendMessage() {
+function sendMessage(message?: any) {
     if(newMessageText.value.length < 1 && fileList.value.length < 1) return;
     if (activeChat.value) {
         const newMessage = {
@@ -316,7 +316,7 @@ function sendMessage() {
 
             postStore.uploadImage(formData).then((res) => {
                 if(res.data.success) {
-                    newMessage.message = res.data.url;
+                    newMessage.message = res.data.data.url;
                     console.log(newMessage.message);
                     fileList.value = [];
                     sendMessage();
