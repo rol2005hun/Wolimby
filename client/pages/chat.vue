@@ -78,7 +78,7 @@
                         <input type="file" ref="fileInput" @change="uploadFile" style="display: none;"/>
                         <span><i class="fa-solid fa-upload"></i></span>
                     </label>
-                    <input class="textarea" type="text" v-model="newMessageText" placeholder="Írd ide az üzeneted..." @focus="typing(true)" @blur="typing(false)" required/>
+                    <input class="textarea" type="text" v-model="newMessageText" placeholder="Írd ide az üzeneted..." @focus="typing(true)" @blur="typing(false)"/>
                     <button type="submit" title="sendbutton" :disabled="newMessageText.length < 1"><i class="fa-solid fa-paper-plane send-button"></i></button>
                 </div>
             </form>
@@ -130,7 +130,9 @@ function formatDateToText(date: any): string {
 
 function scrollToBottom() {
     const messages = document.querySelector('.messages') as HTMLElement;
-    messages.scrollTop = messages.scrollHeight;
+    nextTick(() => {
+        messages.scrollTop = messages.scrollHeight;
+    });
 }
 
 function closeUsers() {
@@ -138,15 +140,15 @@ function closeUsers() {
     filteredUsers.value = users.value.filter(user => user._id !== currentUser.value._id);
 }
 
-function switchText() {
-    if(typingText.value == 'Épp ír...') {
-        typingText.value = 'Épp ír';
-    } else if(typingText.value == 'Épp ír') {
-        typingText.value = 'Épp ír.';
-    } else if(typingText.value == 'Épp ír.') {
-        typingText.value = 'Épp ír..';
-    } else if(typingText.value == 'Épp ír..') {
-        typingText.value = 'Épp ír...';
+function switchText(text: string) {
+    if(typingText.value == `${text}...`) {
+        typingText.value = `${text}`;
+    } else if(typingText.value == `${text}`) {
+        typingText.value = `${text}.`;
+    } else if(typingText.value == `${text}.`) {
+        typingText.value = `${text}..`;
+    } else if(typingText.value == `${text}..`) {
+        typingText.value = `${text}...`;
     }
 }
 
@@ -194,7 +196,7 @@ function uploadFile(event: any) {
 
     fileList.value = [];
     const inputElement = document.getElementsByClassName('input')[0] as HTMLInputElement;
-    inputElement.style.height = '120vh';
+    inputElement.style.minHeight = '21.5vh';
     fileList.value.push(newFile);
     scrollToBottom();
 }
@@ -204,7 +206,7 @@ function removeFile(index: number) {
 
     if(fileList.value.length == 0) {
         const inputElement = document.getElementsByClassName('input')[0] as HTMLInputElement;
-        inputElement.style.height = '0';
+        inputElement.style.minHeight = '45px';
     }
 }
 
@@ -296,12 +298,12 @@ function receiveChat() {
 async function sendMessage() {
     if (newMessageText.value.length < 1 && fileList.value.length < 1) return;
 
-    if (activeChat.value) {
+    if(fileList.value.length < 1) {
         const newTextMessage = {
             message: newMessageText.value,
             sentBy: currentUser.value._id,
             createdAt: new Date(),
-        };
+        }
 
         chatStore.sendMessage(activeChat.value._id, newTextMessage);
         socket.emit('sendMessage', newTextMessage, activeChat.value._id);
@@ -309,62 +311,53 @@ async function sendMessage() {
         newMessageText.value = '';
         const inputElement = document.getElementsByClassName('input')[0] as HTMLInputElement;
         inputElement.style.height = '0';
-        nextTick(() => {
-            scrollToBottom();
-        });
+        scrollToBottom();
+    }
 
-        if (fileList.value.length > 0) {
-            const waitingMessage = {
-                message: 'Fájl feltöltése folyamatban...',
-                sentBy: currentUser.value._id,
-                createdAt: new Date(),
-            }
+    if (fileList.value.length > 0) {
+        const waitingMessage = {
+            message: setInterval(() => switchText('Fájl feltöltése folyamatban'), 500) as any,
+            sentBy: currentUser.value._id,
+            createdAt: new Date(),
+        }
 
-            activeChat.value.messages.push(waitingMessage);
+        activeChat.value.messages.push(waitingMessage);
+        scrollToBottom();
+        const file = fileList.value[0].file;
+        const formData = new FormData();
 
-            nextTick(() => {
-                scrollToBottom();
-            });
+        if (file.type.includes('image')) {
+            formData.append('image', file);
+        } else if (file.type.includes('video')) {
+            formData.append('video', file);
+        }
 
-            const file = fileList.value[0].file;
-            const formData = new FormData();
+        removeFile(0);
 
-            if (file.type.includes('image')) {
-                formData.append('image', file);
-            } else if (file.type.includes('video')) {
-                formData.append('video', file);
-            }
-
-            removeFile(0);
-
-            try {
-                let res: any;
-                await postStore.uploadImage(formData).then((response) => { res = response });
-                if (res.data.success) {
-                    const newImageMessage = {
-                        message: res.data.data.link,
-                        sentBy: currentUser.value._id,
-                        createdAt: new Date(),
-                    }
-
-                    activeChat.value.messages.splice(activeChat.value.messages.indexOf(waitingMessage), 1);
-                    chatStore.sendMessage(activeChat.value._id, newImageMessage);
-                    socket.emit('sendMessage', newImageMessage, activeChat.value._id);
-                    activeChat.value.messages.push(newImageMessage);
-                    fileList.value = [];
-                    newMessageText.value = '';
-                    nextTick(() => {
-                        scrollToBottom();
-                    });
-                    return;
+        try {
+            let res: any;
+            await postStore.uploadImage(formData).then((response) => { res = response });
+            if (res.data.success) {
+                const newImageMessage = {
+                    message: res.data.data.link,
+                    sentBy: currentUser.value._id,
+                    createdAt: new Date(),
                 }
-            } catch (error) {
-                notificationStore.addNotification({
-                    id: 0,
-                    type: 'error',
-                    message: 'Hiba történt a fájl feltöltése közben!',
-                });
+
+                activeChat.value.messages.splice(activeChat.value.messages.indexOf(waitingMessage), 1);
+                chatStore.sendMessage(activeChat.value._id, newImageMessage);
+                socket.emit('sendMessage', newImageMessage, activeChat.value._id);
+                activeChat.value.messages.push(newImageMessage);
+                fileList.value = [];
+                newMessageText.value = '';
+                scrollToBottom();
             }
+        } catch (error: any) {
+            notificationStore.addNotification({
+                id: 0,
+                type: 'error',
+                message: 'Hiba történt a fájl feltöltése közben: ' + error.message || 'Ismeretlen hiba!',
+            });
         }
     }
 }
@@ -401,7 +394,7 @@ function receiveTyping() {
         if(typing) {
             if(activeChat.value._id == where) {
                 isTyping.value = true;
-                interval = setInterval(switchText, 500);
+                interval = setInterval(() => switchText('Épp gépel'), 500) as any;
             }
         } else {
             if(activeChat.value._id == where) {
