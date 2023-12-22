@@ -221,6 +221,7 @@ function newChat(user: any) {
 
 function receiveChat() {
     socket.on('receiveChat', (chat: any) => {
+        socket.emit('connection', currentUser.value._id);
         if(chat.users.some((user: any) => user.user._id == currentUser.value._id)) {
             filteredChats.value.push(chat);
             notificationStore.addNotification({
