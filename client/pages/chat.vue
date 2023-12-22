@@ -194,7 +194,7 @@ function uploadFile(event: any) {
 
     fileList.value = [];
     const inputElement = document.getElementsByClassName('input')[0] as HTMLInputElement;
-    inputElement.style.height = '400px';
+    inputElement.style.height = '110vh';
     fileList.value.push(newFile);
     scrollToBottom();
 }
@@ -293,43 +293,59 @@ function receiveChat() {
     });
 }
 
-function sendMessage() {
-    if(newMessageText.value.length < 1 && fileList.value.length < 1) return;
-    if (activeChat.value) {
-        const newMessage = {
-            message: newMessageText.value,
-            sentBy: currentUser.value._id,
-            createdAt: new Date(),
-        }
+async function sendMessage() {
+    if (newMessageText.value.length < 1 && fileList.value.length < 1) return;
 
-        if(fileList.value.length > 0) {
+    if (activeChat.value) {
+        if (fileList.value.length > 0) {
             const file = fileList.value[0].file;
             const formData = new FormData();
 
-            if(file.type.includes('image')) {
+            if (file.type.includes('image')) {
                 formData.append('image', file);
-            } else if(file.type.includes('video')) {
+            } else if (file.type.includes('video')) {
                 formData.append('video', file);
             }
 
-            postStore.uploadImage(formData).then((res) => {
-                if(res.data.success) {
-                    newMessageText.value = res.data.data.url;
+            try {
+                const res = await postStore.uploadImage(formData);
+                if (res.data.success) {
+                    const newImageMessage = {
+                        message: res.data.data.url,
+                        sentBy: currentUser.value._id,
+                        createdAt: new Date(),
+                    };
+
+                    chatStore.sendMessage(activeChat.value._id, newImageMessage);
+                    socket.emit('sendMessage', newImageMessage, activeChat.value._id);
+                    activeChat.value.messages.push(newImageMessage);
                     fileList.value = [];
-                    sendMessage();
+                    newMessageText.value = '';
+                    scrollToBottom();
+                    return;
                 }
-            });
+            } catch (error) {
+                notificationStore.addNotification({
+                    id: 0,
+                    type: 'error',
+                    message: 'Hiba történt a fájl feltöltése közben!',
+                });
+            }
         }
-        console.log(newMessage)
-        chatStore.sendMessage(activeChat.value._id, newMessage);
-        socket.emit('sendMessage', newMessage, activeChat.value._id);
-        activeChat.value.messages.push(newMessage);
+
+        const newTextMessage = {
+            message: newMessageText.value,
+            sentBy: currentUser.value._id,
+            createdAt: new Date(),
+        };
+
+        chatStore.sendMessage(activeChat.value._id, newTextMessage);
+        socket.emit('sendMessage', newTextMessage, activeChat.value._id);
+        activeChat.value.messages.push(newTextMessage);
         newMessageText.value = '';
         const inputElement = document.getElementsByClassName('input')[0] as HTMLInputElement;
         inputElement.style.height = '0';
-        nextTick(() => {
-            scrollToBottom();
-        });
+        scrollToBottom();
     }
 }
 
