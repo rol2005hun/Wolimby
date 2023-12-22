@@ -134,7 +134,7 @@ const filteredUsers = ref(users.value.filter(user => user._id !== currentUser.va
 const activeChat = ref(firstChat);
 const newMessageText = ref('');
 const isVisible = ref({} as any);
-const isTyping = ref({} as any);
+const isTyping = ref({ bool: false, who: [] } as { bool: boolean; who: string[] });
 const fileList = ref([] as any);
 let socket: any;
 
@@ -444,9 +444,8 @@ function receiveTyping() {
         if(typing) {
             if(activeChat.value._id == where) {
                 isTyping.value.bool = true;
+                isTyping.value.who.push(who);
                 console.log(isTyping.value.who)
-                console.log(who)
-                // isTyping.value.who.push(who);
                 // interval = setInterval(() => {
                 //     const typingElement = document.getElementById('typing') as HTMLParagraphElement;
                 //     typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
