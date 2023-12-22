@@ -335,6 +335,8 @@ async function sendMessage() {
                 formData.append('video', file);
             }
 
+            removeFile(0);
+
             try {
                 let res: any;
                 await postStore.uploadImage(formData).then((response) => { res = response });
