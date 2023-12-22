@@ -310,24 +310,24 @@ async function sendMessage() {
             try {
                 let res: any;
                 await postStore.uploadImage(formData).then((response) => { res = response });
-                if (res.data.success) {
-                    console.log(res.data.data.url)
-                    const newImageMessage = {
-                        message: res.data.data.url,
-                        sentBy: currentUser.value._id,
-                        createdAt: new Date(),
-                    };
+                console.log(res)
+                // if (res.data.success) {
+                //     const newImageMessage = {
+                //         message: res.data.data.url,
+                //         sentBy: currentUser.value._id,
+                //         createdAt: new Date(),
+                //     }
 
-                    chatStore.sendMessage(activeChat.value._id, newImageMessage);
-                    socket.emit('sendMessage', newImageMessage, activeChat.value._id);
-                    activeChat.value.messages.push(newImageMessage);
-                    fileList.value = [];
-                    newMessageText.value = '';
-                    nextTick(() => {
-                        scrollToBottom();
-                    });
-                    return;
-                }
+                //     chatStore.sendMessage(activeChat.value._id, newImageMessage);
+                //     socket.emit('sendMessage', newImageMessage, activeChat.value._id);
+                //     activeChat.value.messages.push(newImageMessage);
+                //     fileList.value = [];
+                //     newMessageText.value = '';
+                //     nextTick(() => {
+                //         scrollToBottom();
+                //     });
+                //     return;
+                // }
             } catch (error) {
                 notificationStore.addNotification({
                     id: 0,
