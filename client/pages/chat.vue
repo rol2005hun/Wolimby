@@ -444,11 +444,13 @@ function receiveTyping() {
         if(typing) {
             if(activeChat.value._id == where) {
                 isTyping.value.bool = true;
-                isTyping.value.who.push(who);
-                interval = setInterval(() => {
-                    const typingElement = document.getElementById('typing') as HTMLParagraphElement;
-                    typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
-                }, 500) as any;
+                console.log(isTyping.value.who)
+                console.log(who)
+                // isTyping.value.who.push(who);
+                // interval = setInterval(() => {
+                //     const typingElement = document.getElementById('typing') as HTMLParagraphElement;
+                //     typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
+                // }, 500) as any;
             }
         } else {
             if(activeChat.value._id == where) {
