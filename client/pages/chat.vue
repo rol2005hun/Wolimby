@@ -310,6 +310,7 @@ async function sendMessage() {
             try {
                 const res = await postStore.uploadImage(formData);
                 if (res.data.success) {
+                    console.log(res.data.data.url)
                     const newImageMessage = {
                         message: res.data.data.url,
                         sentBy: currentUser.value._id,
@@ -321,7 +322,9 @@ async function sendMessage() {
                     activeChat.value.messages.push(newImageMessage);
                     fileList.value = [];
                     newMessageText.value = '';
-                    scrollToBottom();
+                    nextTick(() => {
+                        scrollToBottom();
+                    });
                     return;
                 }
             } catch (error) {
@@ -345,7 +348,9 @@ async function sendMessage() {
         newMessageText.value = '';
         const inputElement = document.getElementsByClassName('input')[0] as HTMLInputElement;
         inputElement.style.height = '0';
-        scrollToBottom();
+        nextTick(() => {
+            scrollToBottom();
+        });
     }
 }
 
