@@ -308,9 +308,9 @@ function sendMessage() {
             const file = fileList.value[0].file;
             const formData = new FormData();
 
-            if(file.value.type.includes('image')) {
+            if(file.type.includes('image')) {
                 formData.append('image', file.value);
-            } else if(file.value.type.includes('video')) {
+            } else if(file.type.includes('video')) {
                 formData.append('video', file.value);
             }
 
