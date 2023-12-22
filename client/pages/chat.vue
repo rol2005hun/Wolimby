@@ -316,7 +316,7 @@ async function sendMessage() {
 
     if (fileList.value.length > 0) {
         const waitingMessage = {
-            message: setInterval(() => switchText('Fájl feltöltése folyamatban'), 500) as any,
+            message: setInterval(function() { switchText('Fájl feltöltése folyamatban') }, 500) as any,
             sentBy: currentUser.value._id,
             createdAt: new Date(),
         }
@@ -394,7 +394,7 @@ function receiveTyping() {
         if(typing) {
             if(activeChat.value._id == where) {
                 isTyping.value = true;
-                interval = setInterval(() => switchText('Épp gépel'), 500) as any;
+                interval = setInterval(function() { switchText('Épp gépel') }, 500) as any;
             }
         } else {
             if(activeChat.value._id == where) {
