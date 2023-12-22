@@ -61,11 +61,11 @@
                 </div>
             </div>
             <div class="messages">
-                <div :class="'message ' + whoSent(message)" v-for="message in activeChat.messages" :key="message.id" :title="formatDateToText(message.createdAt)">
+                <div :class="'message ' + whoSent(message) + ' ' + message._id" v-for="message in activeChat.messages" :key="message.id" :title="formatDateToText(message.createdAt)">
                     <p v-html="filterMessage(message.message)"></p>
                 </div>
             </div>
-            <p v-if="isTyping">{{ typingText }}</p>
+            <p v-if="isTyping" id="typing">Épp gépel</p>
             <form class="input" @submit.prevent="sendMessage" v-on:keyup.enter="sendMessage">
                 <div class="file-list">
                     <div class="file" v-for="(file, index) in fileList" :key="index">
@@ -107,7 +107,6 @@ const activeChat = ref(firstChat);
 const newMessageText = ref('');
 const isVisible = ref(false);
 const isTyping = ref(false);
-const typingText = ref('Épp ír...');
 const fileList = ref([] as any);
 let socket: any;
 
@@ -141,14 +140,16 @@ function closeUsers() {
 }
 
 function switchText(text: string) {
-    if(typingText.value == `${text}...`) {
-        typingText.value = `${text}`;
-    } else if(typingText.value == `${text}`) {
-        typingText.value = `${text}.`;
-    } else if(typingText.value == `${text}.`) {
-        typingText.value = `${text}..`;
-    } else if(typingText.value == `${text}..`) {
-        typingText.value = `${text}...`;
+    const onlyText = text.replaceAll('.', '');
+
+    if(text == `${onlyText}...`) {
+        return `${onlyText}`;
+    } else if(text == `${onlyText}`) {
+        return `${onlyText}.`;
+    } else if(text == `${onlyText}.`) {
+        return `${onlyText}..`;
+    } else if(text == `${onlyText}..`) {
+       return `${onlyText}...`;
     }
 }
 
@@ -316,12 +317,17 @@ async function sendMessage() {
 
     if (fileList.value.length > 0) {
         const waitingMessage = {
-            message: setInterval(function() { switchText('Fájl feltöltése folyamatban') }, 500) as any,
+            _id: 'tempid',
+            message: 'Fájl feltöltése folyamatban',
             sentBy: currentUser.value._id,
             createdAt: new Date(),
         }
 
         activeChat.value.messages.push(waitingMessage);
+        const interval = setInterval(() => {
+            const typingElement = document.querySelector('.tempid p') as HTMLDivElement;
+            typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
+        }, 500) as any;
         scrollToBottom();
         const file = fileList.value[0].file;
         const formData = new FormData();
@@ -344,9 +350,10 @@ async function sendMessage() {
                     createdAt: new Date(),
                 }
 
-                activeChat.value.messages.splice(activeChat.value.messages.indexOf(waitingMessage), 1);
                 chatStore.sendMessage(activeChat.value._id, newImageMessage);
                 socket.emit('sendMessage', newImageMessage, activeChat.value._id);
+                activeChat.value.messages.splice(activeChat.value.messages.indexOf(waitingMessage), 1);
+                clearInterval(interval);
                 activeChat.value.messages.push(newImageMessage);
                 fileList.value = [];
                 newMessageText.value = '';
@@ -394,7 +401,10 @@ function receiveTyping() {
         if(typing) {
             if(activeChat.value._id == where) {
                 isTyping.value = true;
-                interval = setInterval(function() { switchText('Épp gépel') }, 500) as any;
+                interval = setInterval(() => {
+                    const typingElement = document.getElementById('typing') as HTMLParagraphElement;
+                    typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
+                }, 500) as any;
             }
         } else {
             if(activeChat.value._id == where) {
