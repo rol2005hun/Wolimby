@@ -142,10 +142,11 @@ function switchChat(chat: any) {
     activeChat.value = chat;
     scrollToBottom();
     activeChat.value.users.some((user: any) => {
-        // if(isTyping.value.who.includes(user.user._id)) {
-        //     isTyping.value = true;
-        // }
-        console.log(isTyping.value)
+        if(isTyping.value.who.includes(user.user._id)) {
+            isTyping.value.bool = true;
+        } else {
+            isTyping.value.bool = false;
+        }
     });
 }
 
@@ -445,11 +446,10 @@ function receiveTyping() {
             if(activeChat.value._id == where) {
                 isTyping.value.bool = true;
                 isTyping.value.who.push(who);
-                console.log(isTyping.value.who)
-                // interval = setInterval(() => {
-                //     const typingElement = document.getElementById('typing') as HTMLParagraphElement;
-                //     typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
-                // }, 500) as any;
+                interval = setInterval(() => {
+                    const typingElement = document.getElementById('typing') as HTMLParagraphElement;
+                    typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
+                }, 500) as any;
             }
         } else {
             if(activeChat.value._id == where) {
