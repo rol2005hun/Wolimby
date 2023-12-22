@@ -61,10 +61,8 @@
                 </div>
             </div>
             <div class="messages">
-                <div v-for="message in activeChat.messages" :key="message.id" :title="formatDateToText(message.createdAt)">
-                    <div class="message" :class="whoSent(message)">
-                        <p v-html="filterMessage(message.message)"></p>
-                    </div>
+                <div :class="'message ' + whoSent(message)" v-for="message in activeChat.messages" :key="message.id" :title="formatDateToText(message.createdAt)">
+                    <p v-html="filterMessage(message.message)"></p>
                 </div>
             </div>
             <p v-if="isTyping">{{ typingText }}</p>
@@ -295,7 +293,7 @@ function receiveChat() {
     });
 }
 
-function sendMessage(message?: any) {
+function sendMessage() {
     if(newMessageText.value.length < 1 && fileList.value.length < 1) return;
     if (activeChat.value) {
         const newMessage = {
@@ -322,7 +320,7 @@ function sendMessage(message?: any) {
                 }
             });
         }
-
+        console.log(newMessage)
         chatStore.sendMessage(activeChat.value._id, newMessage);
         socket.emit('sendMessage', newMessage, activeChat.value._id);
         activeChat.value.messages.push(newMessage);
