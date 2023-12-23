@@ -136,18 +136,17 @@ const newMessageText = ref('');
 const isVisible = ref({} as any);
 const isTyping = ref({ bool: false, who: [] } as { bool: boolean; who: string[] });
 const fileList = ref([] as any);
+let typingInterval: any;
 let socket: any;
 
 function switchChat(chat: any) {
     activeChat.value = chat;
     scrollToBottom();
     activeChat.value.users.some((user: any) => {
-        console.log(isTyping.value.who)
-        console.log(user.user._id)
         if(isTyping.value.who.includes(user.user._id)) {
-            isTyping.value.bool = true;
+            setTyping(true, user.user._id, true);
         } else {
-            isTyping.value.bool = false;
+            setTyping(false, user.user._id, true);
         }
     });
 }
@@ -234,6 +233,25 @@ function updateChatSorting() {
             return 0;
         }
     });
+}
+
+function setTyping(bool: boolean, who: string, isActive: boolean) {
+    if(bool) {
+        isTyping.value.bool = true;
+        isTyping.value.who.push(who);
+        if(isActive) {
+            typingInterval = setInterval(() => {
+                const typingElement = document.getElementById('typing') as HTMLParagraphElement;
+                typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
+            }, 500) as any;
+        }
+    } else {
+        isTyping.value.bool = false;
+        isTyping.value.who.splice(isTyping.value.who.indexOf(who), 1);
+        if(isActive) {
+            clearInterval(typingInterval);
+        }
+    }
 }
 
 function uploadFile(event: any) {
@@ -522,22 +540,18 @@ function typing(typing: boolean) {
 }
 
 function receiveTyping() {
-    let interval: any;
     socket.on('typing', (who: string, where: string, typing: boolean) => {
         if(typing) {
             if(activeChat.value._id == where) {
-                isTyping.value.bool = true;
-                isTyping.value.who.push(who);
-                interval = setInterval(() => {
-                    const typingElement = document.getElementById('typing') as HTMLParagraphElement;
-                    typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
-                }, 500) as any;
+                setTyping(true, who, true);
+            } else {
+                setTyping(true, who, false);
             }
         } else {
             if(activeChat.value._id == where) {
-                isTyping.value.bool = false;
-                isTyping.value.who.splice(isTyping.value.who.indexOf(who), 1);
-                interval = clearInterval(interval);
+                setTyping(false, who, true);
+            } else {
+                setTyping(false, who, false);
             }
         }
     });
