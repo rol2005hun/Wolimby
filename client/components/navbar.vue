@@ -4,6 +4,9 @@
       <NuxtLink to="/home" class="nav-branding">Social</NuxtLink>
       <ul class="nav-menu">
         <li class="nav-item">
+          <router-link v-if="isLoggedIn && isOnline" to="/chat" class="nav-link">Chat</router-link>
+        </li>
+        <li class="nav-item">
           <a v-if="isLoggedIn && isOnline" href="#" class="nav-link" @click="toggleMenu(2)">{{ currentUser.profile.username }}</a>
           <a v-else :href="'https://account.' + functions.getDomain + '/auth'" class="nav-link" @click="toggleMenu(2)">Bejelentkezés</a>
           <ul v-if="isLoggedIn && isOnline" class="nav-submenu">

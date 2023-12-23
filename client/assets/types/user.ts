@@ -7,7 +7,7 @@ interface UserProfile {
         password: string,
         profilePicture: string,
         biography: string,
-        // birthday: Date,
+        birthday?: Date,
         roles: number[],
 
         notificationList: [{
@@ -30,7 +30,7 @@ interface UserProfile {
         showName: boolean,
         showEmail: boolean
     },
-        appearance: {
+    appearance: {
         backgroundImage: string,
         theme: string
     }

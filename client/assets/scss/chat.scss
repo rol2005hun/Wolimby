@@ -230,6 +230,7 @@
     margin-left: 10px;
     background: transparent;
     border: none;
+    cursor: pointer;
 }
 
 .chat-window {
@@ -355,6 +356,32 @@
                 font-size: 20px;
                 color: black;
             }
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .chat-app {
+        flex-direction: column-reverse;
+        height: 100vh;
+        margin: 0;
+    }
+    
+    .modal-content {
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        max-height: 100%;
+    }
+
+    .sidebar {
+        width: 100%;
+        max-width: 100%;
+        margin-right: 0;
+        flex-direction: column-reverse;
+
+        .new-chat {
+            padding-bottom: 20px;
         }
     }
 }

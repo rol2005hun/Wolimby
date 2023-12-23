@@ -89,7 +89,7 @@
                 </div>
             </div>
             <div class="messages">
-                <div :class="'message ' + whoSent(message) + ' ' + message._id" v-for="message in activeChat.messages" :key="message._id" :title="formatDateToText(message.createdAt)">
+                <div :class="'message ' + sentReceived(message) + ' ' + message._id" v-for="message in activeChat.messages" :key="message._id" :title="formatDateToText(message.createdAt)">
                     <p v-html="filterMessage(message.message)"></p>
                 </div>
             </div>
@@ -107,7 +107,7 @@
                         <span><i class="fa-solid fa-upload"></i></span>
                     </label>
                     <input class="textarea" type="text" v-model="newMessageText" placeholder="Írd ide az üzeneted..." @focus="typing(true)" @blur="typing(false)"/>
-                    <button type="submit" title="sendbutton" :disabled="newMessageText.length < 1"><i class="fa-solid fa-paper-plane send-button"></i></button>
+                    <button type="submit" title="sendbutton"><i class="fa-solid fa-paper-plane send-button"></i></button>
                 </div>
             </form>
         </div>
@@ -154,8 +154,12 @@ function other(users: any) {
     return users.filter((user: any) => user.user._id != currentUser.value._id)[0];
 }
 
-function whoSent(message: any) {
+function sentReceived(message: any) {
     return (message.sentBy._id || message.sentBy) == currentUser.value._id ? 'sent' : 'received';
+}
+
+function whoSent(user: any) {
+    return user.nickname ? user.nickname : user.user.profile.username;
 }
 
 function formatDateToText(date: any): string {
@@ -164,9 +168,11 @@ function formatDateToText(date: any): string {
 
 function scrollToBottom() {
     const messages = document.querySelector('.messages') as HTMLElement;
-    nextTick(() => {
-        messages.scrollTop = messages.scrollHeight;
-    });
+    if(messages != null) {
+        nextTick(() => {
+            messages.scrollTop = messages.scrollHeight;
+        });
+    }
 }
 
 function closeUsers() {
@@ -215,6 +221,19 @@ function filter(event: any, type: string) {
     }
 }
 
+function updateChatSorting() {
+    filteredChats.value.sort((a: any, b: any) => {
+        const lastMessageA = a.messages[a.messages.length - 1];
+        const lastMessageB = b.messages[b.messages.length - 1];
+
+        if (lastMessageA && lastMessageB) {
+            return new Date(lastMessageB.createdAt).getTime() - new Date(lastMessageA.createdAt).getTime();
+        } else {
+            return 0;
+        }
+    });
+}
+
 function uploadFile(event: any) {
     const filetype = functions.getFileType(event.target.files[0].name);
 
@@ -256,14 +275,15 @@ function removeFile(index: number) {
 }
 
 function filterMessage(message: any) {
+    let result = message;
+    const mentionedUsers = activeChat.value.users.map((user: any) => user.user.profile.username);
+    const mentionRegex = new RegExp(`@(${mentionedUsers.join('|')})\\b`, 'g');
+    result = result.replace(mentionRegex, '<span class="mention" style="color: red;">$&</span>');
+
+    const fileMatches = message.match(/\bhttps?:\/\/\S+\b/g);
     const imageRegex = /\.(png|jpg|jpeg|gif)$/i;
     const videoRegex = /\.(mp4|mov|avi)$/i;
     const audioRegex = /\.(mp3|ogg|wav)$/i;
-
-    let result = message;
-
-    const fileMatches = message.match(/\bhttps?:\/\/\S+\b/g);
-    
     if (fileMatches) {
         fileMatches.forEach((fileUrl: any) => {
             let mediaElement = '';
@@ -288,7 +308,7 @@ function filterMessage(message: any) {
 function connection() {
     socket.emit('connection', currentUser.value._id);
     socket.on('connection', (onlineUsers: Array<null>) => {
-        chats.chats.value.forEach((chat: any) => {
+        filteredChats.value.forEach((chat: any) => {
             chat.users.forEach((user: any) => {
                 if(onlineUsers.includes(user.user._id) && !onlineChats.value.includes(chat._id) && user.user._id != currentUser.value._id) {
                     onlineChats.value.push(chat._id);
@@ -308,12 +328,49 @@ function newChat(user: any) {
         if(res.data.success) {
             notificationStore.addNotification({
                 id: 0,
-                message: `Új chatet kezdtél ${user.profile.username} felhasználóval.`,
+                message: `Új chatet kezdtél ${user.profile.username}-l.`,
                 type: 'success',
             });
-            socket.emit('newChat', res.data.chat);
+            socket.emit('newChat', res.data.chat, currentUser.value._id);
             socket.emit('connection', currentUser.value._id);
+            filteredChats.value.push(res.data.chat);
+            chats.chats.value = [...filteredChats.value];
+            if(chats.chats.value.length == 1) {
+                switchChat(res.data.chat);
+            }
             isVisible.value.users = false;
+        }
+    });
+}
+
+function receiveChat() {
+    socket.on('receiveChat', (chat: any, uid: string) => {
+        socket.emit('connection', currentUser.value._id);
+        if(chat.users.some((user: any) => user.user._id == currentUser.value._id)) {
+            filteredChats.value.push(chat);
+            chats.chats.value = [...filteredChats.value];
+            const username =  whoSent(chat.users.find((user: any) => user.user._id == uid));
+            notificationStore.addNotification({
+                id: 0,
+                message: `Új chatet kezdett veled ${username}.`,
+                type: 'success',
+            });
+            if(chats.chats.value.length == 1) {
+                switchChat(chat);
+            }
+        }
+    });
+}
+
+function editChat(chat: any) {
+    chatStore.editChat(chat._id, chat).then((res: any) => {
+        if(res.data.success) {
+            notificationStore.addNotification({
+                id: 0,
+                message: 'A chat sikeresen módosítva lett.',
+                type: 'success',
+            });
+            socket.emit('editChat', activeChat.value._id, chat);
             chatStore.getUserChats(currentUser.value._id).then((res) => {
                 if(res.data.success) {
                     filteredChats.value = res.data.chats;
@@ -323,20 +380,24 @@ function newChat(user: any) {
     });
 }
 
-function receiveChat() {
-    socket.on('receiveChat', (chat: any) => {
-        socket.emit('connection', currentUser.value._id);
-        if(chat.users.some((user: any) => user.user._id == currentUser.value._id)) {
-            filteredChats.value.push(chat);
-            notificationStore.addNotification({
-                id: 0,
-                message: `Új chatet kezdett veled ${other(chat.users).user.profile.username} felhasználó.`,
-                type: 'success',
-            });
-            if(chats.chats.value.length == 1) {
-                switchChat(chat);
+function receiveEditChat() {
+    socket.on('editChat', (chatid: string, editedChat: any) => {
+        filteredChats.value.forEach((chat: any, index: number) => {
+            if (chat._id === chatid) {
+                filteredChats.value[index] = editedChat;
+                chats.chats.value[index] = editedChat;
+
+                if(activeChat.value._id == chatid) {
+                    activeChat.value = editedChat;
+                }
+
+                notificationStore.addNotification({
+                    id: 0,
+                    message: `${returnChatDetails(chat, 'name')} chat módosítva lett valaki által.`,
+                    type: 'success',
+                });
             }
-        }
+        });
     });
 }
 
@@ -350,13 +411,17 @@ async function sendMessage() {
             createdAt: new Date(),
         }
 
-        chatStore.sendMessage(activeChat.value._id, newTextMessage);
-        socket.emit('sendMessage', newTextMessage, activeChat.value._id);
-        activeChat.value.messages.push(newTextMessage);
-        newMessageText.value = '';
-        const inputElement = document.getElementsByClassName('input')[0] as HTMLInputElement;
-        inputElement.style.height = '0';
-        scrollToBottom();
+        chatStore.sendMessage(activeChat.value._id, newTextMessage).then((res: any) => {
+            if(res.data.success) {
+                socket.emit('sendMessage', newTextMessage, activeChat.value._id, currentUser.value._id);
+                activeChat.value.messages.push(newTextMessage);
+                newMessageText.value = '';
+                const inputElement = document.getElementsByClassName('input')[0] as HTMLInputElement;
+                inputElement.style.height = '0';
+                updateChatSorting();
+                scrollToBottom();
+            }
+        });
     }
 
     if (fileList.value.length > 0) {
@@ -394,14 +459,18 @@ async function sendMessage() {
                     createdAt: new Date(),
                 }
 
-                chatStore.sendMessage(activeChat.value._id, newImageMessage);
-                socket.emit('sendMessage', newImageMessage, activeChat.value._id);
-                activeChat.value.messages.splice(activeChat.value.messages.indexOf(waitingMessage), 1);
-                clearInterval(interval);
-                activeChat.value.messages.push(newImageMessage);
-                fileList.value = [];
-                newMessageText.value = '';
-                scrollToBottom();
+                chatStore.sendMessage(activeChat.value._id, newImageMessage).then((res: any) => {
+                    if(res.data.success) {
+                        clearInterval(interval);
+                        socket.emit('sendMessage', newImageMessage, activeChat.value._id, currentUser.value._id);
+                        activeChat.value.messages.splice(activeChat.value.messages.indexOf(waitingMessage), 1);
+                        activeChat.value.messages.push(newImageMessage);
+                        fileList.value = [];
+                        newMessageText.value = '';
+                        updateChatSorting();
+                        scrollToBottom();
+                    }
+                });
             }
         } catch (error: any) {
             notificationStore.addNotification({
@@ -414,24 +483,35 @@ async function sendMessage() {
 }
 
 function receiveMessage() {
-    socket.on('receiveMessage', (message: any, id: string) => {
+    socket.on('receiveMessage', (message: any, id: string, uid: string) => {
         chats.chats.value.forEach((chat: any) => {
             if(chat._id == id) {
+                const mentionedUsers = chat.users.map((user: any) => user.user.profile.username);
+                const mentionRegex = new RegExp(`@(${mentionedUsers.join('|')})\\b`, 'g');
+                const isMentioned = mentionRegex.test(message.message);
+
                 chat.messages.push(message);
+                if (activeChat.value._id != id) {
+                    const username =  whoSent(chat.users.find((user: any) => user.user._id == uid));
+                    if(isMentioned) {
+                        notificationStore.addNotification({
+                            id: 0,
+                            message: `${username} megemlített téged a(z) ${returnChatDetails(chat, 'name')} chatben.`,
+                            type: 'success',
+                        });
+                    } else {
+                        notificationStore.addNotification({
+                            id: 0,
+                            message: `${username} üzenetet küldött a(z) ${returnChatDetails(chat, 'name')} chatbe.`,
+                            type: 'success',
+                        });
+                    }
+                }
             }
         });
 
-        if(activeChat.value._id != id) {
-            notificationStore.addNotification({
-                id: 0,
-                message: `Új üzenetet kaptál ${other(chats.chats.value.filter((chat: any) => chat._id == id)[0].users).user.profile.username} felhasználótól.`,
-                type: 'success',
-            });
-        }
-
-        nextTick(() => {
-            scrollToBottom();
-        });
+        updateChatSorting();
+        scrollToBottom();
     });
 }
 
@@ -461,44 +541,6 @@ function receiveTyping() {
     });
 }
 
-function editChat(chat: any) {
-    chatStore.editChat(chat._id, chat).then((res: any) => {
-        if(res.data.success) {
-            notificationStore.addNotification({
-                id: 0,
-                message: 'A chat sikeresen módosítva lett.',
-                type: 'success',
-            });
-            socket.emit('editChat', activeChat.value._id, chat);
-            chatStore.getUserChats(currentUser.value._id).then((res) => {
-                if(res.data.success) {
-                    filteredChats.value = res.data.chats;
-                }
-            });
-        }
-    });
-}
-
-function receiveEditChat() {
-    socket.on('editChat', (chatid: string, editedChat: any) => {
-        chats.chats.value.forEach((chat: any, index: number) => {
-            if (chat._id === chatid) {
-                chats.chats.value[index] = editedChat;
-
-                if(activeChat.value._id == chatid) {
-                    activeChat.value = editedChat;
-                }
-
-                notificationStore.addNotification({
-                    id: 0,
-                    message: `${returnChatDetails(chat, 'name')} chat módosítva lett valaki által.`,
-                    type: 'success',
-                });
-            }
-        });
-    });
-}
-
 function deleteChat(chatid: string) {
     chatStore.deleteChat(chatid).then((res: any) => {
         if(res.data.success) {
@@ -521,8 +563,9 @@ function deleteChat(chatid: string) {
 
 function receiveDeleteChat() {
     socket.on('deleteChat', (chatid: string) => {
-        chats.chats.value.forEach((chat: any) => {
+        filteredChats.value.forEach((chat: any) => {
             if(chat._id == chatid) {
+                filteredChats.value.splice(filteredChats.value.indexOf(chat), 1);
                 chats.chats.value.splice(chats.chats.value.indexOf(chat), 1);
                 if(activeChat.value._id == chatid) {
                     activeChat.value = chats.chats.value[0];
@@ -540,10 +583,13 @@ function receiveDeleteChat() {
 
 function disconnection() {
     socket.on('disconnection', (id: string) => {
-        chats.chats.value.forEach((chat: any) => {
+        filteredChats.value.forEach((chat: any) => {
             chat.users.filter((user: any) => {
                 if(user.user._id == id) {
                     onlineChats.value.splice(onlineChats.value.indexOf(chat._id), 1);
+                    if(isTyping.value.who.includes(id)) {
+                        isTyping.value.who.splice(isTyping.value.who.indexOf(id), 1);
+                    }
                 }
             });
         });
