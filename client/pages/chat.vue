@@ -142,6 +142,8 @@ function switchChat(chat: any) {
     activeChat.value = chat;
     scrollToBottom();
     activeChat.value.users.some((user: any) => {
+        console.log(isTyping.value.who)
+        console.log(user.user._id)
         if(isTyping.value.who.includes(user.user._id)) {
             isTyping.value.bool = true;
         } else {
