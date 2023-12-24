@@ -27,7 +27,7 @@ const config: NuxtConfig = {
   buildModules: ['@pinia/nuxt'],
   runtimeConfig: {
     public: {
-      apiBase: 'http://localhost:1225',
+      apiBase: 'https://api.wolimby.hu'
     }
   }
 }
