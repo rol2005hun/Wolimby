@@ -1,4 +1,5 @@
 import express from 'express';
+import http from 'http';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import cors from 'cors';
@@ -7,26 +8,31 @@ import posts from './routes/api/PostsAPI';
 import comments from './routes/api/CommentsAPI';
 import replies from './routes/api/RepliesAPI';
 import users from './routes/api/UsersAPI';
+import chats from './routes/api/ChatsAPI';
 import test from './routes/api/TestAPI';
+import setupSocket from './socket';
 
-const server = express();
+const app = express();
+const server = http.createServer(app);
 
 mongoose.connect(config.mongo.url)
     .then(() => console.log('[Wolimby Social] Az adatbázishoz való csatlakozás sikeres volt.'))
     .catch(err => console.log('[Wolimby Social] Az adatbázishoz való csatlakozás sikertelen volt: ' + err));
 
-server.use(express.urlencoded({ extended: true }));
-server.use(express.json());
-server.use(passport.initialize());
-server.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(passport.initialize());
+app.use(cors());
 
 configPassport(passport);
+setupSocket(server);
 
-server.use('/posts', posts);
-server.use('/posts/comments', comments);
-server.use('/posts/comments/replies', replies);
-server.use('/users', users);
-server.use('/test', test);
+app.use('/posts', posts);
+app.use('/posts/comments', comments);
+app.use('/posts/comments/replies', replies);
+app.use('/users', users);
+app.use('/chats', chats);
+app.use('/test', test);
 
 server.listen(config.server.port, () => {
     console.log('[Wolimby Social] A szerver sikeres elindult, port: ' + config.server.port);

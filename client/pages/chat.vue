@@ -93,7 +93,7 @@
                     <p v-html="filterMessage(message.message)"></p>
                 </div>
             </div>
-            <p v-if="isTyping.bool" id="typing">Épp gépel</p>
+            <p v-if="activeChat.typing && activeChat.typing.length > 0" id="typing">{{ generateTypingMessage(activeChat.typing) }}</p>
             <form class="input" @submit.prevent="sendMessage" v-on:keyup.enter="sendMessage">
                 <div class="file-list">
                     <div class="file" v-for="(file, index) in fileList" :key="index">
@@ -134,21 +134,53 @@ const filteredUsers = ref(users.value.filter(user => user._id !== currentUser.va
 const activeChat = ref(firstChat);
 const newMessageText = ref('');
 const isVisible = ref({} as any);
-const isTyping = ref({ bool: false, who: [] } as { bool: boolean; who: string[] });
+const isTyping = ref([] as string[]);
 const fileList = ref([] as any);
 let typingInterval: any;
 let socket: any;
 
 function switchChat(chat: any) {
-    activeChat.value = chat;
-    scrollToBottom();
-    activeChat.value.users.some((user: any) => {
-        if(isTyping.value.who.includes(user.user._id)) {
-            setTyping(true, user.user._id, true);
-        } else {
-            setTyping(false, user.user._id, true);
+    activeChat.value.users.forEach((user: any) => {
+        if (isTyping.value.includes(user.user._id)) {
+            setTyping(true, user.user._id, false);
         }
     });
+
+    activeChat.value = chat;
+
+    activeChat.value.users.forEach((user: any) => {
+        if (isTyping.value.includes(user.user._id)) {
+            setTyping(true, user.user._id, true);
+        }
+    });
+}
+
+function setTyping(typing: boolean, userId: string, isActive: boolean) {
+    scrollToBottom();
+
+    if (typing) {
+        if (!isTyping.value.includes(userId)) {
+            isTyping.value.push(userId);
+        }
+        if (isActive) {
+            activeChat.value.typing = [...isTyping.value];
+            typingInterval = setInterval(() => {
+                const typingElement = document.getElementById('typing') as HTMLParagraphElement;
+                typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
+            }, 500) as any;
+        } else {
+            clearInterval(typingInterval);
+        }
+    } else {
+        const index = isTyping.value.indexOf(userId);
+        if (index !== -1) {
+            isTyping.value.splice(index, 1);
+        }
+        if (isActive) {
+            activeChat.value.typing = [...isTyping.value];
+            clearInterval(typingInterval);
+        }
+    }
 }
 
 function other(users: any) {
@@ -195,6 +227,16 @@ function switchText(text: string) {
     }
 }
 
+function generateTypingMessage(typingUsers: string[]) {
+    if (typingUsers.length === 1) {
+        return `${typingUsers[0]} épp gépel`;
+    } else if (typingUsers.length === 2) {
+        return `${typingUsers[0]} és ${typingUsers[1]} épp gépelnek`;
+    } else if (typingUsers.length > 2) {
+        return 'Többen épp gépelnek';
+    }
+}
+
 function returnChatDetails(chat: any, detail: string) {
     switch(detail) {
         case 'name':
@@ -226,32 +268,12 @@ function updateChatSorting() {
     filteredChats.value.sort((a: any, b: any) => {
         const lastMessageA = a.messages[a.messages.length - 1];
         const lastMessageB = b.messages[b.messages.length - 1];
-
         if (lastMessageA && lastMessageB) {
             return new Date(lastMessageB.createdAt).getTime() - new Date(lastMessageA.createdAt).getTime();
         } else {
             return 0;
         }
     });
-}
-
-function setTyping(bool: boolean, who: string, isActive: boolean) {
-    if(bool) {
-        isTyping.value.bool = true;
-        isTyping.value.who.push(who);
-        if(isActive) {
-            typingInterval = setInterval(() => {
-                const typingElement = document.getElementById('typing') as HTMLParagraphElement;
-                typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
-            }, 500) as any;
-        }
-    } else {
-        isTyping.value.bool = false;
-        isTyping.value.who.splice(isTyping.value.who.indexOf(who), 1);
-        if(isActive) {
-            clearInterval(typingInterval);
-        }
-    }
 }
 
 function uploadFile(event: any) {
@@ -428,7 +450,6 @@ async function sendMessage() {
         const newTextMessage = {
             message: newMessageText.value,
             sentBy: currentUser.value._id,
-            createdAt: new Date(),
         }
 
         chatStore.sendMessage(activeChat.value._id, newTextMessage).then((res: any) => {
@@ -449,7 +470,6 @@ async function sendMessage() {
             _id: 'tempid',
             message: 'Fájl feltöltése folyamatban',
             sentBy: currentUser.value._id,
-            createdAt: new Date(),
         }
 
         activeChat.value.messages.push(waitingMessage);
@@ -476,7 +496,6 @@ async function sendMessage() {
                 const newImageMessage = {
                     message: res.data.data.link,
                     sentBy: currentUser.value._id,
-                    createdAt: new Date(),
                 }
 
                 chatStore.sendMessage(activeChat.value._id, newImageMessage).then((res: any) => {
@@ -603,8 +622,12 @@ function disconnection() {
             chat.users.filter((user: any) => {
                 if(user.user._id == id) {
                     onlineChats.value.splice(onlineChats.value.indexOf(chat._id), 1);
-                    if(isTyping.value.who.includes(id)) {
-                        isTyping.value.who.splice(isTyping.value.who.indexOf(id), 1);
+                    if(isTyping.value.includes(id)) {
+                        if(activeChat.value._id == chat._id) {
+                            setTyping(false, id, true);
+                        } else {
+                            setTyping(false, id, false);
+                        }
                     }
                 }
             });

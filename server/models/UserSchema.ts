@@ -8,7 +8,7 @@ export interface IUser {
         password: string,
         profilePicture: string,
         biography: string,
-        // birthday: Date,
+        birthday?: Date,
         roles: string,
         notificationList: [{
             title: string,
@@ -28,7 +28,8 @@ export interface IUser {
     },
     appearance: {
         backgroundImage: string,
-        theme: string
+        theme: string,
+        redirectLink: string
     }
 }
 
@@ -66,14 +67,13 @@ const UserSchema: Schema = new Schema({
             default: 'Wolimbyt használok.'
         },
 
-        // birthday: {
-        //     type: Date,
-        //     required: true
-        // },
+        birthday: {
+            type: Date
+        },
     
         roles: {
             type: Array,
-            default: [0]
+            default: ['user']
         },
 
         notificationList: [{
@@ -92,7 +92,7 @@ const UserSchema: Schema = new Schema({
     
             createdAt: {
                 type: Date,
-                default: Date.now()
+                default: new Date()
             }
         }],
     
@@ -103,13 +103,13 @@ const UserSchema: Schema = new Schema({
     
             loggedAt: {
                 type: Date,
-                default: Date.now()
+                default: new Date()
             }
         }],
 
         createdAt: {
             type: Date,
-            default: Date.now()
+            default: new Date()
         }
     },
 
@@ -135,6 +135,11 @@ const UserSchema: Schema = new Schema({
             type: String,
             default: 'theme3'
         },
+
+        redirectLink: {
+            type: String,
+            default: 'none'
+        }
     }
 });
 

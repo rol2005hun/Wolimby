@@ -82,4 +82,4 @@ export default {
     setCookie,
     getCookie,
     deleteCookie
-};
+}

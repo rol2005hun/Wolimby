@@ -97,13 +97,13 @@ const PostSchema: Schema = new Schema({
 
             createdAt: {
                 type: Date,
-                default: Date.now(),
+                default: new Date(),
             },
         }],
 
         createdAt: {
             type: Date,
-            default: Date.now(),
+            default: new Date(),
         },
     }],
 
@@ -131,7 +131,7 @@ const PostSchema: Schema = new Schema({
 
     createdAt: {
         type: Date,
-        default: Date.now(),
+        default: new Date(),
     },
 });
 
