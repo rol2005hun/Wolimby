@@ -132,7 +132,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watchEffect, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { userStore, notificationStore } from '@/store';
 import functions from '@/assets/ts/functions';
@@ -204,6 +204,7 @@ async function saveUser(userId: string, option1: string, option2: any) {
                     });
                     return;
                 }
+                console.log(res.data.data.link)
                 link.value = res.data.data.link;
             }
             
