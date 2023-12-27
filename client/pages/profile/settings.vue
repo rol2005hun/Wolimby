@@ -196,8 +196,7 @@ async function saveUser(userId: string, option1: string, option2: any) {
                 formData.append('image', pfp.value as string);
                 let res: any;
                 await userStore.uploadImage(formData).then((resp: any) => res = resp);
-                console.log(res)
-                if(!res.response.data.success) {
+                if(!res.data.success) {
                     notificationStore.addNotification({
                         id: 0,
                         type: 'error',
