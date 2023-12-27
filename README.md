@@ -5,7 +5,9 @@ A **[Wolimby](https://wolimby.hu)** egy weboldal, amely tanulás és szórakozá
 <br/>
 ╰─╮
 <br/>
-╰─➤Mi található a weboldalon? 
+╰─➤
+<br/>
+Mi található a weboldalon? 
 <br/>
 ・🔧 ┃ Gyorsaság.
 <br/>
