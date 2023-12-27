@@ -12,11 +12,12 @@
     width: 100px;
     height: 100px;
     padding: 10px;
+    border-radius: 30px;
   }
 }
 
 @media (max-width: 600px) {
-  .project-icons {
+  .project {
     text-align: center;
     flex-direction: column;
     margin-top: -50px;

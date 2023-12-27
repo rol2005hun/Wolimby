@@ -10,6 +10,6 @@ router.patch('/patch', middleWare.isLoggedIn, controller.patchUser);
 router.patch('/notification', middleWare.isLoggedIn, controller.notification);
 router.delete('/delete', middleWare.isLoggedIn, controller.deleteUser);
 router.get('/get', controller.getUser);
-router.get('/current', middleWare.isLoggedIn, controller.currentUser);
+router.get('/currentuser', middleWare.isLoggedIn, controller.currentUser);
 
 export = router;
