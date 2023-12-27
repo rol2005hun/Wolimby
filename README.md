@@ -1,7 +1,10 @@
 # Wolimby
-A **[Wolimby](https://wolimby.hu)** egy weboldal, amely tanulás és szórakozás révén készülődik. Na, de térjünk a lényegre...<br />
-✧・──・──・──・──・─・──・✧ 
-╰─╮<br/>
+A **[Wolimby](https://wolimby.hu)** egy weboldal, amely tanulás és szórakozás révén készülődik. Na, de térjünk a lényegre...
+<br/>
+✧・──・──・──・──・─・──・✧
+<br/>
+╰─╮
+<br/>
 ╰─➤Mi található a weboldalon? 
 <br/>
 ・🔧 ┃ Gyorsaság. 
