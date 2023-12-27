@@ -8,7 +8,7 @@
           <a v-else :href="'https://account.' + functions.getDomain() + '/auth?redirectTo=' + useRequestURL().href" class="nav-link">Bejelentkezés</a>
           <ul v-if="isLoggedIn && isOnline" class="nav-submenu">
             <li class="nav-submenu-link"><a :href="'https://account.' + functions.getDomain() + '/profile'">Profilom</a></li>
-            <li class="nav-submenu-link"><a :href="'https://account.' + functions.getDomain() + '/settings'">Beállítások</a></li>
+            <li class="nav-submenu-link"><a :href="'https://account.' + functions.getDomain() + '/profile/settings'">Beállítások</a></li>
             <li class="nav-submenu-link"><p @click="logout()">Kijelentkezés</p></li>
           </ul>
         </li>

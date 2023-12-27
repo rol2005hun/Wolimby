@@ -26,8 +26,8 @@ function userRoles(roles: number[] | undefined, id?: string): void {
     }
 }
 
-function formatDate(ipDate: string): string {
-    const date = new Date(ipDate);
+function formatDate(rdate: string): string {
+    const date = new Date(rdate);
     function addZero(i: number): string {
         return i < 10 ? `0${i}` : i.toString();
     }
@@ -82,4 +82,4 @@ export default {
     setCookie,
     getCookie,
     deleteCookie
-};
+}
