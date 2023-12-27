@@ -194,10 +194,17 @@ async function saveUser(userId: string, option1: string, option2: any) {
             if(pfp.value) {
                 const formData = new FormData();
                 formData.append('image', pfp.value as string);
-
-                await userStore.uploadImage(formData).then(res => {
-                    link.value = res.data.data.link;
-                });
+                let res: any;
+                await userStore.uploadImage(formData).then((resp: any) => res = resp);
+                if(!res.response.data.success) {
+                    notificationStore.addNotification({
+                        id: 0,
+                        type: 'error',
+                        message: res,
+                    });
+                    return;
+                }
+                link.value = res.data.data.link;
             }
             
             patchedUserSettings = {

@@ -47,7 +47,7 @@ export const useUserStore = defineStore('user', {
 
     async getCurrentUser() {
       try {
-        const res: any = await axios.get(`${useRuntimeConfig().public.apiBase}/users/current`);
+        const res: any = await axios.get(`${useRuntimeConfig().public.apiBase}/users/currentuser`);
         if(res.data.success) {
           this.$state.currentUser = res.data.user;
         }
@@ -102,10 +102,11 @@ export const useUserStore = defineStore('user', {
           headers: {
             Authorization: 'Client-ID ' + useRuntimeConfig().public.imgurClientId,
           },
-      });
-        return res;
+        });
+          return res;
       } catch(err: any) {
         this.$state.error = err.response.data.message;
+        return err;
       }
     },
 
