@@ -26,7 +26,7 @@ const config: NuxtConfig = {
   buildModules: ['@pinia/nuxt'],
   runtimeConfig: {
     public: {
-      apiBase: 'http://localhost:2002',
+      apiBase: 'https://api.shortify.wolimby.hu'
     }
   }
 }
