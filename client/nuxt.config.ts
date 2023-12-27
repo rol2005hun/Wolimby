@@ -34,7 +34,7 @@ const config: NuxtConfig = {
   },
   runtimeConfig: {
     public: {
-      apiBase: 'http://localhost:2003',
+      apiBase: 'https://api.social.wolimby.hu',
       imgurClientId: '80af936d45232db'
     }
   }
