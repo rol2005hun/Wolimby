@@ -7,14 +7,24 @@ A **[Wolimby](https://wolimby.hu)** egy weboldal, amely tanulás és szórakozá
 <br/>
 ╰─➤Mi található a weboldalon? 
 <br/>
-・🔧 ┃ Gyorsaság. 
-・🎅 ┃ GIF profilkép. 
-・👑 ┃ Jó közösség. 
-・🛠️ ┃ Jófej csapattagok. 
-・📝  ┃ Link rövidítés, chat, bejegyzések, játékok. 
-・🤖 ┃ !! A weboldal fejlesztés alatt jelenleg !! 
-Nézd meg a bemutató videót, és ha megtetszett amit láttál, csatlakozz és várd a fejleményeket. Pacsi 🤟 
+・🔧 ┃ Gyorsaság.
+<br/>
+・🎅 ┃ GIF profilkép.
+<br/>
+・👑 ┃ Jó közösség.
+<br/>
+・🛠️ ┃ Jófej csapattagok.
+<br/>
+・📝  ┃ Link rövidítés, chat, bejegyzések, játékok.
+<br/>
+・🤖 ┃ !! A weboldal fejlesztés alatt jelenleg !!
+<br/>
+Nézd meg a bemutató videót, és ha megtetszett amit láttál, csatlakozz és várd a fejleményeket. Pacsi 🤟
+<br/>
 [📨 Szerver meghívó](https://discord.gg/FqdMuyhdTC)
-[📺 Bemutató videó](https://youtu.be/LzVwiGQb6HU) (régi weboldal) 
+<br/>
+[📺 Bemutató videó](https://youtu.be/LzVwiGQb6HU) (régi weboldal)
+<br/>
 [📃 Discord Szerversablon](https://discord.new/sZMYQYRTj3dz)
+<br/>
 [🌐 GitHub - forráskód](https://github.com/rol2005hun/Wolimby)
