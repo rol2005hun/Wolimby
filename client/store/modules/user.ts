@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
-import functions from '@/assets/ts/functions';
 import UserProfile from '@/assets/types/user';
 
 export const useUserStore = defineStore('user', {

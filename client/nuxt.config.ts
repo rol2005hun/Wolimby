@@ -15,7 +15,7 @@ const config: NuxtConfig = {
       ],
       meta: [
         { name: 'title', content: 'Wolimby - Games' },
-        { name: 'description', content: 'Játsz a Wolimby összes játékával egy helyen' }
+        { name: 'description', content: 'Játssz a Wolimby összes játékával egy helyen' }
       ]
     },
     rootId: 'app'
@@ -26,8 +26,7 @@ const config: NuxtConfig = {
   buildModules: ['@pinia/nuxt'],
   runtimeConfig: {
     public: {
-      apiBase: 'https://api.games.wolimby.hu',
-      cookieDomain: 'wolimby.hu'
+      apiBase: 'http://localhost:2001',
     }
   }
 }

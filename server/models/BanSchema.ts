@@ -25,7 +25,7 @@ const BanSchema: Schema = new Schema({
 
         bannedAt: {
             type: Date,
-            default: Date.now()
+            default: new Date()
         }
     }],
 
@@ -36,7 +36,7 @@ const BanSchema: Schema = new Schema({
 
         bannedAt: {
             type: Date,
-            default: Date.now()
+            default: new Date()
         }
     }]
 });
