@@ -28,7 +28,8 @@ export interface IUser {
     },
     appearance: {
         backgroundImage: string,
-        theme: string
+        theme: string,
+        redirectLink: string
     }
 }
 
@@ -134,6 +135,11 @@ const UserSchema: Schema = new Schema({
             type: String,
             default: 'theme3'
         },
+
+        redirectLink: {
+            type: String,
+            default: 'none'
+        }
     }
 });
 
