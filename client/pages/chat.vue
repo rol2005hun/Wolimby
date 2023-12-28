@@ -50,7 +50,7 @@
     </div>
     <div class="chat-app">
         <div class="sidebar">
-            <div class="user-list">
+            <div class="chat-list">
                 <div class="search">
                     <input type="text" placeholder="Keresés..." v-on:input="filter($event, 'chats')"/>
                 </div>
@@ -59,7 +59,7 @@
                 </div>
                 <div v-else v-for="chat in filteredChats" :key="chat._id" @click="switchChat(chat)">
                     <img :src="returnChatDetails(chat, 'icon')" alt="pfp"/>
-                    <div class="user-info">
+                    <div class="chat-info">
                         <h3>{{ returnChatDetails(chat, 'name') }}</h3>
                         <p>{{ onlineChats.includes(chat._id) ? 'Online' : 'Offline' }}</p>
                     </div>
@@ -78,7 +78,7 @@
         <div v-else class="chat-window">
             <div class="header">
                 <img :src="returnChatDetails(activeChat, 'icon')" alt="pfp"/>
-                <div class="user-info">
+                <div class="chat-info">
                     <h3>{{ returnChatDetails(activeChat, 'name') }}</h3>
                     <p>{{ onlineChats.includes(activeChat._id) ? 'Online' : 'Offline' }}</p>
                 </div>
@@ -502,7 +502,7 @@ async function sendMessage() {
                     sentBy: currentUser.value._id,
                 }
 
-                chatStore.sendMessage(activeChat.value._id, newImageMessage).then((res: any) => {
+                chatStore.sendMessage(activeChat.value, newImageMessage).then((res: any) => {
                     if(res.data.success) {
                         clearInterval(interval);
                         socket.emit('sendMessage', newImageMessage, activeChat.value._id, currentUser.value._id);
