@@ -502,7 +502,7 @@ async function createComment(postId: string) {
             const commentElement = commentCard.getElementsByClassName('comment')[0] as HTMLDivElement;
             commentCard.insertBefore(newPTag, commentElement)
             var interval = setInterval(() => {
-                const typingElement = document.querySelector('.tempid') as HTMLDivElement;
+                const typingElement = document.querySelector('p.tempid') as HTMLDivElement;
                 typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
             }, 500) as any;
         }
@@ -532,7 +532,7 @@ async function createComment(postId: string) {
                     if(res.data.success) {
                         clearInterval(interval);
                         await postStore.getAllPost();
-                        const tempPTag = document.querySelector('.tempid p');
+                        const tempPTag = document.querySelector('p.tempid');
                         console.log(tempPTag)
                         tempPTag?.remove();
                     }
@@ -591,7 +591,7 @@ async function createReply(userId: string, postId: string, commentId: string) {
             const replyElement = replyCard.getElementsByClassName('reply')[0] as HTMLDivElement;
             replyCard.insertBefore(newPTag, replyElement)
             var interval = setInterval(() => {
-                const typingElement = document.querySelector('.tempid p') as HTMLDivElement;
+                const typingElement = document.querySelector('p.tempid') as HTMLDivElement;
                 typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
             }, 500) as any;
         }
@@ -622,7 +622,7 @@ async function createReply(userId: string, postId: string, commentId: string) {
                     if(res.data.success) {
                         clearInterval(interval);
                         await postStore.getAllPost();
-                        const tempPTag = document.querySelector('.tempid p');
+                        const tempPTag = document.querySelector('p.tempid');
                         console.log(tempPTag)
                         tempPTag?.remove();
                     }
