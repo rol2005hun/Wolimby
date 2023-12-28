@@ -494,7 +494,7 @@ async function createComment(postId: string) {
             var interval = setInterval(() => {
                 typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
             }, 500) as any;
-        } else {
+        } else if(!lastComment && fileListComment.value.length > 0) {
             const typingElement = document.getElementsByClassName(`card-comments ${postId}`)[0] as HTMLDivElement;
             const newPTag = document.createElement('p');
             newPTag.textContent = 'Fájl feltöltése folyamatban...';
@@ -503,6 +503,7 @@ async function createComment(postId: string) {
             typingElement.insertBefore(newPTag, commentElement)
             var interval = setInterval(() => {
                 const typingElement = document.querySelector('.tempid p') as HTMLDivElement;
+                console.log(typingElement)
                 typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
             }, 500) as any;
         }
@@ -532,6 +533,8 @@ async function createComment(postId: string) {
                     if(res.data.success) {
                         clearInterval(interval);
                         await postStore.getAllPost();
+                        const tempPTag = document.querySelector('.tempid p');
+                        tempPTag?.remove();
                     }
                 });
             }
@@ -579,7 +582,7 @@ async function createReply(userId: string, postId: string, commentId: string) {
             var interval = setInterval(() => {
                 typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
             }, 500) as any;
-        } else {
+        } else if(!lastReply && fileListReply.value.length > 0) {
             const typingElement = document.getElementsByClassName(`reply-modal-overlay ${commentId}`)[0] as HTMLDivElement;
             const newPTag = document.createElement('p');
             newPTag.textContent = 'Fájl feltöltése folyamatban...';
@@ -619,6 +622,8 @@ async function createReply(userId: string, postId: string, commentId: string) {
                     if(res.data.success) {
                         clearInterval(interval);
                         await postStore.getAllPost();
+                        const tempPTag = document.querySelector('.tempid p');
+                        tempPTag?.remove();
                     }
                 });
             }
