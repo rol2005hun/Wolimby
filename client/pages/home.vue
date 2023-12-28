@@ -495,15 +495,14 @@ async function createComment(postId: string) {
                 typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
             }, 500) as any;
         } else if(!lastComment && fileListComment.value.length > 0) {
-            const typingElement = document.getElementsByClassName(`card-comments ${postId}`)[0] as HTMLDivElement;
+            const commentCard = document.getElementsByClassName(`card-comments ${postId}`)[0] as HTMLDivElement;
             const newPTag = document.createElement('p');
             newPTag.textContent = 'Fájl feltöltése folyamatban...';
             newPTag.classList.add('tempid');
-            const commentElement = typingElement.getElementsByClassName('comment')[0] as HTMLDivElement;
-            typingElement.insertBefore(newPTag, commentElement)
+            const commentElement = commentCard.getElementsByClassName('comment')[0] as HTMLDivElement;
+            commentCard.insertBefore(newPTag, commentElement)
             var interval = setInterval(() => {
-                const typingElement = document.querySelector('.tempid p') as HTMLDivElement;
-                console.log(typingElement)
+                const typingElement = document.querySelector('.tempid') as HTMLDivElement;
                 typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
             }, 500) as any;
         }
@@ -534,6 +533,7 @@ async function createComment(postId: string) {
                         clearInterval(interval);
                         await postStore.getAllPost();
                         const tempPTag = document.querySelector('.tempid p');
+                        console.log(tempPTag)
                         tempPTag?.remove();
                     }
                 });
@@ -583,13 +583,13 @@ async function createReply(userId: string, postId: string, commentId: string) {
                 typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
             }, 500) as any;
         } else if(!lastReply && fileListReply.value.length > 0) {
-            const typingElement = document.getElementsByClassName(`reply-modal-overlay ${commentId}`)[0] as HTMLDivElement;
+            const replyCard = document.getElementsByClassName(`reply-modal-overlay ${commentId}`)[0] as HTMLDivElement;
             const newPTag = document.createElement('p');
             newPTag.textContent = 'Fájl feltöltése folyamatban...';
             newPTag.classList.add('tempid');
-            typingElement.appendChild(newPTag);
-            const replyElement = typingElement.getElementsByClassName('reply')[0] as HTMLDivElement;
-            typingElement.insertBefore(newPTag, replyElement)
+            replyCard.appendChild(newPTag);
+            const replyElement = replyCard.getElementsByClassName('reply')[0] as HTMLDivElement;
+            replyCard.insertBefore(newPTag, replyElement)
             var interval = setInterval(() => {
                 const typingElement = document.querySelector('.tempid p') as HTMLDivElement;
                 typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
@@ -623,6 +623,7 @@ async function createReply(userId: string, postId: string, commentId: string) {
                         clearInterval(interval);
                         await postStore.getAllPost();
                         const tempPTag = document.querySelector('.tempid p');
+                        console.log(tempPTag)
                         tempPTag?.remove();
                     }
                 });
