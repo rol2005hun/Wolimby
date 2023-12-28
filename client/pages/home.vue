@@ -583,7 +583,7 @@ async function createReply(userId: string, postId: string, commentId: string) {
                 typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
             }, 500) as any;
         } else if(!lastReply && fileListReply.value.length > 0) {
-            const replyCard = document.getElementsByClassName(`modal-body ${commentId}`)[0] as HTMLDivElement;
+            const replyCard = document.getElementsByClassName(`modal-body`)[0] as HTMLDivElement;
             const newPTag = document.createElement('p');
             newPTag.textContent = 'Fájl feltöltése folyamatban...';
             newPTag.classList.add('tempid');
