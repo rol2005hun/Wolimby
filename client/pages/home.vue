@@ -499,6 +499,7 @@ async function createComment(postId: string) {
             const newPTag = document.createElement('p');
             newPTag.textContent = 'Fájl feltöltése folyamatban...';
             newPTag.classList.add('tempid');
+            newPTag.style.marginTop = '20px';
             const commentElement = commentCard.getElementsByClassName('comment')[0] as HTMLDivElement;
             commentCard.insertBefore(newPTag, commentElement)
             var interval = setInterval(() => {
@@ -533,7 +534,6 @@ async function createComment(postId: string) {
                         clearInterval(interval);
                         await postStore.getAllPost();
                         const tempPTag = document.querySelector('p.tempid');
-                        console.log(tempPTag)
                         tempPTag?.remove();
                     }
                 });
@@ -588,7 +588,7 @@ async function createReply(userId: string, postId: string, commentId: string) {
             newPTag.textContent = 'Fájl feltöltése folyamatban...';
             newPTag.classList.add('tempid');
             replyCard.appendChild(newPTag);
-            const replyElement = replyCard.getElementsByClassName('reply')[0] as HTMLDivElement;
+            const replyElement = replyCard.getElementsByClassName('modal-body')[0] as HTMLDivElement;
             replyCard.insertBefore(newPTag, replyElement)
             var interval = setInterval(() => {
                 const typingElement = document.querySelector('p.tempid') as HTMLDivElement;
@@ -623,7 +623,6 @@ async function createReply(userId: string, postId: string, commentId: string) {
                         clearInterval(interval);
                         await postStore.getAllPost();
                         const tempPTag = document.querySelector('p.tempid');
-                        console.log(tempPTag)
                         tempPTag?.remove();
                     }
                 });
