@@ -499,7 +499,8 @@ async function createComment(postId: string) {
             const newPTag = document.createElement('p');
             newPTag.textContent = 'Fájl feltöltése folyamatban...';
             newPTag.classList.add('tempid');
-            typingElement.appendChild(newPTag);
+            const commentElement = typingElement.getElementsByClassName('comment')[0] as HTMLDivElement;
+            typingElement.insertBefore(newPTag, commentElement)
             var interval = setInterval(() => {
                 const typingElement = document.querySelector('.tempid p') as HTMLDivElement;
                 typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
@@ -584,6 +585,8 @@ async function createReply(userId: string, postId: string, commentId: string) {
             newPTag.textContent = 'Fájl feltöltése folyamatban...';
             newPTag.classList.add('tempid');
             typingElement.appendChild(newPTag);
+            const replyElement = typingElement.getElementsByClassName('reply')[0] as HTMLDivElement;
+            typingElement.insertBefore(newPTag, replyElement)
             var interval = setInterval(() => {
                 const typingElement = document.querySelector('.tempid p') as HTMLDivElement;
                 typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
