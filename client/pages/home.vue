@@ -131,7 +131,7 @@
                                 </div>
                             </div>
                             <div class="card-comments-body">
-                                <p class="comment-description">{{ comment.description }}</p>
+                                <p :class="'comment-description ' + comment._id" v-html="filterText(comment.description)"></p>
                                 <img v-if="(comment.file != 'none') && functions.getFileType(comment.file) == 'image'" :src="comment.file" alt="commentimg" class="comment-image">
                                 <video v-if="comment.file != 'none' && functions.getFileType(comment.file) == 'video'" :src="comment.file" class="comment-image" controls></video>
                                 <div class="card-comments-footer">
@@ -156,7 +156,7 @@
                                                     <div class="left-side">
                                                         <img :src="reply.author ? reply.author.profile.profilePicture : 'https://i.imgur.com/ceDUpKL.png'" class="user-picture" alt="userpfp">
                                                         <span :class="'username-roles-custom ' + reply._id">{{ reply.author ? reply.author.profile.username : 'Törölt fiók' }}</span>
-                                                        <p>{{ reply.description }}</p>
+                                                        <p :class="'reply-description ' + reply._id" v-html="filterText(reply.description)"></p>
                                                     </div>
                                                     <div class="right-side">
                                                         <button @click="editReply(post._id, comment._id, reply._id, 'like')" class="like-button reply-button">
@@ -284,6 +284,37 @@ function removeFile(index: number, id: string, type: string) {
             inputElement.style.minHeight = '';
         }
     }
+}
+
+function filterText(message: any) {
+    let result = message;
+    // const mentionedUsers = activeChat.value.users.map((user: any) => user.user.profile.username);
+    // const mentionRegex = new RegExp(`@(${mentionedUsers.join('|')})\\b`, 'g');
+    // result = result.replace(mentionRegex, '<span class="mention" style="color: red;">$&</span>');
+
+    const fileMatches = message.match(/\bhttps?:\/\/\S+\b/g);
+    const imageRegex = /\.(png|jpg|jpeg|gif)$/i;
+    const videoRegex = /\.(mp4|mov|avi)$/i;
+    const audioRegex = /\.(mp3|ogg|wav)$/i;
+    if (fileMatches) {
+        fileMatches.forEach((fileUrl: any) => {
+            let mediaElement = '';
+
+            if (imageRegex.test(fileUrl)) {
+                mediaElement = `<img src="${fileUrl}" style="max-width: 100%; max-height: 100%;" alt="Image"/>`;
+            } else if (videoRegex.test(fileUrl)) {
+                mediaElement = `<video controls style="max-width: 100%; max-height: 100%;"><source src="${fileUrl}" type="video/mp4"></video>`;
+            } else if (audioRegex.test(fileUrl)) {
+                mediaElement = `<audio controls style="max-width: 100%; max-height: 100%;"><source src="${fileUrl}" type="audio/mpeg"></audio>`;
+            }
+
+            const isFileAlone = result.trim() === fileUrl.trim();
+
+            result = isFileAlone ? result.replace(fileUrl, mediaElement) : result.replace(fileUrl, `<br/>&nbsp;${mediaElement}`);
+        });
+    }
+
+    return result;
 }
 
 function uploadFile(event: any) {
@@ -433,6 +464,7 @@ function openPost(post: string) {
 async function createComment(postId: string) {
     if(comment.value.length < 1 && fileListComment.value.length < 1) return;
 
+    let lastComment: any;
     if(comment.value.length > 1) {
         const commentToCreate = {
             author: currentUser.value._id,
@@ -444,6 +476,7 @@ async function createComment(postId: string) {
             if(res.data.success) {
                 await postStore.getAllPost();
                 comment.value = '';
+                lastComment = res.data.comment
 
                 notificationStore.addNotification({
                     id: 0,
@@ -455,22 +488,23 @@ async function createComment(postId: string) {
     }
 
     if(fileListComment.value.length > 0) {
-        const waitingComment = {
-            author: currentUser.value._id,
-            postId: postId,
-            description: 'Fájl feltöltése folyamatban...',
+        if(lastComment) {
+            const typingElement = document.getElementsByClassName(`comment-description ${lastComment._id}`)[0] as HTMLDivElement;
+            typingElement.innerHTML += ' Fájl feltöltése folyamatban...';
+            var interval = setInterval(() => {
+                typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
+            }, 500) as any;
+        } else {
+            const typingElement = document.getElementsByClassName(`card-comments ${postId}`)[0] as HTMLDivElement;
+            const newPTag = document.createElement('p');
+            newPTag.textContent = 'Fájl feltöltése folyamatban...';
+            newPTag.classList.add('tempid');
+            typingElement.appendChild(newPTag);
+            var interval = setInterval(() => {
+                const typingElement = document.querySelector('.tempid p') as HTMLDivElement;
+                typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
+            }, 500) as any;
         }
-
-        posts.value.forEach((post: any) => {
-            if(post._id == postId) {
-                post.comments.push(waitingComment);
-            }
-        });
-
-        const interval = setInterval(() => {
-            const typingElement = document.querySelector('.tempid p') as HTMLDivElement;
-            typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
-        }, 500) as any;
 
         const file = fileListComment.value[0].file;
         const formData = new FormData();
@@ -513,6 +547,7 @@ async function createComment(postId: string) {
 async function createReply(userId: string, postId: string, commentId: string) {
     if(reply.value.length < 1 && fileListReply.value.length < 1) return;
 
+    let lastReply: any;
     if(reply.value.length > 1) {
         const replyToCreate = {
             author: userId,
@@ -525,6 +560,7 @@ async function createReply(userId: string, postId: string, commentId: string) {
             if(res.data.success) {
                 await postStore.getAllPost();
                 reply.value = '';
+                lastReply = res.data.reply
 
                 notificationStore.addNotification({
                     id: 0,
@@ -536,27 +572,23 @@ async function createReply(userId: string, postId: string, commentId: string) {
     }
 
     if(fileListReply.value.length > 0) {
-        const waitingReply = {
-            author: userId,
-            postId: postId,
-            commentId: commentId,
-            description: 'Fájl feltöltése folyamatban...'
+        if(lastReply) {
+            const typingElement = document.getElementsByClassName(`reply-description ${lastReply._id}`)[0] as HTMLDivElement;
+            typingElement.innerHTML += ' Fájl feltöltése folyamatban...';
+            var interval = setInterval(() => {
+                typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
+            }, 500) as any;
+        } else {
+            const typingElement = document.getElementsByClassName(`reply-modal-overlay ${commentId}`)[0] as HTMLDivElement;
+            const newPTag = document.createElement('p');
+            newPTag.textContent = 'Fájl feltöltése folyamatban...';
+            newPTag.classList.add('tempid');
+            typingElement.appendChild(newPTag);
+            var interval = setInterval(() => {
+                const typingElement = document.querySelector('.tempid p') as HTMLDivElement;
+                typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
+            }, 500) as any;
         }
-
-        posts.value.forEach((post: any) => {
-            if(post._id == postId) {
-                post.comments.forEach((comment: any) => {
-                    if(comment._id == commentId) {
-                        comment.replies.push(waitingReply);
-                    }
-                });
-            }
-        });
-
-        const interval = setInterval(() => {
-            const typingElement = document.querySelector('.tempid p') as HTMLDivElement;
-            typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
-        }, 500) as any;
 
         const file = fileListReply.value[0].file;
         const formData = new FormData();
