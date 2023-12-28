@@ -44,7 +44,7 @@
             </form>
             <div class="delete-chat">
                 <p>Chat törlése - Visszfordíthatatlan</p>
-                <button class="delete-chat-btn" @click="deleteChat(activeChat._id)"><i class="fa-solid fa-trash"></i></button>
+                <button class="delete-chat-btn" @click="deleteChat(activeChat._id, activeChat.users)"><i class="fa-solid fa-trash"></i></button>
             </div>
         </div>
     </div>
@@ -140,19 +140,23 @@ let typingInterval: any;
 let socket: any;
 
 function switchChat(chat: any) {
-    activeChat.value.users.forEach((user: any) => {
-        if (isTyping.value.includes(user.user._id)) {
-            setTyping(true, user.user._id, false);
-        }
-    });
+    if(activeChat.value) {
+        activeChat.value.users.forEach((user: any) => {
+            if (isTyping.value.includes(user.user._id)) {
+                setTyping(true, user.user._id, false);
+            }
+        });
 
-    activeChat.value = chat;
+        activeChat.value = chat;
 
-    activeChat.value.users.forEach((user: any) => {
-        if (isTyping.value.includes(user.user._id)) {
-            setTyping(true, user.user._id, true);
-        }
-    });
+        activeChat.value.users.forEach((user: any) => {
+            if (isTyping.value.includes(user.user._id)) {
+                setTyping(true, user.user._id, true);
+            }
+        });
+    } else {
+        activeChat.value = chat;
+    }
 }
 
 function setTyping(typing: boolean, userId: string, isActive: boolean) {
@@ -370,7 +374,7 @@ function newChat(user: any) {
         if(res.data.success) {
             notificationStore.addNotification({
                 id: 0,
-                message: `Új chatet kezdtél ${user.profile.username}-l.`,
+                message: `Új chatet kezdtél vele: ${user.profile.username}`,
                 type: 'success',
             });
             socket.emit('newChat', res.data.chat, currentUser.value._id);
@@ -452,7 +456,7 @@ async function sendMessage() {
             sentBy: currentUser.value._id,
         }
 
-        chatStore.sendMessage(activeChat.value._id, newTextMessage).then((res: any) => {
+        chatStore.sendMessage(activeChat.value, newTextMessage).then((res: any) => {
             if(res.data.success) {
                 socket.emit('sendMessage', newTextMessage, activeChat.value._id, currentUser.value._id);
                 activeChat.value.messages.push(newTextMessage);
@@ -576,8 +580,8 @@ function receiveTyping() {
     });
 }
 
-function deleteChat(chatid: string) {
-    chatStore.deleteChat(chatid).then((res: any) => {
+function deleteChat(chatId: string, users: object) {
+    chatStore.deleteChat(chatId, users).then((res: any) => {
         if(res.data.success) {
             notificationStore.addNotification({
                 id: 0,

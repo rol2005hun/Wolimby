@@ -20,7 +20,7 @@ export const useCommentStore = defineStore('comment', {
             }
         },
 
-        async editComment(postId: string, commentId: number, patching: string, body: object) {
+        async editComment(postId: string, commentId: string, patching: string, body: object) {
             try {
                 const res: any = await axios.patch(`${useRuntimeConfig().public.apiBase}/posts/comments/edit?postId=${postId}&commentId=${commentId}&editing=${patching}`, body);
                 return res;
@@ -29,9 +29,9 @@ export const useCommentStore = defineStore('comment', {
             }
         },
 
-        async deleteComment(postId: string, commentId: number) {
+        async deleteComment(postId: string, commentId: string, userId: string) {
             try {
-                const res: any = await axios.delete(`${useRuntimeConfig().public.apiBase}/posts/comments/delete?postId=${postId}&commentId=${commentId}`);
+                const res: any = await axios.delete(`${useRuntimeConfig().public.apiBase}/posts/comments/delete?postId=${postId}&commentId=${commentId}`, { data: { userId } });
                 return res;
             } catch(err: any) {
                 this.$state.error = err.response.data.message;

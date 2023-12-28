@@ -47,18 +47,18 @@ export const useChatStore = defineStore('chat', {
             }
         },
 
-        async sendMessage(chatId: string, message: object) {
+        async sendMessage(chat: any, message: object) {
             try {
-                const res: any = await axios.post(`${useRuntimeConfig().public.apiBase}/chats/messages/send`, { chatId, message});
+                const res: any = await axios.post(`${useRuntimeConfig().public.apiBase}/chats/messages/send?chatId=${chat._id}`, { message, chat });
                 return res;
             } catch(err: any) {
                 this.$state.error = err.response.data.message;
             }
         },
 
-        async deleteChat(chatId: string) {
+        async deleteChat(chatId: string, users: object) {
             try {
-                const res: any = await axios.delete(`${useRuntimeConfig().public.apiBase}/chats/delete?chatId=${chatId}`);
+                const res: any = await axios.delete(`${useRuntimeConfig().public.apiBase}/chats/delete?chatId=${chatId}`, { data: { users } });
                 return res;
             } catch(err: any) {
                 this.$state.error = err.response.data.message;

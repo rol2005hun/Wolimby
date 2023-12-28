@@ -95,7 +95,7 @@ const editChat = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 const sendMessage = async (req: Request, res: Response, next: NextFunction) => {
-    const chat = await Chat.findOne({ _id: req.body.chatId });
+    const chat = await Chat.findOne({ _id: req.query.chatId });
 
     try {
         chat.messages.push(req.body.message);

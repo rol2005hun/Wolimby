@@ -29,12 +29,16 @@ const config: NuxtConfig = {
     sockets: [{
       default: true,
       name: 'main',
-      url: 'http://localhost:2003'
+      url: 'http://localhost:2004'
     }]
   },
   runtimeConfig: {
     public: {
+<<<<<<< HEAD
       apiBase: 'https://api.social.wolimby.hu',
+=======
+      apiBase: 'http://localhost:2004',
+>>>>>>> 59c8e0d (push)
       imgurClientId: '80af936d45232db'
     }
   }

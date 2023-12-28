@@ -80,9 +80,21 @@
                         <button class="share-button footer-button" @click="copyLink(post._id)"><i class="fa-solid fa-share"></i> {{ post.shares.length }} megosztás</button>
                     </div>
                     <div :class="'card-comments ' + post._id">
-                        <form @submit.prevent="createComment(post._id)" class="textarea-container">
-                            <textarea type="text" class="create-comment" placeholder="Szólj hozzá..." v-model="comment" name="create-comment" maxlength="200" required></textarea>
-                            <button type="submit" title="sendbutton"><i class="fa-solid fa-paper-plane send-button"></i></button>
+                        <form @submit.prevent="createComment(post._id)" :class="'textarea-container ' + post._id">
+                            <div class="file-list">
+                                <div class="file" v-for="(file, index) in fileListComment" :key="index">
+                                    <div class="preview"><img :src="file.url" alt="File Thumbnail" /></div>
+                                    <i class="fa-solid fa-trash" @click="removeFile(index, post._id, 'comment')"></i>
+                                </div>
+                            </div>
+                            <div class="bottom">
+                                <label>
+                                    <input type="file" ref="fileInput" @change="uploadFileComment($event, post._id)" style="display: none;"/>
+                                    <span><i class="fa-solid fa-upload"></i></span>
+                                </label>
+                                <textarea type="text" class="create-comment" placeholder="Szólj hozzá..." v-model="comment" name="create-comment" maxlength="200"></textarea>
+                                <button type="submit" title="sendbutton"><i class="fa-solid fa-paper-plane send-button"></i></button>
+                            </div>
                         </form>
                         <div v-if="post.comments.length == 0" class="comment">
                             <div class="card-comments-header">
@@ -163,9 +175,21 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <form @submit.prevent="createReply(currentUser._id, post._id, comment._id)" class="reply-textarea-container">
-                                                    <textarea type="text" class="create-reply" placeholder="Válaszolj rá..." v-model="reply" name="create-reply" maxlength="200" required></textarea>
-                                                    <button type="submit" title="sendbutton"><i class="fa-solid fa-paper-plane send-button"></i></button>
+                                                <form @submit.prevent="createReply(currentUser._id, post._id, comment._id)" :class="'reply-textarea-container ' + comment._id">
+                                                    <div class="file-list">
+                                                        <div class="file" v-for="(file, index) in fileListReply" :key="index">
+                                                            <div class="preview"><img :src="file.url" alt="File Thumbnail" /></div>
+                                                            <i class="fa-solid fa-trash" @click="removeFile(index, comment._id, 'reply')"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="bottom">
+                                                        <label>
+                                                            <input type="file" ref="fileInput" @change="uploadFileReply($event, comment._id)" style="display: none;"/>
+                                                            <span><i class="fa-solid fa-upload"></i></span>
+                                                        </label>
+                                                        <textarea type="text" class="create-reply" placeholder="Válaszolj rá..." v-model="reply" name="create-reply" maxlength="200"></textarea>
+                                                        <button type="submit" title="sendbutton"><i class="fa-solid fa-paper-plane send-button"></i></button>
+                                                    </div>
                                                 </form>
                                             </div>
                                         </div>
@@ -194,6 +218,8 @@ const post = ref('');
 const file = ref();
 const uploadedFile = ref();
 const url = ref('');
+const fileListComment = ref([] as any);
+const fileListReply = ref([] as any);
 const isModalVisible = ref(false);
 
 function isOwner(userId: string) {
@@ -230,6 +256,36 @@ function showReplies(commentId: string) {
     replies.classList.toggle('active');
 }
 
+function switchText(text: string) {
+    const onlyText = text.replaceAll('.', '');
+
+    if(text == `${onlyText}...`) {
+        return `${onlyText}`;
+    } else if(text == `${onlyText}`) {
+        return `${onlyText}.`;
+    } else if(text == `${onlyText}.`) {
+        return `${onlyText}..`;
+    } else if(text == `${onlyText}..`) {
+       return `${onlyText}...`;
+    }
+}
+
+function removeFile(index: number, id: string, type: string) {
+    if(type === 'comment') {
+        fileListComment.value.splice(index, 1);
+        if(fileListComment.value.length == 0) {
+            const inputElement = document.getElementsByClassName(`textarea-container ${id}`)[0] as HTMLInputElement;
+            inputElement.style.minHeight = '';
+        }
+    } else if(type === 'reply') {
+        fileListReply.value.splice(index, 1);
+        if(fileListReply.value.length == 0) {
+            const inputElement = document.getElementsByClassName(`reply-textarea-container ${id}`)[0] as HTMLInputElement;
+            inputElement.style.minHeight = '';
+        }
+    }
+}
+
 function uploadFile(event: any) {
     file.value = event.target.files[0];
     url.value = URL.createObjectURL(file.value);
@@ -254,6 +310,66 @@ function uploadFile(event: any) {
             message: 'A fájl túl nagy! >200mb',
         });
     }
+}
+
+function uploadFileComment(event: any, id: string) {
+    const filetype = functions.getFileType(event.target.files[0].name);
+
+    if(filetype == 'unknown') {
+        return notificationStore.addNotification({
+            id: 0,
+            type: 'error',
+            message: 'Nem támogatott fájlformátum!',
+        });
+    }
+
+    if(event.target.files[0].size > 209000000) {
+        return notificationStore.addNotification({
+            id: 0,
+            type: 'error',
+            message: 'A fájl túl nagy! >200mb',
+        });
+    }
+
+    const newFile = {
+        file: event.target.files[0],
+        url: URL.createObjectURL(event.target.files[0]),
+    }
+
+    fileListComment.value = [];
+    const inputElement = document.getElementsByClassName(`textarea-container ${id}`)[0] as HTMLInputElement;
+    inputElement.style.minHeight = '21.5vh';
+    fileListComment.value.push(newFile);
+}
+
+function uploadFileReply(event: any, id: string) {
+    const filetype = functions.getFileType(event.target.files[0].name);
+
+    if(filetype == 'unknown') {
+        return notificationStore.addNotification({
+            id: 0,
+            type: 'error',
+            message: 'Nem támogatott fájlformátum!',
+        });
+    }
+
+    if(event.target.files[0].size > 209000000) {
+        return notificationStore.addNotification({
+            id: 0,
+            type: 'error',
+            message: 'A fájl túl nagy! >200mb',
+        });
+    }
+
+    const newFile = {
+        file: event.target.files[0],
+        url: URL.createObjectURL(event.target.files[0]),
+    }
+
+    fileListReply.value = [];
+    const inputElement = document.getElementsByClassName(`reply-textarea-container ${id}`)[0] as HTMLInputElement;
+    inputElement.style.minHeight = '21.5vh';
+    fileListReply.value.push(newFile);
 }
 
 async function createPost() {
@@ -314,50 +430,171 @@ function openPost(post: string) {
     navigateTo('/post/' + post);
 }
 
-function createComment(postId: string) {
-    const commentElement = document.getElementsByClassName('create-comment')[0] as HTMLTextAreaElement;
-    const commentToCreate = {
-        author: currentUser.value._id,
-        postId: postId,
-        description: comment.value,
+async function createComment(postId: string) {
+    if(comment.value.length < 1 && fileListComment.value.length < 1) return;
+
+    if(comment.value.length > 1) {
+        const commentToCreate = {
+            author: currentUser.value._id,
+            postId: postId,
+            description: comment.value,
+        }
+
+        commentStore.createComment(commentToCreate).then(async (res: any) => {
+            if(res.data.success) {
+                await postStore.getAllPost();
+                comment.value = '';
+
+                notificationStore.addNotification({
+                    id: 0,
+                    message: 'Sikeres hozzászólás.',
+                    type: 'success'
+                });
+            }
+        });
     }
 
-    commentStore.createComment(commentToCreate).then(async (res: any) => {
-        if(res.data.success) {
-            await postStore.getAllPost();
-            commentElement.value = '';
+    if(fileListComment.value.length > 0) {
+        const waitingComment = {
+            author: currentUser.value._id,
+            postId: postId,
+            description: 'Fájl feltöltése folyamatban...',
+        }
 
+        posts.value.forEach((post: any) => {
+            if(post._id == postId) {
+                post.comments.push(waitingComment);
+            }
+        });
+
+        const interval = setInterval(() => {
+            const typingElement = document.querySelector('.tempid p') as HTMLDivElement;
+            typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
+        }, 500) as any;
+
+        const file = fileListComment.value[0].file;
+        const formData = new FormData();
+
+        if (file.type.includes('image')) {
+            formData.append('image', file);
+        } else if (file.type.includes('video')) {
+            formData.append('video', file);
+        }
+
+        removeFile(0, postId, 'comment');
+
+        try {
+            let res: any;
+            await postStore.uploadImage(formData).then((response) => { res = response });
+            if (res.data.success) {
+                const commentToCreate = {
+                    author: currentUser.value._id,
+                    postId: postId,
+                    description: res.data.data.link,
+                }
+
+                commentStore.createComment(commentToCreate).then(async (res: any) => {
+                    if(res.data.success) {
+                        clearInterval(interval);
+                        await postStore.getAllPost();
+                    }
+                });
+            }
+        } catch (error: any) {
             notificationStore.addNotification({
                 id: 0,
-                message: 'Sikeres hozzászólás.',
-                type: 'success'
+                type: 'error',
+                message: 'Hiba történt a fájl feltöltése közben: ' + error.message || 'Ismeretlen hiba!',
             });
         }
-    });
+    }
 }
 
-function createReply(userId: string, postId: string, commentId: string) {
-    const replyElement = document.getElementsByClassName('create-reply')[0] as HTMLTextAreaElement;
+async function createReply(userId: string, postId: string, commentId: string) {
+    if(reply.value.length < 1 && fileListReply.value.length < 1) return;
 
-    const replyToCreate = {
-        author: userId,
-        postId: postId,
-        commentId: commentId,
-        description: reply.value,
+    if(reply.value.length > 1) {
+        const replyToCreate = {
+            author: userId,
+            postId: postId,
+            commentId: commentId,
+            description: reply.value,
+        }
+
+        replyStore.createReply(replyToCreate).then(async (res: any) => {
+            if(res.data.success) {
+                await postStore.getAllPost();
+                reply.value = '';
+
+                notificationStore.addNotification({
+                    id: 0,
+                    message: 'Sikeres válasz.',
+                    type: 'success'
+                });
+            }
+        });
     }
 
-    replyStore.createReply(replyToCreate).then(async (res: any) => {
-        if(res.data.success) {
-            await postStore.getAllPost();
-            replyElement.value = '';
+    if(fileListReply.value.length > 0) {
+        const waitingReply = {
+            author: userId,
+            postId: postId,
+            commentId: commentId,
+            description: 'Fájl feltöltése folyamatban...'
+        }
 
+        posts.value.forEach((post: any) => {
+            if(post._id == postId) {
+                post.comments.forEach((comment: any) => {
+                    if(comment._id == commentId) {
+                        comment.replies.push(waitingReply);
+                    }
+                });
+            }
+        });
+
+        const interval = setInterval(() => {
+            const typingElement = document.querySelector('.tempid p') as HTMLDivElement;
+            typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
+        }, 500) as any;
+
+        const file = fileListReply.value[0].file;
+        const formData = new FormData();
+
+        if (file.type.includes('image')) {
+            formData.append('image', file);
+        } else if (file.type.includes('video')) {
+            formData.append('video', file);
+        }
+
+        removeFile(0, commentId, 'reply');
+
+        try {
+            let res: any;
+            await postStore.uploadImage(formData).then((response) => { res = response });
+            if (res.data.success) {
+                const replyToCreate = {
+                    author: userId,
+                    postId: postId,
+                    commentId: commentId,
+                    description: res.data.data.link
+                }
+
+                replyStore.createReply(replyToCreate).then(async (res: any) => {
+                    if(res.data.success) {
+                        clearInterval(interval);
+                        await postStore.getAllPost();
+                    }
+                });
+            }
+        } catch (error: any) {
             notificationStore.addNotification({
                 id: 0,
-                message: 'Sikeres válasz.',
-                type: 'success'
+                type: 'error',
+                message: 'Hiba történt a fájl feltöltése közben: ' + error.message || 'Ismeretlen hiba!',
             });
         }
-    });
+    }
 }
 
 function editPost(postId: string, patching: string) {
@@ -391,7 +628,7 @@ function editPost(postId: string, patching: string) {
     });
 }
 
-function editComment(postId: string, commentId: number, patching: string) {
+function editComment(postId: string, commentId: string, patching: string) {
     let body: object = {};
     switch(patching) {
         case 'like':
@@ -422,7 +659,7 @@ function editComment(postId: string, commentId: number, patching: string) {
     });
 }
 
-function editReply(postId: string, commentId: number, replyId: number, patching: string) {
+function editReply(postId: string, commentId: string, replyId: string, patching: string) {
     let body: object = {};
     switch(patching) {
         case 'like':
@@ -454,7 +691,7 @@ function editReply(postId: string, commentId: number, replyId: number, patching:
 }
 
 function deletePost(postId: string) {
-    postStore.deletePost(postId).then(async (res: any) => {
+    postStore.deletePost(postId, currentUser.value._id).then(async (res: any) => {
         if(res.data.success) {
             await postStore.getAllPost();
 
@@ -473,8 +710,8 @@ function deletePost(postId: string) {
     });
 }
 
-function deleteComment(postId: string, commentId: number) {
-    commentStore.deleteComment(postId, commentId).then(async (res: any) => {
+function deleteComment(postId: string, commentId: string) {
+    commentStore.deleteComment(postId, commentId, currentUser.value._id).then(async (res: any) => {
         if(res.data.success) {
             await postStore.getAllPost();
 
@@ -493,8 +730,8 @@ function deleteComment(postId: string, commentId: number) {
     });
 }
 
-function deleteReply(postId: string, commentId: number, replyId: number) {
-    replyStore.deleteReply(postId, commentId, replyId).then(async (res: any) => {
+function deleteReply(postId: string, commentId: string, replyId: string) {
+    replyStore.deleteReply(postId, commentId, replyId, currentUser.value._id).then(async (res: any) => {
         if(res.data.success) {
             await postStore.getAllPost();
 

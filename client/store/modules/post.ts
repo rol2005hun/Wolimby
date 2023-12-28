@@ -69,9 +69,9 @@ export const usePostStore = defineStore('post', {
             }
         },
 
-        async deletePost(postId: string) {
+        async deletePost(postId: string, userId: string) {
             try {
-                const res: any = await axios.delete(`${useRuntimeConfig().public.apiBase}/posts/delete?postId=${postId}`);
+                const res: any = await axios.delete(`${useRuntimeConfig().public.apiBase}/posts/delete?postId=${postId}`, { data: { userId } });
                 return res;
             } catch(err: any) {
                 this.$state.error = err.response.data.message;
