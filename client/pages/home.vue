@@ -583,13 +583,13 @@ async function createReply(userId: string, postId: string, commentId: string) {
                 typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
             }, 500) as any;
         } else if(!lastReply && fileListReply.value.length > 0) {
-            const replyCard = document.getElementsByClassName(`reply-modal-overlay ${commentId}`)[0] as HTMLDivElement;
+            const replyCard = document.getElementsByClassName(`modal-body ${commentId}`)[0] as HTMLDivElement;
             const newPTag = document.createElement('p');
             newPTag.textContent = 'Fájl feltöltése folyamatban...';
             newPTag.classList.add('tempid');
             replyCard.appendChild(newPTag);
-            const replyElement = replyCard.getElementsByClassName('modal-body')[0] as HTMLDivElement;
-            replyCard.insertBefore(newPTag, replyElement)
+            const formElement = replyCard.getElementsByClassName(`reply-textarea-container ${commentId}`)[0] as HTMLDivElement;
+            replyCard.insertBefore(newPTag, formElement)
             var interval = setInterval(() => {
                 const typingElement = document.querySelector('p.tempid') as HTMLDivElement;
                 typingElement.innerHTML = switchText(typingElement.innerHTML) as string;
