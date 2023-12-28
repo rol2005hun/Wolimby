@@ -34,11 +34,7 @@ const config: NuxtConfig = {
   },
   runtimeConfig: {
     public: {
-<<<<<<< HEAD
-      apiBase: 'https://api.social.wolimby.hu',
-=======
       apiBase: 'http://localhost:2004',
->>>>>>> 59c8e0d (push)
       imgurClientId: '80af936d45232db'
     }
   }
