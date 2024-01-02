@@ -142,16 +142,16 @@ let socket: any;
 function switchChat(chat: any) {
     if(activeChat.value) {
         activeChat.value.users.forEach((user: any) => {
-            if (isTyping.value.includes(user.user._id)) {
-                setTyping(true, user.user._id, false);
+            if(isTyping.value.some((auser: any) => auser.user._id === user._id)) {
+                setTyping(true, user.user, false);
             }
         });
 
         activeChat.value = chat;
 
         activeChat.value.users.forEach((user: any) => {
-            if (isTyping.value.includes(user.user._id)) {
-                setTyping(true, user.user._id, true);
+            if(isTyping.value.some((auser: any) => auser.user._id === user._id)) {
+                setTyping(true, user.user, true);
             }
         });
     } else {
@@ -159,13 +159,14 @@ function switchChat(chat: any) {
     }
 }
 
-function setTyping(typing: boolean, userId: string, isActive: boolean) {
+function setTyping(typing: boolean, user: any, isActive: boolean) {
     scrollToBottom();
 
     if (typing) {
-        if (!isTyping.value.includes(userId)) {
-            isTyping.value.push(userId);
+        if (!isTyping.value.some((auser: any) => auser.user._id === user._id)) {
+            isTyping.value.push(user);
         }
+
         if (isActive) {
             activeChat.value.typing = [...isTyping.value];
             typingInterval = setInterval(() => {
@@ -176,7 +177,7 @@ function setTyping(typing: boolean, userId: string, isActive: boolean) {
             clearInterval(typingInterval);
         }
     } else {
-        const index = isTyping.value.indexOf(userId);
+        const index = isTyping.value.findIndex((auser: any) => auser._id === user._id);
         if (index !== -1) {
             isTyping.value.splice(index, 1);
         }
@@ -231,11 +232,11 @@ function switchText(text: string) {
     }
 }
 
-function generateTypingMessage(typingUsers: string[]) {
+function generateTypingMessage(typingUsers: any) {
     if (typingUsers.length === 1) {
-        return `${typingUsers[0]} épp gépel`;
+        return `${typingUsers[0].profile.username} épp gépel`;
     } else if (typingUsers.length === 2) {
-        return `${typingUsers[0]} és ${typingUsers[1]} épp gépelnek`;
+        return `${typingUsers[0].profile.username} és ${typingUsers[1].profile.username} épp gépelnek`;
     } else if (typingUsers.length > 2) {
         return 'Többen épp gépelnek';
     }
@@ -561,11 +562,11 @@ function receiveMessage() {
 }
 
 function typing(typing: boolean) {
-    socket.emit('typing', currentUser.value._id, activeChat.value._id, typing);
+    socket.emit('typing', currentUser.value, activeChat.value._id, typing);
 }
 
 function receiveTyping() {
-    socket.on('typing', (who: string, where: string, typing: boolean) => {
+    socket.on('typing', (who: Object, where: string, typing: boolean) => {
         if(typing) {
             if(activeChat.value._id == where) {
                 setTyping(true, who, true);
