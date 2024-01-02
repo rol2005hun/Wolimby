@@ -10,7 +10,7 @@
               </div>
               <div @click="close(notification.id)" class="close-btn"><i class="fas fa-times"></i></div>
               <h2>{{ notificationTitle(notification.type) }}</h2>
-              <h3>{{ notification.message }}</h3>
+              <h3 v-html="notification.message"></h3>
           </div>
       </div>
     </transition-group>
