@@ -30,7 +30,7 @@ const config: NuxtConfig = {
       default: true,
       name: 'main',
       //url: 'http://localhost:2004',
-      url: 'http://localhost:2004'
+      url: 'https://api.social.wolimby.hu'
     }]
   },
   runtimeConfig: {
