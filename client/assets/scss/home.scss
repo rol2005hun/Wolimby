@@ -165,173 +165,6 @@
       z-index: 1;
     }
   }
-
-  .modal {
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    width: 600px;
-    max-height: 80%;
-    overflow-y: auto;
-
-    .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #ccc;
-      padding: 10px;
-
-      h2 {
-        margin: 0;
-        font-size: 1.2em;
-        color: black;
-      }
-
-      .modal-close-button {
-        font-size: 2em;
-        cursor: pointer;
-        background: transparent;
-        border: 0;
-        outline: none;
-        color: #aaa;
-      }
-    }
-
-    .modal-body {
-      padding: 5px 20px 20px 20px;
-
-      .reply {
-        display: flex;
-        align-items: center;
-        margin: 15px 0 15px 0;
-        padding: 10px;
-        justify-content: space-between;
-        box-shadow: 0 0 5px rgb(0 0 0 / 50%);
-        border-radius: 10px;
-
-        .left-side {
-          display: flex;
-          align-items: center;
-
-          .user-picture {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-          }
-
-          .username-roles-custom {
-            padding-left: 10px;
-            padding-right: 10px;
-            color: black;
-          }
-
-          p {
-            color: black;
-          }
-        }
-
-        .right-side {
-          display: flex;
-          align-items: center;
-
-          .reply-button {
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 7px;
-            color: black;
-
-            i {
-              color: black;
-            }
-
-            &:hover {
-              border-radius: 15px;
-              background-color: #b4afc9;
-            }
-          }
-
-          .more-button {
-            cursor: pointer;
-
-            &-icon {
-              width: 24px;
-              height: 24px;
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-            }
-
-            &-dot {
-              width: 4px;
-              height: 4px;
-              border-radius: 50%;
-              margin-bottom: 4px;
-              background-color: black;
-            }
-
-            .more-options {
-              display: none;
-              position: absolute;
-              background-color: white;
-              border-radius: 10px;
-              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-              overflow: hidden;
-              z-index: 2;
-
-              .more-option {
-                display: block;
-                padding: 8px 16px;
-                text-decoration: none;
-                color: black;
-
-                &:hover {
-                  background-color: #b4afc9;
-                }
-              }
-
-              .more-option:nth-child(4) {
-                color: red;
-              }
-            }
-
-            &:hover {
-              .more-options {
-                display: block;
-              }
-            }
-          }
-        }
-      }
-
-      .modal-footer {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        border-top: 1px solid #ccc;
-        padding: 20px;
-        margin-bottom: -15px;
-
-        button {
-          padding: 10px 20px;
-          border: 0;
-          border-radius: 5px;
-          cursor: pointer;
-          font-size: 0.9em;
-
-          &:hover {
-            background-color: #b4afc9;
-          }
-        }
-
-        .modal-submit-button {
-          color: white;
-          background-color: #3498db;
-        }
-      }
-    }
-  }
 }
 
 .card-container {
@@ -363,7 +196,7 @@
       flex-direction: column;
       color: black;
 
-      .username-roles-custom {
+      .username-roles {
         font-size: 18px;
         font-weight: bold;
       }
@@ -414,10 +247,6 @@
             &:hover {
               background-color: #b4afc9;
             }
-          }
-
-          .more-option:nth-child(4) {
-            color: red;
           }
         }
 
@@ -587,7 +416,7 @@
           flex-direction: column;
           color: black;
 
-          .username-roles-custom {
+          .username-roles {
             font-size: 15px;
             font-weight: bold;
           }
@@ -638,10 +467,6 @@
                 &:hover {
                   background-color: #b4afc9;
                 }
-              }
-
-              .more-option:nth-child(4) {
-                color: red;
               }
             }
 
@@ -765,10 +590,11 @@
                     border-radius: 50%;
                   }
 
-                  .username-roles-custom {
+                  .username-roles {
                     padding-left: 10px;
                     padding-right: 10px;
                     color: black;
+                    font-weight: bold;
                   }
 
                   p {
@@ -835,10 +661,6 @@
                         &:hover {
                           background-color: #b4afc9;
                         }
-                      }
-
-                      .more-option:nth-child(4) {
-                        color: red;
                       }
                     }
 

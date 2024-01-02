@@ -3,7 +3,7 @@
         <div class="welcome-container">
             <div class="welcome">
                 <div class="welcome-text">
-                    <h1>Üdvözöllek, {{ currentUser.profile.username }}!</h1>
+                    <h1>Üdvözöllek, <span class="username-roles" v-html="functions.renderUserRoles(currentUser)"></span>!</h1>
                     <div class="open" @click="isModalVisible = true"><i class="fa-solid fa-plus"></i></div>
                     <p>Itt láthatod a legfrissebb bejegyzéseket, hozzászólásokat és válaszokat.</p>
                 </div>
@@ -36,7 +36,7 @@
                 <div class="card-header">
                     <img src="https://i.imgur.com/ceDUpKL.png" class="user-picture" alt="userpfp">
                     <div class="card-header-text">
-                        <span class="username-roles-custom">WoBo</span>
+                        <span class="username-roles">WoBo</span>
                         <span class="post-time">1848.03.15 12:00</span>
                     </div>
                 </div>
@@ -50,7 +50,8 @@
                 <div class="card-header">
                     <img :src="post.author ? post.author.profile.profilePicture : 'https://i.imgur.com/ceDUpKL.png'" class="user-picture" alt="userpfp">
                     <div class="card-header-text">
-                        <span :class="'username-roles-custom ' + post._id">{{ post.author ? post.author.profile.username : 'Törölt fiók' }}</span>
+                        <span class="username-roles" v-if="!post.author">Törölt fiók</span>
+                        <span class="username-roles" v-else v-html="functions.renderUserRoles(post.author)"></span>
                         <span class="post-time">{{ functions.formatDate(post.createdAt) }}</span>
                     </div>
                     <div class="card-header-right">
@@ -63,8 +64,8 @@
                             <ul class="more-options">
                                 <li class="more-option" @click="copyId(post._id)">Másolás</li>
                                 <li class="more-option" @click="openPost(post._id)">Megnyitás</li>
-                                <li v-if="isOwner(post.author._id)" class="more-option">Szerkesztés</li>
-                                <li v-if="isOwner(post.author._id)" @click.prevent="deletePost(post._id)" class="more-option">Törlés</li>
+                                <li v-if="post.author && isOwner(post.author._id)" class="more-option">Szerkesztés</li>
+                                <li v-if="post.author && isOwner(post.author._id)" @click.prevent="deletePost(post._id)" class="more-option" style="color: red;">Törlés</li>
                             </ul>
                         </div>
                     </div>
@@ -112,7 +113,8 @@
                             <div class="card-comments-header">
                                 <img :src="comment.author ? comment.author.profile.profilePicture : 'https://i.imgur.com/ceDUpKL.png'" class="user-picture" alt="userpfp">
                                 <div class="card-comments-header-text">
-                                    <span :class="'username-roles-custom ' + comment._id">{{ comment.author ? comment.author.profile.username : 'Törölt fiók' }}</span>
+                                    <span class="username-roles" v-if="!comment.author">Törölt fiók</span>
+                                    <span class="username-roles" v-else v-html="functions.renderUserRoles(comment.author)"></span>
                                     <span class="comment-time">{{ functions.formatDate(comment.createdAt) }}</span>
                                 </div>
                                 <div class="card-comments-header-right">
@@ -124,8 +126,8 @@
                                         </div>
                                         <ul class="more-options">
                                             <li class="more-option" @click="copyId(comment._id)">Másolás</li>
-                                            <li v-if="isOwner(comment.author._id)" class="more-option">Szerkesztés</li>
-                                            <li v-if="isOwner(comment.author._id)" @click.prevent="deleteComment(post._id, comment._id)" class="more-option">Törlés</li>
+                                            <li v-if="comment.author && isOwner(comment.author._id)" class="more-option">Szerkesztés</li>
+                                            <li v-if="comment.author && isOwner(comment.author._id)" @click.prevent="deleteComment(post._id, comment._id)" class="more-option" style="color: red;">Törlés</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -141,21 +143,22 @@
                                     <div :class="'reply-modal-overlay ' + comment._id">
                                         <div class="modal">
                                             <div class="modal-header">
-                                                <h2>Válaszok <span :class="'username-roles-custom ' + comment._id">{{ comment.author.profile.username }}</span> részére</h2>
+                                                <h2>Válaszok <span class="username-roles">{{ comment.author.profile.username }}</span> részére</h2>
                                                 <button @click="showReplies(comment._id)" class="modal-close-button" aria-label="Close modal">&times;</button>
                                             </div>
                                             <div class="modal-body">
                                                 <div v-if="comment.replies.length == 0" class="reply">
                                                     <div class="left-side">
                                                         <img src="https://i.imgur.com/ceDUpKL.png" class="user-picture" alt="userpfp">
-                                                        <span class="username-roles-custom">WoBo</span>
+                                                        <span class="username-roles">WoBo</span>
                                                         <p>Egyelőre üres itt, tégy ellene!</p>
                                                     </div>
                                                 </div>
                                                 <div v-else class="reply" v-for="reply in comment.replies" :key="reply._id">
                                                     <div class="left-side">
                                                         <img :src="reply.author ? reply.author.profile.profilePicture : 'https://i.imgur.com/ceDUpKL.png'" class="user-picture" alt="userpfp">
-                                                        <span :class="'username-roles-custom ' + reply._id">{{ reply.author ? reply.author.profile.username : 'Törölt fiók' }}</span>
+                                                        <span class="username-roles" v-if="!reply.author">Törölt fiók</span>
+                                                        <span class="username-roles" v-else v-html="functions.renderUserRoles(reply.author)"></span>
                                                         <p :class="'reply-description ' + reply._id" v-html="filterText(reply.description)"></p>
                                                     </div>
                                                     <div class="right-side">
@@ -169,8 +172,8 @@
                                                             </div>
                                                             <ul class="more-options">
                                                                 <li class="more-option" @click="copyId(reply._id)">Másolás</li>
-                                                                <li v-if="isOwner(reply.author._id)" class="more-option">Szerkesztés</li>
-                                                                <li v-if="isOwner(reply.author._id)" @click.prevent="deleteReply(post._id, comment._id, reply._id)" class="more-option">Törlés</li>
+                                                                <li v-if="reply.author && isOwner(reply.author._id)" class="more-option">Szerkesztés</li>
+                                                                <li v-if="reply.author && isOwner(reply.author._id)" @click.prevent="deleteReply(post._id, comment._id, reply._id)" class="more-option" style="color: red;">Törlés</li>
                                                             </ul>
                                                         </div>
                                                     </div>

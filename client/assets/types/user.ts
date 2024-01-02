@@ -8,7 +8,7 @@ interface UserProfile {
         profilePicture: string,
         biography: string,
         birthday?: Date,
-        roles: number[],
+        roles: string[],
 
         notificationList: [{
             _id: string,

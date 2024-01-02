@@ -26,7 +26,7 @@
             <form @submit.prevent="editChat(activeChat)">
                 <div class="header">
                     <img :src="returnChatDetails(activeChat, 'icon')" alt="chaticon" :disabled="activeChat.type != 'group'">
-                    <input type="text" :value="returnChatDetails(activeChat, 'name')" placeholder="Chat neve" required :disabled="activeChat.type != 'group'">
+                    <input type="text" :value="returnChatDetails(activeChat, 'onlyname')" placeholder="Chat neve" required :disabled="activeChat.type != 'group'">
                 </div>
                 <div class="users">
                     <details>
@@ -60,7 +60,7 @@
                 <div v-else v-for="chat in filteredChats" :key="chat._id" @click="switchChat(chat)">
                     <img :src="returnChatDetails(chat, 'icon')" alt="pfp"/>
                     <div class="chat-info">
-                        <h3>{{ returnChatDetails(chat, 'name') }}</h3>
+                        <h3 class="username-roles" v-html="returnChatDetails(chat, 'name')"></h3>
                         <p>{{ onlineChats.includes(chat._id) ? 'Online' : 'Offline' }}</p>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
             <div class="header">
                 <img :src="returnChatDetails(activeChat, 'icon')" alt="pfp"/>
                 <div class="chat-info">
-                    <h3>{{ returnChatDetails(activeChat, 'name') }}</h3>
+                    <h3 class="username-roles" v-html="returnChatDetails(activeChat, 'name')"></h3>
                     <p>{{ onlineChats.includes(activeChat._id) ? 'Online' : 'Offline' }}</p>
                 </div>
                 <div class="buttons">
@@ -243,8 +243,10 @@ function generateTypingMessage(typingUsers: string[]) {
 
 function returnChatDetails(chat: any, detail: string) {
     switch(detail) {
-        case 'name':
+        case 'onlyname':
             return chat.type == 'group' ? chat.name : ( other(chat.users).nickname ? other(chat.users).nickname : other(chat.users).user.profile.username );
+        case 'name':
+            return chat.type == 'group' ? chat.name : ( other(chat.users).nickname ? functions.renderUserRoles(other(chat.users).user, other(chat.users).nickname) : functions.renderUserRoles(other(chat.users).user) );
         case 'icon':
             return other(chat.users).user.profile.profilePicture;
     }
@@ -654,4 +656,28 @@ onMounted(() => {
 
 <style scoped lang="scss">
 @import '@/assets/scss/chat.scss';
+</style>
+
+<style lang="scss">
+@media screen and (max-width: 600px) {
+    #app {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+
+    .nav {
+        position: relative;
+        min-height: 0 !important;
+    }
+
+    .nav-menu {
+        top: -130px !important;
+        margin: 0 !important;
+        flex-direction: column-reverse !important;
+    }
+
+    .nav-submenu {
+        top: -157px !important;
+    }
+}
 </style>
