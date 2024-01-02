@@ -26,12 +26,8 @@ const config: NuxtConfig = {
   buildModules: ['@pinia/nuxt'],
   runtimeConfig: {
     public: {
-<<<<<<< HEAD
-      apiBase: 'https://api.games.wolimby.hu'
-=======
-      //apiBase: 'localhost:2002',
+      //apiBase: 'http://localhost:2002',
       apiBase: 'https://api.games.wolimby.hu',
->>>>>>> 3055d34 (push)
     }
   }
 }
