@@ -106,7 +106,8 @@
                         <input type="file" ref="fileInput" @change="uploadFile" style="display: none;"/>
                         <span><i class="fa-solid fa-upload"></i></span>
                     </label>
-                    <input class="textarea" type="text" v-model="newMessageText" placeholder="Írd ide az üzeneted..." @focus="typing(true)" @blur="typing(false)" @keyup.enter="sendMessage"/>
+                    <!-- @blur="typing(false)" -->
+                    <input class="textarea" type="text" v-model="newMessageText" placeholder="Írd ide az üzeneted..." @focus="typing(true)" @keyup.enter="sendMessage"/>
                     <button type="submit" title="sendbutton" @click="sendMessage"><i class="fa-solid fa-paper-plane send-button"></i></button>
                 </div>
             </div>
@@ -140,9 +141,11 @@ let typingInterval: any;
 let socket: any;
 
 function switchChat(chat: any) {
+    scrollToBottom();
+
     if(activeChat.value) {
         activeChat.value.users.forEach((user: any) => {
-            if(isTyping.value.some((auser: any) => auser.user._id === user._id)) {
+            if(isTyping.value.find((auser: any) => auser._id === user.user._id)) {
                 setTyping(true, user.user, false);
             }
         });
@@ -150,7 +153,7 @@ function switchChat(chat: any) {
         activeChat.value = chat;
 
         activeChat.value.users.forEach((user: any) => {
-            if(isTyping.value.some((auser: any) => auser.user._id === user._id)) {
+            if(isTyping.value.find((auser: any) => auser._id === user.user._id)) {
                 setTyping(true, user.user, true);
             }
         });
@@ -163,7 +166,7 @@ function setTyping(typing: boolean, user: any, isActive: boolean) {
     scrollToBottom();
 
     if (typing) {
-        if (!isTyping.value.some((auser: any) => auser.user._id === user._id)) {
+        if (!isTyping.value.find((auser: any) => auser._id === user._id)) {
             isTyping.value.push(user);
         }
 
@@ -451,9 +454,9 @@ function receiveEditChat() {
 }
 
 async function sendMessage() {
-    if (newMessageText.value.length < 1 && fileList.value.length < 1) return;
+    if (newMessageText.value.trim().length < 1 && fileList.value.length < 1) return;
 
-    if(newMessageText.value.length > 0) {
+    if(newMessageText.value.trim().length > 0) {
         const newTextMessage = {
             message: newMessageText.value,
             sentBy: currentUser.value._id,
