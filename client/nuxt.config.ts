@@ -26,6 +26,10 @@ const config: NuxtConfig = {
   buildModules: ['@pinia/nuxt'],
   runtimeConfig: {
     public: {
+<<<<<<< HEAD
+=======
+      //apiBase: 'localhost:2001',
+>>>>>>> 8d6bcb8 (push)
       apiBase: 'https://api.account.wolimby.hu',
       imgurClientId: '80af936d45232db'
     }

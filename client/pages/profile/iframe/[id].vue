@@ -2,11 +2,11 @@
     <div class="card">
       <div class="card-top"></div>
       <div class="avatar-holder">
-        <img :src="user.profile?.profilePicture" alt="pfp">
+        <img :src="user.profile.profilePicture" alt="pfp">
       </div>
       <div class="name">
-        <h3 class="username-roles">{{ user.profile?.username }}</h3>
-        <p>{{ user.profile?.biography }}</p>
+        <h3 class="username-roles" v-html="functions.renderUserRoles(user)"></h3>
+        <p>{{ user.profile.biography }}</p>
       </div>
       <div class="card-info">
         <div class="followers">
@@ -23,11 +23,11 @@
         </div>
       </div>
       <div class="card-footer">
-        <h4 v-if="user.privacy?.showName">Teljes név</h4>
-        <h5 v-if="user.privacy?.showName">{{ user.profile?.name }}</h5>
-        <h4 v-if="user.privacy?.showEmail">Email cím</h4>
-        <h5 v-if="user.privacy?.showEmail">{{ user.profile?.email }}</h5>
-        <h4 v-if="!user.privacy?.showName && !user.privacy?.showEmail">A felhasználó adatai privátak</h4>
+        <h4 v-if="user.privacy.showName">Teljes név</h4>
+        <h5 v-if="user.privacy.showName">{{ user.profile.name }}</h5>
+        <h4 v-if="user.privacy.showEmail">Email cím</h4>
+        <h5 v-if="user.privacy.showEmail">{{ user.profile.email }}</h5>
+        <h4 v-if="!user.privacy.showName && !user.privacy.showEmail">A felhasználó adatai privátak</h4>
       </div>
     </div>
 </template>
@@ -35,6 +35,7 @@
 <script setup lang=ts>
 import { storeToRefs } from 'pinia';
 import { userStore } from '@/store';
+import functions from '@/assets/ts/functions';
 
 const { user } = storeToRefs(userStore);
 

@@ -1,5 +1,5 @@
 <template>
-    <h1 class="text">Üdv <strong class="username-roles">{{ currentUser.profile?.username }}</strong>, a Wolimby Account-ban, a lenti ikonok közül az egyikre kattintva átírányítás történik meg.</h1>
+    <h1 class="text">Üdv <strong class="username-roles" v-html="functions.renderUserRoles(currentUser)"></strong>, a Wolimby Account-ban, a lenti ikonok közül az egyikre kattintva átírányítás történik meg.</h1>
     <div class="project">
         <div class="project-icon 4">
             <a :href="domains.domain1"><img src="https://i.imgur.com/icueTAY.png" alt="domain1"></a>
@@ -20,6 +20,7 @@
 import { ref, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { userStore } from '@/store';
+import functions from '@/assets/ts/functions';
 
 const { currentUser } = storeToRefs(userStore);
 

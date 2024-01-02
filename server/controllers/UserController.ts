@@ -10,28 +10,6 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     const user = await User.findOne({ $or: [{ 'profile.username': req.body.username }, { 'profile.email': req.body.username }] });
     const key = config.key;
 
-    async function ipLogging() {
-        if (!user.profile.ipList.length) {
-            const ip = { 'profile.ipList': [{ ip: reqip.getClientIp(req) }] };
-            await User.updateOne({ $or: [{ 'profile.username': req.body.username }, { 'profile.email': req.body.email }] }, { $push: ip });
-        } else {
-            if (user.profile.ipList.length > 5) {
-                user.profile.ipList.shift();
-                await user.save();
-            }
-
-            for (let i = 0; i < user.profile.ipList.length; i++) {
-                if (user.profile.ipList[i].ip == reqip.getClientIp(req)) {
-                    await user.profile.ipList.splice(user.profile.ipList.map(x => x.ip).indexOf(reqip.getClientIp(req)), 1);
-                    break;
-                }
-            }
-
-            await user.profile.ipList.push({ ip: reqip.getClientIp(req), loggedAt: new Date() });
-            await user.save();
-        }
-    }
-
     const validPassword = await bcrypt.compare(req.body.password, user.profile.password);
     try {
         if (validPassword) {
@@ -43,8 +21,10 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
             }
             jwt.sign(payload, key, {
                 expiresIn: 604800
-            }, (err, token) => {
-                ipLogging();
+            }, async (err, token) => {
+                user.profile.ipList.push({ ip: reqip.getClientIp(req), loggedAt: new Date() });
+                await user.save();
+
                 return res.status(200).send({
                     success: true,
                     message: 'Sikeres bejelentkezés.',
@@ -68,30 +48,33 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
 const register = async (req: Request, res: Response, next: NextFunction) => {
     const salt = await bcrypt.genSalt(10);
-    const passwordk = await bcrypt.hash(req.body.password, salt);
+    const password = await bcrypt.hash(req.body.password, salt);
 
     const user = new User ({
         profile: {
             username: req.body.username,
             email: req.body.email,
             birthday: req.body.birthday,
-            password: passwordk
+            password: password
         }
     });
 
     try {
-        user.save().then(() => {
+        user.save().then(async () => {
+            user.profile.ipList.push({ ip: reqip.getClientIp(req), loggedAt: new Date() });
+            await user.save();
+            
             return res.status(201).send({
                 success: true,
                 message: 'Sikeres regisztráció.',
                 user: user
             })
-        })
+        });
     } catch(err) {
         return res.status(404).send({
             success: false,
             message: 'Sikertelen regisztráció: ' + err
-        })
+        });
     }
 }
 

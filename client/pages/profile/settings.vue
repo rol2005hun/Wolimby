@@ -10,7 +10,7 @@
               </label>
               <img :src="previewpfp ? previewpfp : currentUser.profile.profilePicture" alt="pfp">
             </div>
-            <h3 class="username-roles notranslate">{{ currentUser.profile.username }}</h3>
+            <h3 class="username-roles" v-html="functions.renderUserRoles(currentUser)"></h3>
           </div>
           <div class="buttons">
             <button @click="showPage(0)">Fiókom</button>
@@ -146,10 +146,6 @@ const bglink = ref('');
 const password = ref('');
 const notifications = ref('');
 const link = ref('');
-
-function checkUserRoles() {
-    functions.userRoles(currentUser.value.profile.roles);
-}
 
 function formatDateToText(ipDate: any): string {
     return functions.formatDate(ipDate);
@@ -385,7 +381,6 @@ function showPage(pageName: number) {
 }
 
 onMounted(() => {
-    checkUserRoles();
     checkbgimage();
 }); 
 </script>
