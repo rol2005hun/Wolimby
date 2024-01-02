@@ -94,7 +94,7 @@
                 </div>
             </div>
             <p v-if="activeChat.typing && activeChat.typing.length > 0" id="typing">{{ generateTypingMessage(activeChat.typing) }}</p>
-            <form class="input" @submit.prevent="sendMessage" v-on:keyup.enter="sendMessage">
+            <div class="input">
                 <div class="file-list">
                     <div class="file" v-for="(file, index) in fileList" :key="index">
                         <div class="preview"><img :src="file.url" alt="File Thumbnail" /></div>
@@ -106,10 +106,10 @@
                         <input type="file" ref="fileInput" @change="uploadFile" style="display: none;"/>
                         <span><i class="fa-solid fa-upload"></i></span>
                     </label>
-                    <input class="textarea" type="text" v-model="newMessageText" placeholder="Írd ide az üzeneted..." @focus="typing(true)" @blur="typing(false)"/>
-                    <button type="submit" title="sendbutton"><i class="fa-solid fa-paper-plane send-button"></i></button>
+                    <input class="textarea" type="text" v-model="newMessageText" placeholder="Írd ide az üzeneted..." @focus="typing(true)" @blur="typing(false)" @keyup.enter="sendMessage"/>
+                    <button type="submit" title="sendbutton" @click="sendMessage"><i class="fa-solid fa-paper-plane send-button"></i></button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </template>
