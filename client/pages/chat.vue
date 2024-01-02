@@ -106,8 +106,7 @@
                         <input type="file" ref="fileInput" @change="uploadFile" style="display: none;"/>
                         <span><i class="fa-solid fa-upload"></i></span>
                     </label>
-                    <!-- @blur="typing(false)" -->
-                    <input class="textarea" type="text" v-model="newMessageText" placeholder="Írd ide az üzeneted..." @focus="typing(true)" @keyup.enter="sendMessage"/>
+                    <input class="textarea" type="text" v-model="newMessageText" placeholder="Írd ide az üzeneted..." @focus="typing(true)" @blur="typing(false)" @keyup.enter="sendMessage" maxlength="1000"/>
                     <button type="submit" title="sendbutton" @click="sendMessage"><i class="fa-solid fa-paper-plane send-button"></i></button>
                 </div>
             </div>
@@ -141,8 +140,6 @@ let typingInterval: any;
 let socket: any;
 
 function switchChat(chat: any) {
-    scrollToBottom();
-
     if(activeChat.value) {
         activeChat.value.users.forEach((user: any) => {
             if(isTyping.value.find((auser: any) => auser._id === user.user._id)) {
@@ -160,6 +157,8 @@ function switchChat(chat: any) {
     } else {
         activeChat.value = chat;
     }
+
+    scrollToBottom();
 }
 
 function setTyping(typing: boolean, user: any, isActive: boolean) {
