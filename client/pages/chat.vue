@@ -331,25 +331,27 @@ function filterMessage(message: any) {
     const mentionRegex = new RegExp(`@(${mentionedUsers.join('|')})\\b`, 'g');
     result = result.replace(mentionRegex, '<span class="mention" style="color: red;">$&</span>');
 
-    const fileMatches = message.match(/\bhttps?:\/\/\S+\b/g);
+    const isUrl = message.match(/\bhttps?:\/\/\S+\b/g);
     const imageRegex = /\.(png|jpg|jpeg|gif)$/i;
     const videoRegex = /\.(mp4|mov|avi)$/i;
     const audioRegex = /\.(mp3|ogg|wav)$/i;
-    if (fileMatches) {
-        fileMatches.forEach((fileUrl: any) => {
+    if (isUrl) {
+        isUrl.forEach((url: any) => {
             let mediaElement = '';
 
-            if (imageRegex.test(fileUrl)) {
-                mediaElement = `<img src="${fileUrl}" style="max-width: 40vh; max-height: 40vh;" alt="Image"/>`;
-            } else if (videoRegex.test(fileUrl)) {
-                mediaElement = `<video controls style="max-width: 40vh; max-height: 40vh;"><source src="${fileUrl}" type="video/mp4"></video>`;
-            } else if (audioRegex.test(fileUrl)) {
-                mediaElement = `<audio controls style="max-width: 40vh; max-height: 40vh;"><source src="${fileUrl}" type="audio/mpeg"></audio>`;
+            if(imageRegex.test(url)) {
+                mediaElement = `<img src="${url}" style="max-width: 40vh; max-height: 40vh;" alt="Image"/>`;
+            } else if(videoRegex.test(url)) {
+                mediaElement = `<video controls style="max-width: 40vh; max-height: 40vh;"><source src="${url}" type="video/mp4"></video>`;
+            } else if(audioRegex.test(url)) {
+                mediaElement = `<audio controls style="max-width: 40vh; max-height: 40vh;"><source src="${url}" type="audio/mpeg"></audio>`;
+            } else {
+                mediaElement = `<a href="${url}" target="_blank">${url}</a>`;
             }
 
-            const isFileAlone = result.trim() === fileUrl.trim();
+            const isFileAlone = result.trim() === url.trim();
 
-            result = isFileAlone ? result.replace(fileUrl, mediaElement) : result.replace(fileUrl, `<br/>&nbsp;${mediaElement}`);
+            result = isFileAlone ? result.replace(url, mediaElement) : result.replace(url, `<br/>&nbsp;${mediaElement}`);
         });
     }
 
