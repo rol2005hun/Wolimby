@@ -27,6 +27,7 @@ const createComment = async (req: Request, res: Response, next: NextFunction) =>
         await post.save().then(() => {
             return res.status(201).send({
                 success: true,
+                comment: comment,
                 message: 'Sikeres hozzászólás.'
             });
         });

@@ -79,12 +79,12 @@ const editChat = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const chat = await Chat.findOne({ _id: req.query.chatId });
         chat.set(req.body);
-        chat.save().then(() => {
-            return res.status(200).send({
-                success: true,
-                message: 'Sikeres chat módosítás.',
-                chat: chat
-            });
+        const updatedChat = await chat.save();
+
+        return res.status(200).send({
+            success: true,
+            message: 'Sikeres chat módosítás.',
+            chat: updatedChat
         });
     } catch (err) {
         return res.status(404).send({

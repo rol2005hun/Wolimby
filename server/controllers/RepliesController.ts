@@ -35,6 +35,7 @@ const createReply = async (req: Request, res: Response, next: NextFunction) => {
         await post.save().then(() => {
             return res.status(201).send({
                 success: true,
+                reply: reply,
                 message: 'Sikeres válasz.'
             });
         });
