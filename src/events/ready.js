@@ -1,12 +1,12 @@
-const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v9");
-const { readdirSync } = require("fs");
-require("dotenv").config();
-const { ChalkAdvanced } = require("chalk-advanced");
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
+const { readdirSync } = require('fs');
+require('dotenv').config();
+const { ChalkAdvanced } = require('chalk-advanced');
 
 module.exports = async (client) => {
-  const commandFiles = readdirSync("./src/commands/").filter((file) =>
-    file.endsWith(".js"),
+  const commandFiles = readdirSync('./src/commands/').filter((file) =>
+    file.endsWith('.js'),
   );
 
   const commands = [];
@@ -18,20 +18,20 @@ module.exports = async (client) => {
   }
 
   const rest = new REST({
-    version: "10",
+    version: '10',
   }).setToken(process.env.TOKEN);
 
   (async () => {
     try {
-      if (process.env.STATUS === "PRODUCTION") {
+      if (process.env.STATUS === 'PRODUCTION') {
         await rest.put(Routes.applicationCommands(client.user.id), {
           body: commands,
         });
         console.log(
-          `${ChalkAdvanced.white("Boilerplate Bot")} ${ChalkAdvanced.gray(
-            ">",
+          `${ChalkAdvanced.white('WoliBot')} ${ChalkAdvanced.gray(
+            '>',
           )} ${ChalkAdvanced.green(
-            "Successfully registered commands globally",
+            'A parancsok sikeresen regisztrálva lettek.',
           )}`,
         );
       } else {
@@ -43,10 +43,10 @@ module.exports = async (client) => {
         );
 
         console.log(
-          `${ChalkAdvanced.white("Boilerplate Bot")} ${ChalkAdvanced.gray(
-            ">",
+          `${ChalkAdvanced.white('WoliBot')} ${ChalkAdvanced.gray(
+            '>',
           )} ${ChalkAdvanced.green(
-            "Successfully registered commands locally",
+            'A parancsok sikeresen regisztrálva lettek. (local)',
           )}`,
         );
       }

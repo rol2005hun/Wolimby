@@ -1,15 +1,14 @@
-// Main Bot Library's
 const {
   Client,
   GatewayIntentBits,
   Options,
   Collection,
-} = require("discord.js");
+} = require('discord.js');
 
-require("dotenv").config();
+require('dotenv').config();
 
-const EventHandler = require("./eventLoader");
-const ButtonHandler = require("./buttonHandler");
+const EventHandler = require('./eventLoader');
+const ButtonHandler = require('./buttonHandler');
 
 module.exports = class BoilerplateClient extends Client {
   constructor(customCacheOptions = {}) {
@@ -36,12 +35,10 @@ module.exports = class BoilerplateClient extends Client {
     });
 
     this.commands = new Collection();
-    
-    // Event Loader
+
     this.eventHandler = new EventHandler(this);
     this.eventHandler.load();
 
-    // Button Loader
     this.buttonHandler = new ButtonHandler(this);
     this.buttonHandler.load();
   }

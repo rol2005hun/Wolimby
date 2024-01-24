@@ -7,7 +7,7 @@ module.exports = async (client, interaction) => {
     } catch (err) {
       if (err) console.error(err);
       interaction.reply({
-        content: "An error occurred while executing that command.",
+        content: 'Hiba történt a parancs végrehajtásakor.',
         ephemeral: true,
       });
     }
@@ -15,7 +15,7 @@ module.exports = async (client, interaction) => {
 		const command = interaction.client.commands.get(interaction.commandName);
 
 		if (!command) {
-			console.error(`No command matching ${interaction.commandName} was found.`);
+			console.error(`Nincs ${interaction.commandName} parancs.`);
 			return;
 		}
 
@@ -32,7 +32,7 @@ module.exports = async (client, interaction) => {
     } catch (err) {
       if (err) console.error(err);
       interaction.reply({
-        content: "An error occurred while trying to execute this button.",
+        content: 'Hiba történt a gomb kattintásakor.',
         ephemeral: true,
       });
     }
