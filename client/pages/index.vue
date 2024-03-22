@@ -32,6 +32,22 @@
         <NuxtLink to="mastermind">Játék</NuxtLink>
       </div>
     </div>
+    <div class="game">
+      <img class="game-profile-img" src="https://iconspng.com/images/2048-game/2048-game.jpg" alt="">
+      <div class="game-description-bk"></div>
+      <div class="game-logo">
+        <img src="https://th.bing.com/th/id/OIP.PLOc_G95V-3njOOpPa--swAAAA?rs=1&pid=ImgDetMain" alt="">
+      </div>
+      <div class="game-description">
+        <p>Számolj el 2048-ig.</p>
+      </div>
+      <div  class="game-date">
+        <p>2024.03.22</p>
+      </div>
+      <div class="game-btn">
+        <NuxtLink to="2048">Játék</NuxtLink>
+      </div>
+    </div>
   </main>
 </template>
 

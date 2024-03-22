@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watchEffect, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import codesnippets from '@/assets/ts/codesnippets.json';
 
 const typedText = ref('');

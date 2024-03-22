@@ -1,6 +1,8 @@
 .index {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
+    margin-bottom: 20px;
 
     .game {
         display: inline-block;
@@ -63,6 +65,7 @@
     
             a {
                 color: #fff;
+                text-decoration: none;
             }
         }
           
@@ -78,6 +81,7 @@
 @media (max-width: 900px) {
     .index {
         flex-wrap: wrap;
+        margin-bottom: 40px;
 
         .game {
             width: 90%;
