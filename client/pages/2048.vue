@@ -161,25 +161,53 @@ if(process.client) {
   window.addEventListener('touchstart', handleTouchStart, false);  
   window.addEventListener('touchmove', handleTouchMove, false);
   window.addEventListener('keydown', (e) => {
-    switch (e.key) {
-      case 'ArrowUp':
+    switch (e.key.toLowerCase()) {
+      case 'w':
+      case 'arrowup':
         move('up');
         break;
-      case 'ArrowDown':
+      case 's':
+      case 'arrowdown':
         move('down');
         break;
-      case 'ArrowLeft':
+      case 'a':
+      case 'arrowleft':
         move('left');
         break;
-      case 'ArrowRight':
+      case 'd':
+      case 'arrowright':
         move('right');
         break;
+    }
+
+    if(detectGameOver()) {
+      title.value = 'Vesztettél';
+      description.value = `Sajnálom, de nem tudsz tovább lépni. Próbáld újra!`;
+      modalOpen.value = true;
+      return;
     }
   });
 }
 
 function transpose(matrix: number[][]) {
   return matrix[0].map((col, i) => matrix.map(row => row[i]));
+}
+
+function detectGameOver() {
+  for (let i = 0; i < gridSize; i++) {
+    for (let j = 0; j < gridSize; j++) {
+      if (grid.value[i][j] === 0) {
+        return false;
+      }
+      if (j !== gridSize - 1 && grid.value[i][j] === grid.value[i][j + 1]) {
+        return false;
+      }
+      if (i !== gridSize - 1 && grid.value[i][j] === grid.value[i + 1][j]) {
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 function compare(a: number[][], b: number[][]) {

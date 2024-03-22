@@ -14,3 +14,9 @@ footer {
         }
     }
 }
+
+@media (max-width: 600px) {
+    footer {
+        height: 70px;
+    }
+}
