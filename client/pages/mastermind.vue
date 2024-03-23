@@ -75,6 +75,8 @@ function checkGuess() {
         const colorMatches = guess.filter(color => secretCode.value.includes(color) && !exactMatches.includes(color));
         feedbackCircles.value[state.currentRow] = generateFeedback(exactMatches.length, colorMatches.length);
 
+        console.log(exactMatches.length)
+        console.log(state.abdicating)
         if (exactMatches.length === 4 && state.abdicating !== true) {
             new Audio(sounds.find(sound => sound.name === 'won')!.sound).play();
             state.gameWon = true;
