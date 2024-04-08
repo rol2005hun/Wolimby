@@ -1,7 +1,20 @@
 <template>
     <div class="game-container">
+      <div class="score-container">
+        <p class="game-title">2048</p>
+        <div class="scores">
+          <div class="score">
+            <p class="score-label">Jelenlegi</p>
+            <p class="score-value">{{ gameState.currentPoint }}</p>
+          </div>
+          <div class="score">
+            <p class="score-label">Rekord</p>
+            <p class="score-value">{{ gameState.bestPoint }}</p>
+          </div>
+        </div>
+      </div>
         <div class="grid">
-            <div class="grid-row" v-for="(row, rowIndex) in grid" :key="`row-${rowIndex}`">
+            <div class="grid-row" v-for="(row, rowIndex) in gameState.grid" :key="`row-${rowIndex}`">
                 <div class="grid-cell" v-for="(cell, cellIndex) in row" :key="`cell-${cellIndex}-${cell}`">
                     <div class="tile" v-if="cell !== 0" :style="'background-color: ' + backgroundColor(cell)">{{ cell }}</div>
                 </div>
@@ -25,13 +38,17 @@ import { ref } from 'vue';
 const title = ref('');
 const description = ref('');
 const modalOpen = ref(false);
-const grid = ref();
+const gameState = ref({ currentPoint: 0, bestPoint: 0 } as any);
+const currentPoint = ref(0);
+const bestPoint = ref(0);
 const gridSize = 4;
 var xDown: number = 0;
 var yDown: number = 0;
 
 function startGame() {
-  grid.value = Array(gridSize).fill(0).map(() => Array(gridSize).fill(0));
+  gameState.value.grid = Array(gridSize).fill(0).map(() => Array(gridSize).fill(0));
+  gameState.value.currentPoint = 0;
+  localStorage.setItem('2048', JSON.stringify(gameState.value));
   addRandomTile();
   addRandomTile();
 }
@@ -41,8 +58,9 @@ function addRandomTile() {
   while (!added) {
     let randRow = Math.floor(Math.random() * gridSize);
     let randCol = Math.floor(Math.random() * gridSize);
-    if (grid.value[randRow][randCol] === 0) {
-      grid.value[randRow][randCol] = Math.random() > 0.9 ? 4 : 2;
+    if (gameState.value.grid[randRow][randCol] === 0) {
+      gameState.value.grid[randRow][randCol] = Math.random() > 0.9 ? 4 : 2;
+      localStorage.setItem('2048', JSON.stringify(gameState.value));
       added = true;
     }
   }
@@ -57,14 +75,19 @@ function slide(row: number[]) {
 }
 
 function combine(row: number[]) {
+  let points = 0;
+
   for (let i = gridSize - 1; i >= 1; i--) {
     let a = row[i];
     let b = row[i - 1];
     if (a === b) {
       row[i] = a + b;
       row[i - 1] = 0;
+      points += row[i];
     }
   }
+  
+  setPoints(points);
   return row;
 }
 
@@ -86,8 +109,9 @@ function handleTouchStart(e: any) {
 }
 
 function handleTouchMove(e: any) {
+  e.preventDefault();
   if (!xDown || !yDown) {
-      return;
+    return;
   }
 
   var xUp = e.touches[0].clientX;                                    
@@ -120,18 +144,18 @@ function move(direction: string) {
   let played = true;
   switch (direction) {
     case 'down':
-      grid.value = transpose(grid.value);
+      gameState.value.grid = transpose(gameState.value.grid);
       rotated = true;
       break;
     case 'up':
-      grid.value = transpose(grid.value).map((row: number[]) => row.reverse());
+      gameState.value.grid = transpose(gameState.value.grid).map((row: number[]) => row.reverse());
       rotated = true;
       flipped = true;
       break;
     case 'right':
       break;
     case 'left':
-      grid.value = grid.value.map((row: number[]) => row.reverse());
+      gameState.value.grid = gameState.value.grid.map((row: number[]) => row.reverse());
       flipped = true;
       break;
     default:
@@ -139,17 +163,17 @@ function move(direction: string) {
   }
 
   if (played) {
-    let past = copyGrid(grid.value);
+    let past = copyGrid(gameState.value.grid);
     for (let i = 0; i < gridSize; i++) {
-      grid.value[i] = operate(grid.value[i]);
+      gameState.value.grid[i] = operate(gameState.value.grid[i]);
     }
 
-    let changed = compare(past, grid.value);
+    let changed = compare(past, gameState.value.grid);
     if (flipped) {
-      grid.value = grid.value.map((row: number[]) => row.reverse());
+      gameState.value.grid = gameState.value.grid.map((row: number[]) => row.reverse());
     }
     if (rotated) {
-      grid.value = transpose(grid.value);
+      gameState.value.grid = transpose(gameState.value.grid);
     }
     if (changed) {
       addRandomTile();
@@ -161,6 +185,21 @@ if(process.client) {
   window.addEventListener('touchstart', handleTouchStart, false);  
   window.addEventListener('touchmove', handleTouchMove, false);
   window.addEventListener('keydown', (e) => {
+    e.preventDefault();
+    if(detectWin()) {
+      title.value = 'Nyertél';
+      description.value = `Gratulálok, elérted a 2048-as csempét! Kezdj el egy új játékot!`;
+      modalOpen.value = true;
+      return;
+    }
+
+    if(detectGameOver()) {
+      title.value = 'Vesztettél';
+      description.value = `Sajnálom, de nem tudsz tovább lépni. Próbáld újra!`;
+      modalOpen.value = true;
+      return;
+    }
+
     switch (e.key.toLowerCase()) {
       case 'w':
       case 'arrowup':
@@ -180,6 +219,13 @@ if(process.client) {
         break;
     }
 
+    if(detectWin()) {
+      title.value = 'Nyertél';
+      description.value = `Gratulálok, elérted a 2048-as csempét! Kezdj el egy új játékot!`;
+      modalOpen.value = true;
+      return;
+    }
+
     if(detectGameOver()) {
       title.value = 'Vesztettél';
       description.value = `Sajnálom, de nem tudsz tovább lépni. Próbáld újra!`;
@@ -193,16 +239,34 @@ function transpose(matrix: number[][]) {
   return matrix[0].map((col, i) => matrix.map(row => row[i]));
 }
 
+function setPoints(points: number) {
+  gameState.value.currentPoint += points;
+  if (gameState.value.currentPoint > gameState.value.bestPoint) {
+    gameState.value.bestPoint = gameState.value.currentPoint;
+  }
+}
+
+function detectWin() {
+  for (let i = 0; i < gridSize; i++) {
+    for (let j = 0; j < gridSize; j++) {
+      if (gameState.value.grid[i][j] === 2048) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 function detectGameOver() {
   for (let i = 0; i < gridSize; i++) {
     for (let j = 0; j < gridSize; j++) {
-      if (grid.value[i][j] === 0) {
+      if (gameState.value.grid[i][j] === 0) {
         return false;
       }
-      if (j !== gridSize - 1 && grid.value[i][j] === grid.value[i][j + 1]) {
+      if (j !== gridSize - 1 && gameState.value.grid[i][j] === gameState.value.grid[i][j + 1]) {
         return false;
       }
-      if (i !== gridSize - 1 && grid.value[i][j] === grid.value[i + 1][j]) {
+      if (i !== gridSize - 1 && gameState.value.grid[i][j] === gameState.value.grid[i + 1][j]) {
         return false;
       }
     }
@@ -263,7 +327,7 @@ function backgroundColor(cell: number) {
 }
 
 onMounted(() => {
-  startGame();
+  localStorage.getItem('2048') ? gameState.value = JSON.parse(localStorage.getItem('2048') as string) : startGame();
 });
 </script>
   

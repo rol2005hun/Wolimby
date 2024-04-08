@@ -3,8 +3,36 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 30%;
+    margin: 0 auto;
 }
-  
+
+.score-container {
+    display: flex;
+    width: 400px;
+    margin-bottom: 20px;
+    align-items: center;
+    justify-content: space-between;
+
+    .game-title {
+        font-size: 30px;
+    }
+
+    .scores {
+        display: flex;
+        gap: 10px;
+    
+        .score {
+            background-color: #cdc1b4;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+}
+
 .grid {
     display: grid;
     grid-template-columns: repeat(4, 100px);
@@ -61,6 +89,22 @@
 }
 
 @media (max-width: 500px) {
+    .score-container {
+        width: 250px;
+
+        .game-title {
+            font-size: 20px;
+        }
+
+        .scores {
+            gap: 5px;
+
+            .score p {
+                font-size: 13px;
+            }
+        }
+    }
+
     .grid {
         grid-template-columns: repeat(4, 60px);
     }
