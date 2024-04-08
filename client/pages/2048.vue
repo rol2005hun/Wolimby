@@ -109,7 +109,6 @@ function handleTouchStart(e: any) {
 }
 
 function handleTouchMove(e: any) {
-  e.preventDefault();
   if (!xDown || !yDown) {
     return;
   }
@@ -128,6 +127,7 @@ function handleTouchMove(e: any) {
       }                       
   } else {
       if (yDiff > 0) {
+        e.preventDefault();
         move('up');
       } else { 
         move('down');
@@ -185,7 +185,6 @@ if(process.client) {
   window.addEventListener('touchstart', handleTouchStart, false);  
   window.addEventListener('touchmove', handleTouchMove, false);
   window.addEventListener('keydown', (e) => {
-    e.preventDefault();
     if(detectWin()) {
       title.value = 'Nyertél';
       description.value = `Gratulálok, elérted a 2048-as csempét! Kezdj el egy új játékot!`;
