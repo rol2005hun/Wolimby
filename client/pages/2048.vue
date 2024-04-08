@@ -109,6 +109,20 @@ function handleTouchStart(e: any) {
 }
 
 function handleTouchMove(e: any) {
+  if(detectWin()) {
+    title.value = 'Nyertél';
+    description.value = `Gratulálok, elérted a 2048-as csempét! Kezdj el egy új játékot!`;
+    modalOpen.value = true;
+    return;
+  }
+
+  if(detectGameOver()) {
+    title.value = 'Vesztettél';
+    description.value = `Sajnálom, de nem tudsz tovább lépni. Próbáld újra!`;
+    modalOpen.value = true;
+    return;
+  }
+
   if (!xDown || !yDown) {
     return;
   }
@@ -120,22 +134,22 @@ function handleTouchMove(e: any) {
   var yDiff = yDown - yUp;
                                                                         
   if (Math.abs(xDiff) > Math.abs(yDiff)) {
-      if (xDiff > 0) {
-        move('left');
-      } else {
-        move('right');
-      }                       
+    if (xDiff > 0) {
+      move('left');
+    } else {
+      move('right');
+    }                       
   } else {
-      if (yDiff > 0) {
-        e.preventDefault();
-        move('up');
-      } else { 
-        move('down');
-      }                                                                 
+    if (yDiff > 0) {
+      e.preventDefault();
+      move('up');
+    } else { 
+      move('down');
+    }                                                                 
   }
 
   xDown = 0;
-  yDown = 0;                                             
+  yDown = 0;                                        
 }
 
 function move(direction: string) {
