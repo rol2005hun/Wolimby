@@ -10,7 +10,7 @@
                             <i class="fa-solid fa-link"></i>
                         </div>
                         <div class="input-field">
-                            <input type="text" v-model="shortUrl" placeholder="Rövidített link" minlength="3" maxlength="8" required>
+                            <input type="text" v-model="shortUrl" placeholder="Rövidített link" minlength="3" maxlength="50" required>
                             <i class="fa-solid fa-link-slash"></i>
                         </div>
                         <div class="input-field button">
@@ -18,7 +18,7 @@
                         </div>
                     </form>
                     <div class="preview">
-                        <span v-if="shortUrl" class="text">Előnézet: <a :href="'https://wosho.tech/' + shortUrl">{{ 'https://wosho.tech/' + shortUrl }}</a></span>
+                        <span v-if="shortUrl" class="text">Előnézet: <a :href="'https://wby.hu/' + shortUrl">{{ 'https://wby.hu/' + shortUrl }}</a></span>
                     </div>
                 </div>
             </div>
