@@ -36,10 +36,10 @@ export const checkUrl = async (req: Request, res: Response, next: NextFunction) 
         });
     }
 
-    if(req.body.shortUrl.length < 3 || req.body.shortUrl.length > 8) {
+    if(req.body.shortUrl.length < 3 || req.body.shortUrl.length > 50) {
         return res.status(404).send({
             success: false,
-            message: 'A rövidített URL 3 és 8 karakter között kell álljon.'
+            message: 'A rövidített URL 3 és 50 karakter között kell álljon.'
         })
     }
   
