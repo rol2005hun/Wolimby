@@ -1,5 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import { NuxtConfig } from '@nuxt/types';
+import type { NuxtConfig } from '@nuxt/types';
 
 const config: NuxtConfig = {
   devtools: { enabled: true },
