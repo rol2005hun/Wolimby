@@ -325,8 +325,19 @@ function removeFile(index: number) {
     }
 }
 
+function escapeHTML(text: string): string {
+    const map: { [key: string]: string } = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, (m) => map[m]);
+}
+
 function filterMessage(message: any) {
-    let result = message;
+    let result = escapeHTML(message);
     const mentionedUsers = activeChat.value.users.map((user: any) => user.user.profile.username);
     const mentionRegex = new RegExp(`@(${mentionedUsers.join('|')})\\b`, 'g');
     result = result.replace(mentionRegex, '<span class="mention" style="color: red;">$&</span>');
@@ -335,6 +346,8 @@ function filterMessage(message: any) {
     const imageRegex = /\.(png|jpg|jpeg|gif)$/i;
     const videoRegex = /\.(mp4|mov|avi)$/i;
     const audioRegex = /\.(mp3|ogg|wav)$/i;
+    let mediaElements: string[] = [];
+
     if (isUrl) {
         isUrl.forEach((url: any) => {
             let mediaElement = '';
@@ -350,11 +363,17 @@ function filterMessage(message: any) {
             }
 
             const isFileAlone = result.trim() === url.trim();
-
-            result = isFileAlone ? result.replace(url, mediaElement) : result.replace(url, `<br/>&nbsp;${mediaElement}`);
+            if(isFileAlone) {
+                mediaElements.push(mediaElement);
+            } else {
+                mediaElements.push('<br style="content: \' \'; margin-top: 10px; display: block;" />');
+                mediaElements.push(mediaElement);
+            }
+            result = result.replace(url, '');
         });
     }
 
+    result += mediaElements.join('');    
     return result;
 }
 
