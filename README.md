@@ -1,4 +1,5 @@
-# Wolimby
+# [Archívum] Wolimby
+- 2024 decemberétől végleg megszűnik futni, patchek/fejlesztések sem lesznek. A kód szabadon felhasználható, kérdés esetén elérsz. Köszi.
 A **[Wolimby](https://wolimby.hu)** egy weboldal, amely tanulás és szórakozás révén készülődik. Na, de térjünk a lényegre...
 <br/>
 ✧・──・──・──・──・─・──・✧
