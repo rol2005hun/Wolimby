@@ -23,7 +23,7 @@
         </button>
       </div>
     </div>
-    <Modal :isVisible="modalOpen" @closeModal="modalOpen = false" :title="title" :description="description"/>
+    <Modal :isVisible="modalOpen" @closeModal="modalOpen = false" :title="title" :description="description" />
   </main>
 </template>
 
@@ -111,7 +111,7 @@ function formatChar() {
     const isCorrect = char === typedText.value[index];
     const isIncorrect = char !== typedText.value[index];
     const isLineBreak = char === '\n' || char === '\t' || char === ' ';
-    
+
     const spanClass: Record<string, boolean> = {
       correct: isCorrect,
       incorrect: isIncorrect,
@@ -156,14 +156,14 @@ watch(typedText, (newTypedText: string) => {
     modalOpen.value = true;
     restart();
   }
-  
-  if(typedText.value == currentSnippet.value) {
+
+  if (typedText.value == currentSnippet.value) {
     initialCharacterCount.value = correctCharacterCount.value;
     generateNewSnippet();
     counter.value++;
   }
 
-  if(typedText.value.length > currentSnippet.value.length) typedText.value = typedText.value.slice(0, -1);
+  if (typedText.value.length > currentSnippet.value.length) typedText.value = typedText.value.slice(0, -1);
   correctCharacterCount.value = initialCharacterCount.value + typedText.value.split('').filter((char, index) => char === currentSnippet.value[index]).length;
 });
 
@@ -171,37 +171,37 @@ onMounted(() => {
   generateNewSnippet();
 });
 
-if(process.client) {
+if (process.client) {
   window.addEventListener('keydown', (event) => {
-    if(!timer.value) {
+    if (!timer.value) {
       startTimer();
       timerRunning.value = true;
     }
 
-    if(event.key === 'Space') {
+    if (event.key === 'Space') {
       typedText.value += ' ';
     }
 
-    if(event.key === 'Tab') {
+    if (event.key === 'Tab') {
       event.preventDefault();
       typedText.value += '\t';
     }
 
-    if(event.key === 'Enter') {
+    if (event.key === 'Enter') {
       typedText.value += '\n';
     }
 
-    if(event.key === 'Backspace') {
+    if (event.key === 'Backspace') {
       typedText.value = typedText.value.slice(0, -1);
     }
 
-    if(event.key.length === 1) {
+    if (event.key.length === 1) {
       typedText.value += event.key;
     }
 
     formatChar();
     console.log(typedText.value)
-      console.log(currentSnippet.value)
+    console.log(currentSnippet.value)
   });
 }
 </script>

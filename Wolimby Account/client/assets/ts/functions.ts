@@ -1,4 +1,4 @@
-import UserProfile from '@/assets/types/user';
+import type { UserProfile } from '@/assets/types/user';
 
 function renderUserRoles(user: UserProfile, username?: string): string {
     let html = '';

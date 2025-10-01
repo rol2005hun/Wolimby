@@ -36,4 +36,4 @@ interface UserProfile {
     }
 }
 
-export default UserProfile;
+export type { UserProfile };
