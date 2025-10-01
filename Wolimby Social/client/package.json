@@ -12,16 +12,16 @@
     "vue": "latest"
   },
   "devDependencies": {
-    "@nuxt/devtools": "latest",
-    "@nuxt/types": "^2.17.1",
-    "@types/node": "^18.16.19",
-    "nuxt": "^3.6.3"
+    "@nuxt/devtools": "^2.6.5",
+    "@nuxt/types": "^2.18.1",
+    "@types/node": "^24.6.1",
+    "nuxt": "^4.1.2"
   },
   "dependencies": {
-    "@pinia/nuxt": "^0.4.11",
-    "axios": "^1.4.0",
-    "nuxt-socket-io": "^3.0.13",
-    "pinia": "^2.1.4",
-    "sass": "^1.63.6"
+    "@pinia/nuxt": "^0.11.2",
+    "axios": "^1.12.2",
+    "nuxt-socket-io": "^3.0.10",
+    "pinia": "^3.0.3",
+    "sass": "^1.93.2"
   }
 }

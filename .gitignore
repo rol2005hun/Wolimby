@@ -1,0 +1,69 @@
+# Git ignore for Node / Nuxt projects
+# Ignore node modules everywhere
+node_modules/
+**/node_modules/
+
+# Environment files (ignore secrets). Keep example files if present
+.env
+.env.*
+!.env.example
+
+# Lockfiles (ignore in root and subfolders)
+package-lock.json
+npm-shrinkwrap.json
+yarn.lock
+pnpm-lock.yaml
+**/package-lock.json
+**/npm-shrinkwrap.json
+**/yarn.lock
+**/pnpm-lock.yaml
+
+# Build output directories
+.nuxt/
+.next/
+dist/
+build/
+.output/
+output/
+**/dist/
+**/build/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Coverage and test output
+coverage/
+.nyc_output/
+
+# Caches
+.cache/
+.cache-loader/
+.parcel-cache/
+.sass-cache/
+
+# TypeScript
+*.tsbuildinfo
+
+# Editor directories and files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Misc
+*.tgz
+*.gz
+*.zip
+*.pid
+*.pid.lock
+
+# End of .gitignore
