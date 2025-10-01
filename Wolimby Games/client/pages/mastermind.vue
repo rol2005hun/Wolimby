@@ -4,12 +4,15 @@
             <h1>Színözön</h1>
             <div class="board">
                 <div class="row" v-for="(row, index) in board" :key="index">
-                    <div class="circle" v-for="(color, colIndex) in row" :key="colIndex" :style="{ backgroundColor: color }" @click="removeColor(index, colIndex)"></div>
-                    <div class="mini-circle" v-for="(color, colIndex) in feedbackCircles[index]" :key="colIndex" :style="{ backgroundColor: color }"></div>
+                    <div class="circle" v-for="(color, colIndex) in row" :key="colIndex"
+                        :style="{ backgroundColor: color }" @click="removeColor(index, colIndex)"></div>
+                    <div class="mini-circle" v-for="(color, colIndex) in feedbackCircles[index]" :key="colIndex"
+                        :style="{ backgroundColor: color }"></div>
                 </div>
             </div>
             <div class="colors">
-                <div class="circle" v-for="(color, index) in colors" :key="index" :style="{ backgroundColor: color }" @click="placeColor(color)"></div>
+                <div class="circle" v-for="(color, index) in colors" :key="index" :style="{ backgroundColor: color }"
+                    @click="placeColor(color)"></div>
             </div>
             <div class="buttons">
                 <button @click="checkGuess"><i class="fa-solid fa-check"></i></button>
@@ -19,9 +22,9 @@
             </div>
         </div>
     </main>
-    <Modal :isVisible="modalOpen" @closeModal="modalOpen = false" :title="title" :description="description"/>
+    <Modal :isVisible="modalOpen" @closeModal="modalOpen = false" :title="title" :description="description" />
 </template>
-  
+
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import soundNames from '@/assets/ts/sounds.json';
@@ -35,13 +38,13 @@ const title = ref('');
 const description = ref('');
 const defaultSound = ref('walker');
 const sounds = soundNames.find(soundName => soundName.name === defaultSound.value)!.sounds;
-  
+
 const state = reactive({
     currentRow: 0,
     gameWon: false,
     abdicating: false
 });
-  
+
 function generateCode() {
     const code = [];
     for (let i = 0; i < 4; i++) {
@@ -66,11 +69,11 @@ function generateFeedback(exactMatchesCount: number, colorMatchesCount: number) 
     }
     return feedback;
 }
-  
+
 function checkGuess() {
-    if(state.currentRow > 9) return;
+    if (state.currentRow > 9) return;
     const guess = board.value[state.currentRow];
-    if (guess.every(color => color !== '')) {
+    if (guess && guess.every(color => color !== '')) {
         const exactMatches = guess.filter((color, index) => color === secretCode.value[index]);
         const colorMatches = guess.filter(color => secretCode.value.includes(color) && !exactMatches.includes(color));
         feedbackCircles.value[state.currentRow] = generateFeedback(exactMatches.length, colorMatches.length);
@@ -96,10 +99,11 @@ function checkGuess() {
         }
     }
 }
-  
+
 function placeColor(color: string) {
     if (!state.gameWon && state.currentRow < 10) {
         const currentRow = board.value[state.currentRow];
+        if (!currentRow) return;
         const emptyIndex = currentRow.findIndex(cell => cell === '');
 
         if (emptyIndex !== -1) {
@@ -108,7 +112,7 @@ function placeColor(color: string) {
         }
     }
 }
-  
+
 function restart() {
     new Audio(sounds.find(sound => sound.name === 'newgame')!.sound).play();
     board.value = new Array(10).fill([]).map(() => new Array(4).fill(''));
@@ -133,7 +137,7 @@ function showSolution() {
 function removeColor(rowIndex: number, colIndex: number) {
     if (!state.gameWon && state.currentRow === rowIndex) {
         const currentRow = board.value[rowIndex];
-        if (colIndex >= 0 && colIndex < currentRow.length) {
+        if (currentRow && colIndex >= 0 && colIndex < currentRow.length) {
             new Audio(sounds.find(sound => sound.name === 'no')!.sound).play();
             currentRow[colIndex] = '';
         }
@@ -155,8 +159,7 @@ function openRules() {
     modalOpen.value = true;
 }
 </script>
-  
+
 <style lang="scss" scoped>
 @use '@/assets/scss/mastermind.scss';
 </style>
-  

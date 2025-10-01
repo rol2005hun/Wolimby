@@ -1,37 +1,37 @@
 <template>
-    <div class="game-container">
-      <div class="score-container">
-        <p class="game-title">2048</p>
-        <div class="scores">
-          <div class="score">
-            <p class="score-label">Jelenlegi</p>
-            <p class="score-value">{{ gameState.currentPoint }}</p>
-          </div>
-          <div class="score">
-            <p class="score-label">Rekord</p>
-            <p class="score-value">{{ gameState.bestPoint }}</p>
-          </div>
+  <div class="game-container">
+    <div class="score-container">
+      <p class="game-title">2048</p>
+      <div class="scores">
+        <div class="score">
+          <p class="score-label">Jelenlegi</p>
+          <p class="score-value">{{ gameState.currentPoint }}</p>
+        </div>
+        <div class="score">
+          <p class="score-label">Rekord</p>
+          <p class="score-value">{{ gameState.bestPoint }}</p>
         </div>
       </div>
-        <div class="grid">
-            <div class="grid-row" v-for="(row, rowIndex) in gameState.grid" :key="`row-${rowIndex}`">
-                <div class="grid-cell" v-for="(cell, cellIndex) in row" :key="`cell-${cellIndex}-${cell}`">
-                    <div class="tile" v-if="cell !== 0" :style="'background-color: ' + backgroundColor(cell)">{{ cell }}</div>
-                </div>
-            </div>
-        </div>
-        <div class="buttons">
-          <button class="restart-btn" @click="startGame">
-            <i class="fas fa-redo"></i>
-          </button>
-          <button class="rules-btn" @click="openRules">
-            <i class="fa-solid fa-book"></i>
-          </button>
-        </div>
     </div>
-    <Modal :isVisible="modalOpen" @closeModal="modalOpen = false" :title="title" :description="description"/>
+    <div class="grid">
+      <div class="grid-row" v-for="(row, rowIndex) in gameState.grid" :key="`row-${rowIndex}`">
+        <div class="grid-cell" v-for="(cell, cellIndex) in row" :key="`cell-${cellIndex}-${cell}`">
+          <div class="tile" v-if="cell !== 0" :style="'background-color: ' + backgroundColor(cell)">{{ cell }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="buttons">
+      <button class="restart-btn" @click="startGame">
+        <i class="fas fa-redo"></i>
+      </button>
+      <button class="rules-btn" @click="openRules">
+        <i class="fa-solid fa-book"></i>
+      </button>
+    </div>
+  </div>
+  <Modal :isVisible="modalOpen" @closeModal="modalOpen = false" :title="title" :description="description" />
 </template>
-  
+
 <script setup lang="ts">
 import { ref } from 'vue';
 
@@ -80,13 +80,15 @@ function combine(row: number[]) {
   for (let i = gridSize - 1; i >= 1; i--) {
     let a = row[i];
     let b = row[i - 1];
-    if (a === b) {
+    if (a !== undefined && b !== undefined && a === b) {
       row[i] = a + b;
       row[i - 1] = 0;
-      points += row[i];
+      if (typeof row[i] !== 'undefined') {
+        points += row[i]!;
+      }
     }
   }
-  
+
   setPoints(points);
   return row;
 }
@@ -103,20 +105,20 @@ function getTouches(e: any) {
 }
 
 function handleTouchStart(e: any) {
-    const firstTouch = getTouches(e)[0];                                      
-    xDown = firstTouch.clientX;                                      
-    yDown = firstTouch.clientY;                                      
+  const firstTouch = getTouches(e)[0];
+  xDown = firstTouch.clientX;
+  yDown = firstTouch.clientY;
 }
 
 function handleTouchMove(e: any) {
-  if(detectWin()) {
+  if (detectWin()) {
     title.value = 'Nyertél';
     description.value = `Gratulálok, elérted a 2048-as csempét! Kezdj el egy új játékot!`;
     modalOpen.value = true;
     return;
   }
 
-  if(detectGameOver()) {
+  if (detectGameOver()) {
     title.value = 'Vesztettél';
     description.value = `Sajnálom, de nem tudsz tovább lépni. Próbáld újra!`;
     modalOpen.value = true;
@@ -127,29 +129,29 @@ function handleTouchMove(e: any) {
     return;
   }
 
-  var xUp = e.touches[0].clientX;                                    
+  var xUp = e.touches[0].clientX;
   var yUp = e.touches[0].clientY;
 
   var xDiff = xDown - xUp;
   var yDiff = yDown - yUp;
-                                                                        
+
   if (Math.abs(xDiff) > Math.abs(yDiff)) {
     if (xDiff > 0) {
       move('left');
     } else {
       move('right');
-    }                       
+    }
   } else {
     if (yDiff > 0) {
       e.preventDefault();
       move('up');
-    } else { 
+    } else {
       move('down');
-    }                                                                 
+    }
   }
 
   xDown = 0;
-  yDown = 0;                                        
+  yDown = 0;
 }
 
 function move(direction: string) {
@@ -162,7 +164,7 @@ function move(direction: string) {
       rotated = true;
       break;
     case 'up':
-      gameState.value.grid = transpose(gameState.value.grid).map((row: number[]) => row.reverse());
+      gameState.value.grid = (transpose(gameState.value.grid) as number[][]).map((row: number[]) => row.reverse());
       rotated = true;
       flipped = true;
       break;
@@ -195,18 +197,18 @@ function move(direction: string) {
   }
 }
 
-if(process.client) {
-  window.addEventListener('touchstart', handleTouchStart, false);  
+if (process.client) {
+  window.addEventListener('touchstart', handleTouchStart, false);
   window.addEventListener('touchmove', handleTouchMove, false);
   window.addEventListener('keydown', (e) => {
-    if(detectWin()) {
+    if (detectWin()) {
       title.value = 'Nyertél';
       description.value = `Gratulálok, elérted a 2048-as csempét! Kezdj el egy új játékot!`;
       modalOpen.value = true;
       return;
     }
 
-    if(detectGameOver()) {
+    if (detectGameOver()) {
       title.value = 'Vesztettél';
       description.value = `Sajnálom, de nem tudsz tovább lépni. Próbáld újra!`;
       modalOpen.value = true;
@@ -232,14 +234,14 @@ if(process.client) {
         break;
     }
 
-    if(detectWin()) {
+    if (detectWin()) {
       title.value = 'Nyertél';
       description.value = `Gratulálok, elérted a 2048-as csempét! Kezdj el egy új játékot!`;
       modalOpen.value = true;
       return;
     }
 
-    if(detectGameOver()) {
+    if (detectGameOver()) {
       title.value = 'Vesztettél';
       description.value = `Sajnálom, de nem tudsz tovább lépni. Próbáld újra!`;
       modalOpen.value = true;
@@ -249,6 +251,7 @@ if(process.client) {
 }
 
 function transpose(matrix: number[][]) {
+  if (!matrix.length || !matrix[0]) return [];
   return matrix[0].map((col, i) => matrix.map(row => row[i]));
 }
 
@@ -289,8 +292,15 @@ function detectGameOver() {
 
 function compare(a: number[][], b: number[][]) {
   for (let i = 0; i < gridSize; i++) {
+    if (!a[i] || !b[i]) continue;
     for (let j = 0; j < gridSize; j++) {
-      if (a[i][j] !== b[i][j]) {
+      if (
+        typeof a[i] !== 'undefined' &&
+        typeof b[i] !== 'undefined' &&
+        typeof a[i]?.[j] !== 'undefined' &&
+        typeof b[i]?.[j] !== 'undefined' &&
+        a[i]?.[j] !== b[i]?.[j]
+      ) {
         return true;
       }
     }
@@ -343,8 +353,7 @@ onMounted(() => {
   localStorage.getItem('2048') ? gameState.value = JSON.parse(localStorage.getItem('2048') as string) : startGame();
 });
 </script>
-  
+
 <style lang="scss">
-@use '@/assets/scss/2048.scss';
+@use '@/assets/scss/2048.scss' as game2048;
 </style>
-  

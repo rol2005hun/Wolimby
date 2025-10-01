@@ -91,7 +91,12 @@ function formatTime(seconds: number) {
 function generateNewSnippet() {
   let newSnippet = currentSnippet.value;
   while (newSnippet == currentSnippet.value) {
-    newSnippet = codesnippets[Math.floor(Math.random() * codesnippets.length)].code;
+    const randomSnippet = codesnippets[Math.floor(Math.random() * codesnippets.length)];
+    if (randomSnippet) {
+      newSnippet = randomSnippet.code;
+    } else {
+      break;
+    }
   }
 
   currentSnippet.value = newSnippet;
