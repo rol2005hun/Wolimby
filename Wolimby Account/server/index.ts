@@ -14,8 +14,17 @@ mongoose.connect(config.mongo.url)
 
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
+
+server.use(cors({
+    origin: true,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    exposedHeaders: ['Content-Length', 'Content-Type'],
+    maxAge: 86400
+}));
+
 server.use(passport.initialize());
-server.use(cors());
 
 configPassport(passport);
 

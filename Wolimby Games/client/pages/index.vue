@@ -33,7 +33,7 @@
       </div>
     </div>
     <div class="game">
-      <img class="game-profile-img" src="https://iconspng.com/images/2048-game/2048-game.jpg" alt="">
+      <img class="game-profile-img" src="https://tse4.mm.bing.net/th/id/OIP.BqjYx2m8F9u4_6lYyQj_2gHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" alt="">
       <div class="game-description-bk"></div>
       <div class="game-logo">
         <img src="https://th.bing.com/th/id/OIP.PLOc_G95V-3njOOpPa--swAAAA?rs=1&pid=ImgDetMain" alt="">
