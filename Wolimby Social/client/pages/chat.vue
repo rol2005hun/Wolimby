@@ -679,7 +679,7 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/chat.scss';
+@use '@/assets/scss/chat.scss';
 </style>
 
 <style lang="scss">

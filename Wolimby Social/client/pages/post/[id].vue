@@ -401,5 +401,5 @@ function deleteReply(postId: string, commentId: number, replyId: number) {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/post/index.scss';
+@use '@/assets/scss/post/index.scss';
 </style>

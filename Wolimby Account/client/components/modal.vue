@@ -21,6 +21,6 @@ function closeModal() {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/modal.scss';
+@use '@/assets/scss/modal.scss';
 </style>
   

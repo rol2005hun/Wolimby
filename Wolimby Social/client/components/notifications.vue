@@ -37,5 +37,5 @@ function close(id: number) {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/notifications.scss';
+@use '@/assets/scss/notifications.scss';
 </style>

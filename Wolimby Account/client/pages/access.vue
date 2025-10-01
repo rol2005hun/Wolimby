@@ -50,5 +50,5 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/access.scss';
+@use '@/assets/scss/access.scss';
 </style>

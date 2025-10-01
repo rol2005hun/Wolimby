@@ -163,5 +163,5 @@ function register() {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/auth.scss';
+@use '@/assets/scss/auth.scss';
 </style>

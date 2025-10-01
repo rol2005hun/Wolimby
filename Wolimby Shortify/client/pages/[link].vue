@@ -28,5 +28,5 @@ redirect();
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/link.scss';
+@use '@/assets/scss/link.scss';
 </style>

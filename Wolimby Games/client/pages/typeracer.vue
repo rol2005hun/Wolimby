@@ -202,5 +202,5 @@ if(process.client) {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/typeracer.scss';
+@use '@/assets/scss/typeracer.scss';
 </style>

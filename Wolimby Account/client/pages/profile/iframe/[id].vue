@@ -45,5 +45,5 @@ onBeforeMount(async () => {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/profile/iframe.scss';
+@use '@/assets/scss/profile/iframe.scss';
 </style>

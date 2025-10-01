@@ -78,6 +78,6 @@ function handleOutsideClick(event: MouseEvent) {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/navbar.scss';
+@use '@/assets/scss/navbar.scss';
 </style>
     

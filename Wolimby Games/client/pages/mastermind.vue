@@ -157,6 +157,6 @@ function openRules() {
 </script>
   
 <style lang="scss" scoped>
-@import '@/assets/scss/mastermind.scss';
+@use '@/assets/scss/mastermind.scss';
 </style>
   

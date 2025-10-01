@@ -43,5 +43,5 @@ const { currentUser } = storeToRefs(userStore);
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/profile/index.scss';
+@use '@/assets/scss/profile/index.scss';
 </style>

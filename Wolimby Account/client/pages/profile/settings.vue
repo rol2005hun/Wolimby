@@ -386,5 +386,5 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/profile/settings.scss';
+@use '@/assets/scss/profile/settings.scss';
 </style>

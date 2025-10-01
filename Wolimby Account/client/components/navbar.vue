@@ -83,6 +83,6 @@ function logout() {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/navbar.scss';
+@use '@/assets/scss/navbar.scss';
 </style>
     
