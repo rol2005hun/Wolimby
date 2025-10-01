@@ -18,5 +18,5 @@
 </script>
 
 <style lang="scss" scoped>
-@use url('@/assets/scss/index.scss');
+@import url('@/assets/scss/index.scss');
 </style>

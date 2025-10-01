@@ -1,6 +1,6 @@
 import { userStore, testStore } from '@/store';
 import axios from 'axios';
-import UserProfile from '@/assets/types/user';
+import type { UserProfile } from '@/assets/types/user';
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
     if(useCookie('redirect').value || to.query.source === 'pwa') {

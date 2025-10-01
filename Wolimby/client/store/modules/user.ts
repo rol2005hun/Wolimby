@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
-import UserProfile from '@/assets/types/user';
+import type { UserProfile } from '@/assets/types/user';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     token: '',
     currentUser: {} as UserProfile,
-    error: '' || 'Ismeretlen'
+    error: ''
   }),
 
   getters: {
