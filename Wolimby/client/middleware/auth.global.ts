@@ -4,7 +4,7 @@ import UserProfile from '@/assets/types/user';
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
     if(useCookie('redirect').value || to.query.source === 'pwa') {
-        return navigateTo('https://account.wolimby.hu', { external: true });
+        return navigateTo('https://account.wolimby.site', { external: true });
     } else {
         await testStore.testApi();
         if(testStore.isOnline) {

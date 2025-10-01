@@ -49,7 +49,7 @@ export const useUserStore = defineStore('user', {
         delete axios.defaults.headers.common['Authorization'];
         this.$state.currentUser = {} as UserProfile;
         this.$state.token = '';
-        return navigateTo('https://account.wolimby.hu/auth', { external: true });
+        return navigateTo('https://account.wolimby.site/auth', { external: true });
       } catch(err: any) {
         this.$state.error = err.response.data.message;
       }

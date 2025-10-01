@@ -70,7 +70,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     if(!isEmail(req.body.email)) {
         return res.status(404).send({
             success: false,
-            message: 'A megadott email cím nem megfelelő. (pelda@wolimby.hu)'
+            message: 'A megadott email cím nem megfelelő. (pelda@wolimby.site)'
         });
     }
 

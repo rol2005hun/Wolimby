@@ -2,6 +2,7 @@
 import type { NuxtConfig } from '@nuxt/types';
 
 const config: NuxtConfig = {
+  compatibilityDate: '2025-10-01',
   devtools: { enabled: true },
   app: {
     head: {
@@ -27,7 +28,7 @@ const config: NuxtConfig = {
   runtimeConfig: {
     public: {
       //apiBase: 'http://localhost:2001',
-      apiBase: 'https://api.account.wolimby.hu',
+      apiBase: 'https://api.account.wolimby.site',
       imgurClientId: '80af936d45232db'
     }
   }

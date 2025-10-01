@@ -2,6 +2,7 @@
 import type { NuxtConfig } from '@nuxt/types';
 
 const config: NuxtConfig = {
+  compatibilityDate: '2025-10-01',
   devtools: { enabled: true },
   app: {
     head: {
@@ -28,7 +29,7 @@ const config: NuxtConfig = {
   runtimeConfig: {
     public: {
       //apiBase: 'http://localhost:2000',
-      apiBase: 'https://api.wolimby.hu',
+      apiBase: 'https://api.wolimby.site',
     }
   }
 }
