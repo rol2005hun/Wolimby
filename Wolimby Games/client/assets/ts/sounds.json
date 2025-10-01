@@ -1,0 +1,116 @@
+[
+  {
+    "name": "google",
+    "sounds": [
+      {
+        "name": "blue",
+        "sound": "/sounds/google/kek.mp3"
+      },
+      {
+        "name": "purple",
+        "sound": "/sounds/google/lila.mp3"
+      },
+      {
+        "name": "no",
+        "sound": "/sounds/google/megsem.mp3"
+      },
+      {
+        "name": "orange",
+        "sound": "/sounds/google/narancssarga.mp3"
+      },
+      {
+        "name": "red",
+        "sound": "/sounds/google/piros.mp3"
+      },
+      {
+        "name": "ok",
+        "sound": "/sounds/google/rendben.mp3"
+      },
+      {
+        "name": "yellow",
+        "sound": "/sounds/google/sarga.mp3"
+      },
+      {
+        "name": "free",
+        "sound": "/sounds/google/szabadagazda.mp3"
+      },
+      {
+        "name": "rules",
+        "sound": "/sounds/google/szabalyzat.mp3"
+      },
+      {
+        "name": "newgame",
+        "sound": "/sounds/google/ujjatek.mp3"
+      },
+      {
+        "name": "green",
+        "sound": "/sounds/google/zold.mp3"
+      },
+      {
+        "name": "won",
+        "sound": "/sounds/google/nyertel.mp3"
+      },
+      {
+        "name": "loose",
+        "sound": "/sounds/google/vesztettel.mp3"
+      }
+    ]
+  },
+  {
+    "name": "walker",
+    "sounds": [
+      {
+        "name": "blue",
+        "sound": "/sounds/walker/kek.wav"
+      },
+      {
+        "name": "purple",
+        "sound": "/sounds/walker/lila.wav"
+      },
+      {
+        "name": "no",
+        "sound": "/sounds/google/megsem.mp3"
+      },
+      {
+        "name": "orange",
+        "sound": "/sounds/walker/narancs.wav"
+      },
+      {
+        "name": "red",
+        "sound": "/sounds/walker/piros.wav"
+      },
+      {
+        "name": "ok",
+        "sound": "/sounds/google/rendben.mp3"
+      },
+      {
+        "name": "yellow",
+        "sound": "/sounds/walker/sarga.wav"
+      },
+      {
+        "name": "free",
+        "sound": "/sounds/google/szabadagazda.mp3"
+      },
+      {
+        "name": "rules",
+        "sound": "/sounds/google/szabalyzat.mp3"
+      },
+      {
+        "name": "newgame",
+        "sound": "/sounds/walker/newgame.wav"
+      },
+      {
+        "name": "green",
+        "sound": "/sounds/walker/zold.wav"
+      },
+      {
+        "name": "won",
+        "sound": "/sounds/walker/win.wav"
+      },
+      {
+        "name": "loose",
+        "sound": "/sounds/walker/vesztettel.wav"
+      }
+    ]
+  }
+]

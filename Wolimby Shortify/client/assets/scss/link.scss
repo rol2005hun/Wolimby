@@ -1,0 +1,26 @@
+.text {
+    margin: 50px 30px;
+    text-align: center;
+    color: var(--fontColor1);
+}
+  
+.project {
+    justify-content: center;
+    display: flex;
+  
+    &-icon img {
+      width: 100px;
+      height: 100px;
+      padding: 10px;
+      border-radius: 50%;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .project-icons {
+      text-align: center;
+      flex-direction: column;
+      margin-top: -50px;
+      margin-bottom: 100px;
+    }
+}

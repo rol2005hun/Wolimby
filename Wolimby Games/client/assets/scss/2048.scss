@@ -1,0 +1,120 @@
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 30%;
+    margin: 0 auto;
+}
+
+.score-container {
+    display: flex;
+    width: 400px;
+    margin-bottom: 20px;
+    align-items: center;
+    justify-content: space-between;
+
+    .game-title {
+        font-size: 30px;
+    }
+
+    .scores {
+        display: flex;
+        gap: 10px;
+    
+        .score {
+            background-color: #cdc1b4;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 100px);
+    grid-gap: 10px;
+    background-color: #ad9d8f;
+    padding: 10px;
+    border-radius: 10px;
+}
+  
+.grid-row {
+    display: contents;
+}
+  
+.grid-cell {
+    background-color: #cdc1b4;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+}
+  
+.tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 30px;
+    font-weight: bold;
+    border-radius: 5px;
+}
+  
+.buttons {
+    display: flex;
+
+    .pause-btn, .restart-btn, .rules-btn {
+        padding: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        margin: 0 20px 0 20px;
+        color: white;
+        font-size: 30px;
+    
+        &:hover {
+          color: greenyellow;
+        }
+    }
+}
+
+@media (max-width: 500px) {
+    .score-container {
+        width: 250px;
+
+        .game-title {
+            font-size: 20px;
+        }
+
+        .scores {
+            gap: 5px;
+
+            .score p {
+                font-size: 13px;
+            }
+        }
+    }
+
+    .grid {
+        grid-template-columns: repeat(4, 60px);
+    }
+  
+    .grid-cell {
+        width: 60px;
+        height: 60px;
+    }
+  
+    .tile {
+        font-size: 20px;
+    }
+}
