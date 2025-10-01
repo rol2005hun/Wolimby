@@ -58,5 +58,5 @@ function createUrl() {
 </script>
 
 <style lang="scss" scoped>
-@use '@/assets/scss/createlink.scss';
+@use '@/assets/scss/index.scss';
 </style>

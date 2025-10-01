@@ -88,7 +88,7 @@ const editComment = async (req: Request, res: Response, next: NextFunction) => {
 
 const removeComment = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        await Post.updateOne({ _id: req.query.postId }, { $pull: { comments: { _id: req.query.commentId } }}, { safe: true, multi: true });
+        await Post.updateOne({ _id: req.query.postId }, { $pull: { comments: { _id: req.query.commentId } }});
 
         return res.status(201).send({
             success: true,

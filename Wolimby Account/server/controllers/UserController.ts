@@ -128,7 +128,7 @@ const notification = async (req: Request, res: Response, next: NextFunction) => 
                 await User.updateOne({ _id: req.query.user }, { $push: notification });
                 break
             case 'delete':
-                await User.updateOne({ _id: req.params.id}, { $set: {'profile.notificationList': []}}, { multi: true });
+                await User.updateOne({ _id: req.params.id}, { $set: {'profile.notificationList': []}});
                 break;
         }
     } catch (err) {
