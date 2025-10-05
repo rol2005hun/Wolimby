@@ -1,27 +1,27 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import functions from '@/assets/ts/functions';
-import type { UserProfile } from '@/assets/types/user';
+import type UserProfile from '@/assets/types/user';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     token: '',
     currentUser: {} as UserProfile,
     user: {} as UserProfile,
-    error: '' || 'Ismeretlen'
+    error: 'Ismeretlen'
   }),
 
   getters: {
     isLoggedIn: state => !!state.token,
   },
-  
+
   actions: {
     async login(user: any, checkbox: boolean) {
       try {
         const res: any = await axios.post(`${useRuntimeConfig().public.apiBase}/users/login`, user);
-        if(res.data.success) {
+        if (res.data.success) {
           const token = res.data.token;
-          if(checkbox == true) {
+          if (checkbox == true) {
             functions.setCookie('token', token, 365);
           } else {
             functions.setCookie('token', token);
@@ -31,7 +31,7 @@ export const useUserStore = defineStore('user', {
           this.$state.currentUser = user;
         }
         return res;
-      } catch(err: any) {
+      } catch (err: any) {
         this.$state.error = err.response.data.message;
       }
     },
@@ -40,7 +40,7 @@ export const useUserStore = defineStore('user', {
       try {
         const res: any = await axios.post(`${useRuntimeConfig().public.apiBase}/users/register`, user);
         return res;
-      } catch(err: any) {
+      } catch (err: any) {
         this.$state.error = err.response.data.message;
       }
     },
@@ -48,13 +48,21 @@ export const useUserStore = defineStore('user', {
     async getCurrentUser() {
       try {
         const res: any = await axios.get(`${useRuntimeConfig().public.apiBase}/users/currentuser`);
-        if(res.data.success) {
+        if (res.data.success) {
           this.$state.currentUser = res.data.user;
+          try {
+            const bg = res.data.user.appearance?.backgroundImage;
+            if (bg && bg !== 'none') {
+              functions.setCookie('bgimage', bg, 365);
+            } else {
+              functions.deleteCookie('bgimage');
+            }
+          } catch (e) {}
         }
         return res;
-      } catch(err: any) {
+      } catch (err: any) {
         this.$state.error = err.response.data.message;
-        if(process.client && err.response.status != 429) {
+        if (process.client && err.response.status != 429) {
           this.logout();
         }
       }
@@ -63,11 +71,11 @@ export const useUserStore = defineStore('user', {
     async getUser(user: string) {
       try {
         const res: any = await axios.get(`${useRuntimeConfig().public.apiBase}/users/get?user=${user}`);
-        if(res.data.success) {
+        if (res.data.success) {
           this.$state.user = res.data.user;
         }
         return res;
-      } catch(err: any) {
+      } catch (err: any) {
         this.$state.error = err.response.data.message;
       }
     },
@@ -75,11 +83,20 @@ export const useUserStore = defineStore('user', {
     async updateUserData(user: string, patching: string, data: object) {
       try {
         const res: any = await axios.patch(`${useRuntimeConfig().public.apiBase}/users/patch?user=${user}&patching=${patching}`, data);
-        if(res.data.success) {
+        if (res.data.success) {
           this.$state.currentUser = res.data.user;
+          // update bgimage cookie if appearance changed
+          try {
+            const bg = res.data.user.appearance?.backgroundImage;
+            if (bg && bg !== 'none') {
+              functions.setCookie('bgimage', bg, 365);
+            } else {
+              functions.deleteCookie('bgimage');
+            }
+          } catch (e) {}
         }
         return res;
-      } catch(err: any) {
+      } catch (err: any) {
         this.$state.error = err.response.data.message;
       }
     },
@@ -87,35 +104,36 @@ export const useUserStore = defineStore('user', {
     async updateNotificationSettings(user: string, action: string) {
       try {
         const res: any = await axios.patch(`${useRuntimeConfig().public.apiBase}/users/notification?user=${user}&action=${action}`);
-        if(res.data.success) {
+        if (res.data.success) {
           this.$state.currentUser = res.data.user;
         }
         return res;
-      } catch(err: any) {
+      } catch (err: any) {
         this.$state.error = err.response.data.message;
       }
     },
 
     async uploadImage(image: object) {
       try {
-          const res: any = await axios.post('https://api.imgur.com/3/upload', image, {
-              headers: {
-                  Authorization: 'Client-ID ' + useRuntimeConfig().public.imgurClientId,
-              },
-          });
-          return res;
-      } catch(err: any) {
-          this.$state.error = err.response.data.message;
-          return err;
+        const res: any = await axios.post('https://api.imgur.com/3/upload', image, {
+          headers: {
+            Authorization: 'Client-ID ' + useRuntimeConfig().public.imgurClientId,
+          },
+        });
+        return res;
+      } catch (err: any) {
+        this.$state.error = err.response.data.message;
+        return err;
       }
-  },
+    },
 
     async logout() {
       try {
         functions.deleteCookie('token');
+        try { functions.deleteCookie('bgimage'); } catch(e) {}
         delete axios.defaults.headers.common['Authorization'];
         return navigateTo('/auth');
-      } catch(err: any) {
+      } catch (err: any) {
         this.$state.error = err.response.data.message;
       }
     },
@@ -123,13 +141,14 @@ export const useUserStore = defineStore('user', {
     async deleteUser(user: string) {
       try {
         const res: any = await axios.delete(`${useRuntimeConfig().public.apiBase}/users/delete?user=${user}`);
-        if(res.data.success) {
+        if (res.data.success) {
           functions.deleteCookie('token');
+          try { functions.deleteCookie('bgimage'); } catch(e) {}
           delete axios.defaults.headers.common['Authorization'];
           return navigateTo('/auth');
         }
         return res;
-      } catch(err: any) {
+      } catch (err: any) {
         this.$state.error = err.response.data.message;
       }
     }

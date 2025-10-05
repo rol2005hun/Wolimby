@@ -1,5 +1,5 @@
 <template>
-  <Navbar/>
+  <Navbar />
   <NuxtPage />
   <Notifications />
 </template>
@@ -8,20 +8,24 @@
 import { notificationStore, testStore } from '@/store';
 import functions from '@/assets/ts/functions';
 
-function getRedirect() {
-  const redirect = functions.getCookie('redirect');
-  if(!redirect) {
-    functions.setCookie('redirect', 'true', 999);
-  }
-}
-
 onMounted(() => {
+  try {
+    const bg = functions.getCookie('bgimage');
+    if (import.meta.client && bg && bg !== 'none') {
+      document.body.style.backgroundImage = 'url(' + bg + ')';
+      document.body.style.backgroundRepeat = 'no-repeat';
+      document.body.style.backgroundSize = 'auto';
+      document.body.style.animation = 'none';
+    }
+  } catch (e) { }
+
   if (!('serviceWorker' in navigator)) {
     throw new Error('A serviceWorker nem fut ebben a böngészőben.');
   }
 
   navigator.serviceWorker.register('./sw.js');
-  if(!testStore.isOnline) {
+
+  if (!testStore.isOnline) {
     notificationStore.addNotification({
       id: 0,
       type: 'information',

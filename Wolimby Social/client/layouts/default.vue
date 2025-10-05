@@ -1,14 +1,27 @@
 <template>
-  <Navbar v-if="$route.path !== '/auth'"/>
+  <Navbar v-if="route.path !== '/auth'" />
   <NuxtPage />
   <Notifications />
 </template>
-  
+
 <script setup lang="ts">
 import { notificationStore, testStore } from '@/store';
+import functions from '@/assets/ts/functions';
+
+const route = useRoute();
 
 onMounted(() => {
-  if(!testStore.isOnline) {
+  try {
+    const bg = functions.getCookie('bgimage');
+    if (import.meta.client && bg && bg !== 'none') {
+      document.body.style.backgroundImage = 'url(' + bg + ')';
+      document.body.style.backgroundRepeat = 'no-repeat';
+      document.body.style.backgroundSize = 'auto';
+      document.body.style.animation = 'none';
+    }
+  } catch (e) { }
+
+  if (!testStore.isOnline) {
     notificationStore.addNotification({
       id: 0,
       type: 'information',
