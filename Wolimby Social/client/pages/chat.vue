@@ -7,7 +7,7 @@
                 <h3>Új chat</h3>
             </div>
             <div class="search">
-                <input type="text" placeholder="Keresés..." v-on:input="filter($event, 'users')"/>
+                <input type="text" placeholder="Keresés..." v-on:input="filter($event, 'users')" />
             </div>
             <div class="user-list">
                 <div v-for="user in filteredUsers" :key="user._id" @click="newChat(user)">
@@ -25,14 +25,16 @@
             <button @click="isVisible.settings = false" class="close-btn">&times;</button>
             <form @submit.prevent="editChat(activeChat)">
                 <div class="header">
-                    <img :src="returnChatDetails(activeChat, 'icon')" alt="chaticon" :disabled="activeChat.type != 'group'">
-                    <input type="text" :value="returnChatDetails(activeChat, 'onlyname')" placeholder="Chat neve" required :disabled="activeChat.type != 'group'">
+                    <img :src="returnChatDetails(activeChat, 'icon')" alt="chaticon"
+                        :disabled="activeChat.type != 'group'">
+                    <input type="text" :value="returnChatDetails(activeChat, 'onlyname')" placeholder="Chat neve"
+                        required :disabled="activeChat.type != 'group'">
                 </div>
                 <div class="users">
                     <details>
                         <summary>Tagok</summary>
                         <div :class="'user ' + user.user._id" v-for="user in activeChat.users" :key="user._id">
-                            <img :src="user.user.profile.profilePicture" alt="pfp"/>
+                            <img :src="user.user.profile.profilePicture" alt="pfp" />
                             <div class="user-info">
                                 <h3>{{ user.user.profile.username }}</h3>
                                 <input type="text" v-model="user.nickname" placeholder="Becenév">
@@ -44,7 +46,8 @@
             </form>
             <div class="delete-chat">
                 <p>Chat törlése - Visszfordíthatatlan</p>
-                <button class="delete-chat-btn" @click="deleteChat(activeChat._id, activeChat.users)"><i class="fa-solid fa-trash"></i></button>
+                <button class="delete-chat-btn" @click="deleteChat(activeChat._id, activeChat.users)"><i
+                        class="fa-solid fa-trash"></i></button>
             </div>
         </div>
     </div>
@@ -52,13 +55,13 @@
         <div class="sidebar">
             <div class="chat-list">
                 <div class="search">
-                    <input type="text" placeholder="Keresés..." v-on:input="filter($event, 'chats')"/>
+                    <input type="text" placeholder="Keresés..." v-on:input="filter($event, 'chats')" />
                 </div>
                 <div v-if="chats.chats.value.length == 0" class="no-chats-message">
                     <p>Jelenleg nincsenek chatjeid.</p>
                 </div>
                 <div v-else v-for="chat in filteredChats" :key="chat._id" @click="switchChat(chat)">
-                    <img :src="returnChatDetails(chat, 'icon')" alt="pfp"/>
+                    <img :src="returnChatDetails(chat, 'icon')" alt="pfp" />
                     <div class="chat-info">
                         <h3 class="username-roles" v-html="returnChatDetails(chat, 'name')"></h3>
                         <p>{{ onlineChats.includes(chat._id) ? 'Online' : 'Offline' }}</p>
@@ -71,13 +74,16 @@
         </div>
         <div v-if="activeChat == undefined" class="chat-window">
             <div class="video">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/gbshdqKVWvY?si=KxL4nuQUiUwNvI9L&amp;start=43" title="YouTube video player" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                <iframe width="560" height="315"
+                    src="https://www.youtube.com/embed/gbshdqKVWvY?si=KxL4nuQUiUwNvI9L&amp;start=43"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
             </div>
         </div>
         <div v-else class="chat-window">
             <div class="header">
-                <img :src="returnChatDetails(activeChat, 'icon')" alt="pfp"/>
+                <img :src="returnChatDetails(activeChat, 'icon')" alt="pfp" />
                 <div class="chat-info">
                     <h3 class="username-roles" v-html="returnChatDetails(activeChat, 'name')"></h3>
                     <p>{{ onlineChats.includes(activeChat._id) ? 'Online' : 'Offline' }}</p>
@@ -89,11 +95,14 @@
                 </div>
             </div>
             <div class="messages">
-                <div :class="'message ' + sentReceived(message) + ' ' + message._id" v-for="message in activeChat.messages" :key="message._id" :title="formatDateToText(message.createdAt)">
+                <div :class="'message ' + sentReceived(message) + ' ' + message._id"
+                    v-for="message in activeChat.messages" :key="message._id"
+                    :title="formatDateToText(message.createdAt)">
                     <p v-html="filterMessage(message.message)"></p>
                 </div>
             </div>
-            <p v-if="activeChat.typing && activeChat.typing.length > 0" id="typing">{{ generateTypingMessage(activeChat.typing) }}</p>
+            <p v-if="activeChat.typing && activeChat.typing.length > 0" id="typing">{{
+                generateTypingMessage(activeChat.typing) }}</p>
             <div class="input">
                 <div class="file-list">
                     <div class="file" v-for="(file, index) in fileList" :key="index">
@@ -103,11 +112,13 @@
                 </div>
                 <div class="bottom">
                     <label>
-                        <input type="file" ref="fileInput" @change="uploadFile" style="display: none;"/>
+                        <input type="file" ref="fileInput" @change="uploadFile" style="display: none;" />
                         <span><i class="fa-solid fa-upload"></i></span>
                     </label>
-                    <input class="textarea" type="text" v-model="newMessageText" placeholder="Írd ide az üzeneted..." @focus="typing(true)" @blur="typing(false)" @keyup.enter="sendMessage" maxlength="1000"/>
-                    <button type="submit" title="sendbutton" @click="sendMessage"><i class="fa-solid fa-paper-plane send-button"></i></button>
+                    <input class="textarea" type="text" v-model="newMessageText" placeholder="Írd ide az üzeneted..."
+                        @focus="typing(true)" @blur="typing(false)" @keyup.enter="sendMessage" maxlength="1000" />
+                    <button type="submit" title="sendbutton" @click="sendMessage"><i
+                            class="fa-solid fa-paper-plane send-button"></i></button>
                 </div>
             </div>
         </div>
@@ -140,9 +151,9 @@ let typingInterval: any;
 let socket: any;
 
 function switchChat(chat: any) {
-    if(activeChat.value) {
+    if (activeChat.value) {
         activeChat.value.users.forEach((user: any) => {
-            if(isTyping.value.find((auser: any) => auser._id === user.user._id)) {
+            if (isTyping.value.find((auser: any) => auser._id === user.user._id)) {
                 setTyping(true, user.user, false);
             }
         });
@@ -150,7 +161,7 @@ function switchChat(chat: any) {
         activeChat.value = chat;
 
         activeChat.value.users.forEach((user: any) => {
-            if(isTyping.value.find((auser: any) => auser._id === user.user._id)) {
+            if (isTyping.value.find((auser: any) => auser._id === user.user._id)) {
                 setTyping(true, user.user, true);
             }
         });
@@ -208,7 +219,7 @@ function formatDateToText(date: any): string {
 
 function scrollToBottom() {
     const messages = document.querySelector('.messages') as HTMLElement;
-    if(messages != null) {
+    if (messages != null) {
         nextTick(() => {
             messages.scrollTop = messages.scrollHeight;
         });
@@ -223,14 +234,14 @@ function closeUsers() {
 function switchText(text: string) {
     const onlyText = text.replaceAll('.', '');
 
-    if(text == `${onlyText}...`) {
+    if (text == `${onlyText}...`) {
         return `${onlyText}`;
-    } else if(text == `${onlyText}`) {
+    } else if (text == `${onlyText}`) {
         return `${onlyText}.`;
-    } else if(text == `${onlyText}.`) {
+    } else if (text == `${onlyText}.`) {
         return `${onlyText}..`;
-    } else if(text == `${onlyText}..`) {
-       return `${onlyText}...`;
+    } else if (text == `${onlyText}..`) {
+        return `${onlyText}...`;
     }
 }
 
@@ -245,21 +256,21 @@ function generateTypingMessage(typingUsers: any) {
 }
 
 function returnChatDetails(chat: any, detail: string) {
-    switch(detail) {
+    switch (detail) {
         case 'onlyname':
-            return chat.type == 'group' ? chat.name : ( other(chat.users).nickname ? other(chat.users).nickname : other(chat.users).user.profile.username );
+            return chat.type == 'group' ? chat.name : (other(chat.users).nickname ? other(chat.users).nickname : other(chat.users).user.profile.username);
         case 'name':
-            return chat.type == 'group' ? chat.name : ( other(chat.users).nickname ? functions.renderUserRoles(other(chat.users).user, other(chat.users).nickname) : functions.renderUserRoles(other(chat.users).user) );
+            return chat.type == 'group' ? chat.name : (other(chat.users).nickname ? functions.renderUserRoles(other(chat.users).user, other(chat.users).nickname) : functions.renderUserRoles(other(chat.users).user));
         case 'icon':
             return other(chat.users).user.profile.profilePicture;
     }
 }
 
 function filter(event: any, type: string) {
-    switch(type) {
+    switch (type) {
         case 'chats':
             filteredChats.value = chats.chats.value.filter((chat: any) => {
-                if(chat.type == 'private') {
+                if (chat.type == 'private') {
                     chat.name = other(chat.users).nickname ? other(chat.users).nickname : other(chat.users).user.profile.username;
                 }
                 return chat.name.toLowerCase().includes(event.target.value.toLowerCase());
@@ -288,7 +299,7 @@ function updateChatSorting() {
 function uploadFile(event: any) {
     const filetype = functions.getFileType(event.target.files[0].name);
 
-    if(filetype == 'unknown') {
+    if (filetype == 'unknown') {
         return notificationStore.addNotification({
             id: 0,
             type: 'error',
@@ -296,7 +307,7 @@ function uploadFile(event: any) {
         });
     }
 
-    if(event.target.files[0].size > 209000000) {
+    if (event.target.files[0].size > 209000000) {
         return notificationStore.addNotification({
             id: 0,
             type: 'error',
@@ -319,7 +330,7 @@ function uploadFile(event: any) {
 function removeFile(index: number) {
     fileList.value.splice(index, 1);
 
-    if(fileList.value.length == 0) {
+    if (fileList.value.length == 0) {
         const inputElement = document.getElementsByClassName('input')[0] as HTMLInputElement;
         inputElement.style.minHeight = '45px';
     }
@@ -333,7 +344,7 @@ function escapeHTML(text: string): string {
         '"': '&quot;',
         "'": '&#039;'
     };
-    return text.replace(/[&<>"']/g, (m) => map[m]);
+    return text.replace(/[&<>"']/g, (m) => map[m] ?? m);
 }
 
 function filterMessage(message: any) {
@@ -352,18 +363,18 @@ function filterMessage(message: any) {
         isUrl.forEach((url: any) => {
             let mediaElement = '';
 
-            if(imageRegex.test(url)) {
+            if (imageRegex.test(url)) {
                 mediaElement = `<img src="${url}" style="max-width: 40vh; max-height: 40vh;" alt="Image"/>`;
-            } else if(videoRegex.test(url)) {
+            } else if (videoRegex.test(url)) {
                 mediaElement = `<video controls style="max-width: 40vh; max-height: 40vh;"><source src="${url}" type="video/mp4"></video>`;
-            } else if(audioRegex.test(url)) {
+            } else if (audioRegex.test(url)) {
                 mediaElement = `<audio controls style="max-width: 40vh; max-height: 40vh;"><source src="${url}" type="audio/mpeg"></audio>`;
             } else {
                 mediaElement = `<a href="${url}" target="_blank">${url}</a>`;
             }
 
             const isFileAlone = result.trim() === url.trim();
-            if(isFileAlone) {
+            if (isFileAlone) {
                 mediaElements.push(mediaElement);
             } else {
                 mediaElements.push('<br style="content: \' \'; margin-top: 10px; display: block;" />');
@@ -373,7 +384,7 @@ function filterMessage(message: any) {
         });
     }
 
-    result += mediaElements.join('');    
+    result += mediaElements.join('');
     return result;
 }
 
@@ -382,7 +393,7 @@ function connection() {
     socket.on('connection', (onlineUsers: Array<null>) => {
         filteredChats.value.forEach((chat: any) => {
             chat.users.forEach((user: any) => {
-                if(onlineUsers.includes(user.user._id) && !onlineChats.value.includes(chat._id) && user.user._id != currentUser.value._id) {
+                if (onlineUsers.includes(user.user._id) && !onlineChats.value.includes(chat._id) && user.user._id != currentUser.value._id) {
                     onlineChats.value.push(chat._id);
                 }
             });
@@ -397,7 +408,7 @@ function newChat(user: any) {
         users: [currentUser.value._id, user._id],
     }
     chatStore.createChat(newChat).then((res) => {
-        if(res.data.success) {
+        if (res.data.success) {
             notificationStore.addNotification({
                 id: 0,
                 message: `Új chatet kezdtél vele: ${user.profile.username}`,
@@ -407,7 +418,7 @@ function newChat(user: any) {
             socket.emit('connection', currentUser.value._id);
             filteredChats.value.push(res.data.chat);
             chats.chats.value = [...filteredChats.value];
-            if(chats.chats.value.length == 1) {
+            if (chats.chats.value.length == 1) {
                 switchChat(res.data.chat);
             }
             isVisible.value.users = false;
@@ -418,16 +429,16 @@ function newChat(user: any) {
 function receiveChat() {
     socket.on('receiveChat', (chat: any, uid: string) => {
         socket.emit('connection', currentUser.value._id);
-        if(chat.users.some((user: any) => user.user._id == currentUser.value._id)) {
+        if (chat.users.some((user: any) => user.user._id == currentUser.value._id)) {
             filteredChats.value.push(chat);
             chats.chats.value = [...filteredChats.value];
-            const username =  whoSent(chat.users.find((user: any) => user.user._id == uid));
+            const username = whoSent(chat.users.find((user: any) => user.user._id == uid));
             notificationStore.addNotification({
                 id: 0,
                 message: `Új chatet kezdett veled ${username}.`,
                 type: 'success',
             });
-            if(chats.chats.value.length == 1) {
+            if (chats.chats.value.length == 1) {
                 switchChat(chat);
             }
         }
@@ -436,7 +447,7 @@ function receiveChat() {
 
 function editChat(chat: any) {
     chatStore.editChat(chat._id, chat).then((res: any) => {
-        if(res.data.success) {
+        if (res.data.success) {
             notificationStore.addNotification({
                 id: 0,
                 message: 'A chat sikeresen módosítva lett.',
@@ -444,7 +455,7 @@ function editChat(chat: any) {
             });
             socket.emit('editChat', activeChat.value._id, chat);
             chatStore.getUserChats(currentUser.value._id).then((res) => {
-                if(res.data.success) {
+                if (res.data.success) {
                     filteredChats.value = res.data.chats;
                 }
             });
@@ -459,7 +470,7 @@ function receiveEditChat() {
                 filteredChats.value[index] = editedChat;
                 chats.chats.value[index] = editedChat;
 
-                if(activeChat.value._id == chatid) {
+                if (activeChat.value._id == chatid) {
                     activeChat.value = editedChat;
                 }
 
@@ -476,14 +487,14 @@ function receiveEditChat() {
 async function sendMessage() {
     if (newMessageText.value.trim().length < 1 && fileList.value.length < 1) return;
 
-    if(newMessageText.value.trim().length > 0) {
+    if (newMessageText.value.trim().length > 0) {
         const newTextMessage = {
             message: newMessageText.value,
             sentBy: currentUser.value._id,
         }
 
         chatStore.sendMessage(activeChat.value, newTextMessage).then((res: any) => {
-            if(res.data.success) {
+            if (res.data.success) {
                 socket.emit('sendMessage', newTextMessage, activeChat.value._id, currentUser.value._id);
                 activeChat.value.messages.push(newTextMessage);
                 newMessageText.value = '';
@@ -529,7 +540,7 @@ async function sendMessage() {
                 }
 
                 chatStore.sendMessage(activeChat.value, newImageMessage).then((res: any) => {
-                    if(res.data.success) {
+                    if (res.data.success) {
                         clearInterval(interval);
                         socket.emit('sendMessage', newImageMessage, activeChat.value._id, currentUser.value._id);
                         activeChat.value.messages.splice(activeChat.value.messages.indexOf(waitingMessage), 1);
@@ -554,15 +565,15 @@ async function sendMessage() {
 function receiveMessage() {
     socket.on('receiveMessage', (message: any, id: string, uid: string) => {
         chats.chats.value.forEach((chat: any) => {
-            if(chat._id == id) {
+            if (chat._id == id) {
                 const mentionedUsers = chat.users.map((user: any) => user.user.profile.username);
                 const mentionRegex = new RegExp(`@(${mentionedUsers.join('|')})\\b`, 'g');
                 const isMentioned = mentionRegex.test(message.message);
 
                 chat.messages.push(message);
                 if (activeChat.value._id != id) {
-                    const username =  whoSent(chat.users.find((user: any) => user.user._id == uid));
-                    if(isMentioned) {
+                    const username = whoSent(chat.users.find((user: any) => user.user._id == uid));
+                    if (isMentioned) {
                         notificationStore.addNotification({
                             id: 0,
                             message: `${username} megemlített téged a(z) ${returnChatDetails(chat, 'name')} chatben.`,
@@ -590,14 +601,14 @@ function typing(typing: boolean) {
 
 function receiveTyping() {
     socket.on('typing', (who: Object, where: string, typing: boolean) => {
-        if(typing) {
-            if(activeChat.value._id == where) {
+        if (typing) {
+            if (activeChat.value._id == where) {
                 setTyping(true, who, true);
             } else {
                 setTyping(true, who, false);
             }
         } else {
-            if(activeChat.value._id == where) {
+            if (activeChat.value._id == where) {
                 setTyping(false, who, true);
             } else {
                 setTyping(false, who, false);
@@ -608,7 +619,7 @@ function receiveTyping() {
 
 function deleteChat(chatId: string, users: object) {
     chatStore.deleteChat(chatId, users).then((res: any) => {
-        if(res.data.success) {
+        if (res.data.success) {
             notificationStore.addNotification({
                 id: 0,
                 message: 'A chat sikeresen törölve lett.',
@@ -618,7 +629,7 @@ function deleteChat(chatId: string, users: object) {
             activeChat.value = null;
             isVisible.value.settings = false;
             chatStore.getUserChats(currentUser.value._id).then((res) => {
-                if(res.data.success) {
+                if (res.data.success) {
                     filteredChats.value = res.data.chats;
                 }
             });
@@ -629,10 +640,10 @@ function deleteChat(chatId: string, users: object) {
 function receiveDeleteChat() {
     socket.on('deleteChat', (chatid: string) => {
         filteredChats.value.forEach((chat: any) => {
-            if(chat._id == chatid) {
+            if (chat._id == chatid) {
                 filteredChats.value.splice(filteredChats.value.indexOf(chat), 1);
                 chats.chats.value.splice(chats.chats.value.indexOf(chat), 1);
-                if(activeChat.value._id == chatid) {
+                if (activeChat.value._id == chatid) {
                     activeChat.value = chats.chats.value[0];
                     isVisible.value.settings = false;
                 }
@@ -650,10 +661,10 @@ function disconnection() {
     socket.on('disconnection', (id: string) => {
         filteredChats.value.forEach((chat: any) => {
             chat.users.filter((user: any) => {
-                if(user.user._id == id) {
+                if (user.user._id == id) {
                     onlineChats.value.splice(onlineChats.value.indexOf(chat._id), 1);
-                    if(isTyping.value.includes(id)) {
-                        if(activeChat.value._id == chat._id) {
+                    if (isTyping.value.includes(id)) {
+                        if (activeChat.value._id == chat._id) {
                             setTyping(false, id, true);
                         } else {
                             setTyping(false, id, false);

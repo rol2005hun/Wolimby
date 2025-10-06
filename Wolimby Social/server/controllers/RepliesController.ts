@@ -91,10 +91,11 @@ const editReply = async (req: Request, res: Response, next: NextFunction) => {
                 }
                 break;
         }
+        
         return res.status(201).send({
             success: true,
             post: post
-        })
+        });
     } catch (err) {
         return res.status(404).send({
             success: false,

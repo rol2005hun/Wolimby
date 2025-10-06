@@ -26,62 +26,62 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       message: 'A jelszó minimum 6 karakterből kell álljon.'
     });
   }
-  
+
   next();
 }
 
 const register = async (req: Request, res: Response, next: NextFunction) => {
-    const isUsernameTaken = await User.findOne({ 'profile.username': req.body.username });
-    const isEmailTaken = await User.findOne({ 'profile.email': req.body.email });
+  const isUsernameTaken = await User.findOne({ 'profile.username': req.body.username });
+  const isEmailTaken = await User.findOne({ 'profile.email': req.body.email });
 
-    if (isUsernameTaken) {
-        return res.status(404).send({
-            success: false,
-            message: 'A megadott felhasználónév már foglalt.'
-        });
-    }
+  if (isUsernameTaken) {
+    return res.status(404).send({
+      success: false,
+      message: 'A megadott felhasználónév már foglalt.'
+    });
+  }
 
-    if (isEmailTaken) {
-        return res.status(404).send({
-            success: false,
-            message: 'A megadott email cím már foglalt.'
-        });
-    }
+  if (isEmailTaken) {
+    return res.status(404).send({
+      success: false,
+      message: 'A megadott email cím már foglalt.'
+    });
+  }
 
-    if (req.body.username.length < 3 || req.body.username.length > 20) {
-        return res.status(404).send({
-            success: false,
-            message: 'A felhasználónév 3 és 20 karakter között kell álljon.'
-        });
-    }
+  if (req.body.username.length < 3 || req.body.username.length > 20) {
+    return res.status(404).send({
+      success: false,
+      message: 'A felhasználónév 3 és 20 karakter között kell álljon.'
+    });
+  }
 
-    if (req.body.email.length < 6 || req.body.email.length > 30) {
-        return res.status(404).send({
-            success: false,
-            message: 'Az email cím 6 és 30 karakter között kell álljon.'
-        });
-    }
+  if (req.body.email.length < 6 || req.body.email.length > 30) {
+    return res.status(404).send({
+      success: false,
+      message: 'Az email cím 6 és 30 karakter között kell álljon.'
+    });
+  }
 
-    function isEmail(str: string) {
-        const pattern = new RegExp('^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$');
-        return !!pattern.test(str);
-    }
+  function isEmail(str: string) {
+    const pattern = new RegExp('^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$');
+    return !!pattern.test(str);
+  }
 
-    if(!isEmail(req.body.email)) {
-        return res.status(404).send({
-            success: false,
-            message: 'A megadott email cím nem megfelelő. (pelda@wolimby.site)'
-        });
-    }
+  if (!isEmail(req.body.email)) {
+    return res.status(404).send({
+      success: false,
+      message: 'A megadott email cím nem megfelelő. (pelda@wolimby.site)'
+    });
+  }
 
-    if (req.body.password.length < 6) {
-        return res.status(404).send({
-            success: false,
-            message: 'A jelszó minimum 6 karakterből kell álljon.'
-        });
-    }
+  if (req.body.password.length < 6) {
+    return res.status(404).send({
+      success: false,
+      message: 'A jelszó minimum 6 karakterből kell álljon.'
+    });
+  }
 
-    next();
+  next();
 }
 
 function passportAuthenticate(callback: (req: Request, res: Response, next: NextFunction) => void) {
