@@ -267,19 +267,25 @@ function returnChatDetails(chat: any, detail: string) {
 }
 
 function filter(event: any, type: string) {
+    const query = (event?.target?.value ?? '').toString().toLowerCase();
     switch (type) {
         case 'chats':
             filteredChats.value = chats.chats.value.filter((chat: any) => {
                 if (chat.type == 'private') {
-                    chat.name = other(chat.users).nickname ? other(chat.users).nickname : other(chat.users).user.profile.username;
+                    const o = other(chat.users);
+                    chat.name = o?.nickname ?? o?.user?.profile?.username ?? '';
                 }
-                return chat.name.toLowerCase().includes(event.target.value.toLowerCase());
+                const name = (chat.name ?? '').toString();
+                return name.toLowerCase().includes(query);
             });
             break;
         case 'users':
-            filteredUsers.value = users.value.filter(user => user._id !== currentUser.value._id).filter((user: any) => {
-                return user.profile.username.toLowerCase().includes(event.target.value.toLowerCase());
-            });
+            filteredUsers.value = users.value
+                .filter(user => user._id !== currentUser.value._id)
+                .filter((user: any) => {
+                    const username = (user?.profile?.username ?? '').toString();
+                    return username.toLowerCase().includes(query);
+                });
             break;
     }
 }
