@@ -1,7 +1,7 @@
 <template>
   <main class="index">
     <div class="game">
-      <img class="game-profile-img" src="https://th.bing.com/th/id/R.806cb3d2fb0ac1406eb7bb44968dc68d?rik=t92Ef1b%2bJhSRIA&pid=ImgRaw&r=0" alt="">
+      <img class="game-profile-img" src="https://tse4.mm.bing.net/th/id/OIP.f5kDDK8ugg3lBjshpabHKQHaE8?rs=1&pid=ImgDetMain&o=7&rm=3" alt="">
       <div class="game-description-bk"></div>
       <div class="game-logo">
         <img src="https://th.bing.com/th/id/R.85e52fd42cafca36dcc6bc64477b2af0?rik=6Now6uGDKVx3Ng&pid=ImgRaw&r=0" alt="">
