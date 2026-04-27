@@ -4,13 +4,14 @@
       <NuxtLink to="/" class="nav-branding">Games</NuxtLink>
       <ul class="nav-menu">
         <li class="nav-item">
-          <a v-if="isLoggedIn && isOnline" href="#" class="nav-link" @click="toggleMenu(2)">{{ currentUser.profile.username }}</a>
+          <!-- <a v-if="isLoggedIn && isOnline" href="#" class="nav-link" @click="toggleMenu(2)">{{ currentUser.profile.username }}</a>
           <a v-else :href="'https://account.' + functions.getDomain() + '/auth?redirectTo=' + useRequestURL().href" class="nav-link">Bejelentkezés</a>
           <ul v-if="isLoggedIn && isOnline" class="nav-submenu">
             <li class="nav-submenu-link"><a :href="'https://account.' + functions.getDomain() + '/profile'">Profilom</a></li>
             <li class="nav-submenu-link"><a :href="'https://account.' + functions.getDomain() + '/profile/settings'">Beállítások</a></li>
             <li class="nav-submenu-link"><p @click="logout()">Kijelentkezés</p></li>
-          </ul>
+          </ul> -->
+          <p>Itt régen be lehetett jelentkezni :)</p>
         </li>
       </ul>
       <div class="nav-hamburger" @click="toggleMenu(1)">
