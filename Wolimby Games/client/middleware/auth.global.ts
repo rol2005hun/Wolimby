@@ -3,7 +3,7 @@ import axios from 'axios';
 import type { UserProfile } from '@/assets/types/user';
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  await testStore.testApi();
+  /* await testStore.testApi();
   if(testStore.isOnline) {
     const token = useCookie('token').value;
     if (token) {
@@ -14,5 +14,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       userStore.currentUser = {} as UserProfile;
       userStore.token = '';
     }
-  }
+  } */
+  console.log('middleware no longer active');
 });
