@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { notificationStore, testStore } from '@/store';
+/* import { notificationStore, testStore } from '@/store';
 
 onMounted(() => {
   if(!testStore.isOnline) {
@@ -16,7 +16,7 @@ onMounted(() => {
       message: 'A Wolimby Games szerverei jelenleg alszanak.'
     });
   }
-});
+}); */
 </script>
 
 <style lang="scss">
